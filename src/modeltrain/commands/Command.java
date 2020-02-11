@@ -5,16 +5,15 @@ import java.util.regex.Pattern;
 import modeltrain.Model;
 
 public abstract class Command {
-    
-    protected String regex = "";
-    private final Pattern commandPattern;
     protected final Model model;
+    private final Pattern commandPattern;    
     
     public static final String COORDINATE = "\\((-|)\\d+),((-|)\\d+)\\)";
-    
+    public static final String ENGINE_TYPE = "electrical|steam|diesel";
+    public static final String COACH_TYPE = "passenger|freight|special";
+    public static final String COUPLING = "true|false";    
 
     protected Command(Model model, String regex) {
-        this.regex = regex;
         this.model = model;
         commandPattern = Pattern.compile(regex);
     }
@@ -31,7 +30,7 @@ public abstract class Command {
         return matcher;
     }
 
-    public boolean isQuit() {
+    public boolean isExit() {
         return false;
     }
 }

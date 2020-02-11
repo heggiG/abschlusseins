@@ -4,8 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import modeltrain.Model;
-import modeltrain.commands.AddTrack;
-import modeltrain.commands.Command;
+import modeltrain.commands.*;
 
 public class UserInterface {
     private final Set<Command> commands = new HashSet<>();
@@ -13,6 +12,24 @@ public class UserInterface {
 
     public UserInterface(Model model) {
         commands.add(new AddTrack(model));
+        commands.add(new AddSwitch(model));
+        commands.add(new AddTrain(model));
+        commands.add(new CreateCoach(model));
+        commands.add(new CreateEngine(model));
+        commands.add(new CreateTrainSet(model));
+        commands.add(new DeleteRollingStock(model));
+        commands.add(new DeleteTrack(model));
+        commands.add(new DeleteTrain(model));
+        commands.add(new Exit(model));
+        commands.add(new ListCoaches(model));
+        commands.add(new ListEngines(model));
+        commands.add(new ListTracks(model));
+        commands.add(new ListTrains(model));
+        commands.add(new ListTrainSets(model));
+        commands.add(new PutTrain(model));
+        commands.add(new SetSwitch(model));
+        commands.add(new ShowTrain(model));
+        commands.add(new Step(model));
     }
 
     public void executeCommand(String command) {
@@ -25,7 +42,7 @@ public class UserInterface {
                 .findFirst().get();
     }
 
-    public boolean isQuit() {
-        return lastFoundCommand.isQuit();
+    public boolean isExit() {
+        return lastFoundCommand.isExit();
     }
 }

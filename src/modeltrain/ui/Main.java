@@ -10,6 +10,6 @@ public class Main {
         UserInterface userInterface = new UserInterface(model);
         do {
             userInterface.executeCommand(Terminal.readLine());
-        } while (!userInterface.isQuit());
+        } while (!userInterface.isExit());
     }
 }
