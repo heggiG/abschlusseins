@@ -9,7 +9,7 @@ public class Train {
     private List<Wagon> wagons;
     
     public Train() {
-        
+        wagons = new ArrayList<>();
     }
     
 }
