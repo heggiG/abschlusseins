@@ -3,14 +3,16 @@ package modeltrain.ui;
 import java.util.HashSet;
 import java.util.Set;
 
+import modeltrain.Model;
+import modeltrain.commands.AddTrack;
 import modeltrain.commands.Command;
 
 public class UserInterface {
     private final Set<Command> commands = new HashSet<>();
     private Command lastFoundCommand;
 
-    public UserInterface() {
-        
+    public UserInterface(Model model) {
+        commands.add(new AddTrack(model));
     }
 
     public void executeCommand(String command) {
