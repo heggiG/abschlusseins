@@ -10,5 +10,8 @@ public class Model {
     
     private Set<Track> tracks;
     
+    public Model() {
+        tracks = new HashSet<>();
+    }
     
 }
