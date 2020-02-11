@@ -10,7 +10,7 @@ public abstract class Command {
     private final Pattern commandPattern;
     protected final Model model;
     
-    public static final String COORDINATE = "\\((-|)=\\d+),(\\d+)\\)";
+    public static final String COORDINATE = "\\((-|)\\d+),((-|)\\d+)\\)";
     
 
     protected Command(Model model, String regex) {
