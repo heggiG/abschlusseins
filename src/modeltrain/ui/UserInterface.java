@@ -7,6 +7,7 @@ import modeltrain.Model;
 import modeltrain.commands.*;
 
 public class UserInterface {
+    
     private final Set<Command> commands = new HashSet<>();
     private Command lastFoundCommand;
 
@@ -38,7 +39,7 @@ public class UserInterface {
 
     private Command getCommand(String command) {
         return lastFoundCommand = commands.stream()
-                .filter(c -> c.matches(command))
+                .filter(co -> co.matches(command))
                 .findFirst().get();
     }
 
