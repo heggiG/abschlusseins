@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.HashMap;
 import modeltrain.trains.RollMaterial;
+import modeltrain.trains.Train;
 
 
 public class Model {
