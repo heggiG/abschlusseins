@@ -2,7 +2,8 @@ package modeltrain.commands;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import modeltrain.Model;
+
+import modeltrain.core.Model;
 
 public abstract class Command {
     protected final Model model;

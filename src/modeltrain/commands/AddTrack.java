@@ -1,7 +1,8 @@
 package modeltrain.commands;
 
-import modeltrain.Model;
 import java.util.regex.MatchResult;
+
+import modeltrain.core.Model;
 
 public class AddTrack extends Command {
 

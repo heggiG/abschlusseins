@@ -1,6 +1,6 @@
 package modeltrain.commands;
 
-import modeltrain.Model;
+import modeltrain.core.Model;
 
 public class AddTrain extends Command {
 

@@ -1,4 +1,4 @@
-package modeltrain;
+package modeltrain.core;
 
 public class Point {
 

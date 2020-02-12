@@ -1,7 +1,7 @@
 package modeltrain.ui;
 
-import modeltrain.Model;
 import edu.kit.informatik.Terminal;
+import modeltrain.core.Model;
 
 public class Main {
     

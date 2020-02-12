@@ -3,8 +3,8 @@ package modeltrain.ui;
 import java.util.HashSet;
 import java.util.Set;
 
-import modeltrain.Model;
 import modeltrain.commands.*;
+import modeltrain.core.Model;
 
 public class UserInterface {
     

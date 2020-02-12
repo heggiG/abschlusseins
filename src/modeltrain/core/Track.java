@@ -1,4 +1,4 @@
-package modeltrain;
+package modeltrain.core;
 
 public class Track {
     
@@ -18,6 +18,15 @@ public class Track {
     
     public Point getEnd() {
         return end;
+    }
+    
+    public Point getOtherPoint(Point po) {
+        if(po.equals(start))
+            return end;
+        else if(po.equals(end))
+            return start;
+        else
+            throw new IllegalStateException("point is not part of the track");
     }
     
     public int getLength() {

@@ -7,6 +7,7 @@ public class Train {
     
     private final int id;
     private List<RollMaterial> wagons;
+    private Boolean hasPoweredCar;
     
     public Train(int id) {
         this.id = id;
@@ -14,17 +15,34 @@ public class Train {
     }
     
     public void add(Locomotive lo) {
-        
+        if(hasPoweredCar == null) {
+            hasPoweredCar = false;
+        }
+        if (hasPoweredCar) {
+            return;
+        }
     }
     
     public void add(Coach w) {
+        if(hasPoweredCar == null) {
+            hasPoweredCar = false;
+        }
+        if (hasPoweredCar) {
+            return;
+        }
+        hasPoweredCar = false;
         if(wagons.get(wagons.size() - 1).getBackCoupling() == false) {
            throw new IllegalStateException("last wagon needs a back coupler");
         }
     }
     
     public void add(PoweredCart pc) {
-        
+        if(hasPoweredCar == null) {
+            hasPoweredCar = true;
+        }
+        if (!hasPoweredCar) {
+            return;
+        }
     }
     
     @Override
