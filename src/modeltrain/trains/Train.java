@@ -4,9 +4,8 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Train {
-
-    private Locomotive locomotive;
-    private List<Wagon> wagons;
+    
+    private List<RollMaterial> wagons;
     
     public Train() {
         wagons = new ArrayList<>();

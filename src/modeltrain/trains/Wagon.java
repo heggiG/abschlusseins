@@ -1,7 +1,8 @@
 package modeltrain.trains;
 
-public class Wagon {
+public abstract class Wagon extends RollMaterial {
     
-    private int id;
-    
+    public Wagon(boolean front, boolean back) {
+        super(front, back);
+    }
 }
