@@ -1,5 +1,11 @@
 package modeltrain.core;
 
+/**
+ * Implements a standard Point in the way of a coordinate
+ * 
+ * @author Florian Heck
+ * @version 1.0
+ */
 public class Point {
 
     private int xCord;

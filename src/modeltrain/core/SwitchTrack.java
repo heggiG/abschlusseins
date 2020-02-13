@@ -2,6 +2,12 @@ package modeltrain.core;
 
 import java.util.Set;
 
+/**
+ * Implements a switch track as an extension of the normal track.
+ * 
+ * @author Florian Heck
+ * @version 1.0
+ */
 public class SwitchTrack extends Track {
 
     private Point altEnd;

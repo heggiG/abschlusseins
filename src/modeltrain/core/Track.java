@@ -3,6 +3,12 @@ package modeltrain.core;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Implements a standard track with a start and an end point.
+ * 
+ * @author Florian Heck
+ * @version 1.0
+ */
 public class Track {
     
     protected Point start;
