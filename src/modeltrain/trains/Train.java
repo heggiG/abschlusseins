@@ -61,6 +61,10 @@ public class Train {
         }
         
     }
+    
+    public int getLength() {
+        return 0; //TODO
+    }
 
     @Override
     public int hashCode() {

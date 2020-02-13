@@ -15,7 +15,8 @@ public class Model {
     // Maps points to boolean values whether a point can be seen or if it is hidden
     private Map<Point, Boolean> points;
     private Set<RollMaterial> rollMaterial;
-    private Map<Train, Map<Track, Point>> trainsOnTracks;
+    //maps trains to points
+    private Map<Train, Point> trainsOnTracks;
 
     public Model() {
         tracks = new HashMap<>();
@@ -27,46 +28,65 @@ public class Model {
 
     public void addTrack(Track track) {
         if (tracks.size() == 0) {
+            //adds a track if there are non
             tracks.put(track, track.getPoints());
             for (Point p : track.getPoints()) {
                 points.put(p, true);
             }
-            int diffX = track.getStart().getXCord() - track.getEnd().getXCord();
-            int diffY = track.getStart().getYCord() - track.getEnd().getYCord();
-            //fills the points with hidden ones, to make stopping between track ends possible
-            if (Math.abs(diffX) > 1 && diffY == 0) {
-                if (diffX > 0) {
-                    for (int i = diffX - 1; i > 1; i--) {
-                        points.put(new Point(track.getStart().getXCord() - i, track.getStart().getYCord()), false);
-                    }
-                } else {
-                    for (int i = Math.abs(diffX) - 1; i > 1; i--) {
-                        points.put(new Point(track.getStart().getXCord() + i, track.getStart().getYCord()), false);
-                    }
-                } 
-            } else if (Math.abs(diffY) > 1 && diffX == 0) {
-                if (diffY > 0) {
-                    for (int i = diffX - 1; i > 1; i--) {
-                        points.put(new Point(track.getStart().getXCord(), track.getStart().getYCord() - i), false);
-                    }
-                } else {
-                    for (int i = Math.abs(diffX) - 1; i > 1; i--) {
-                        points.put(new Point(track.getStart().getXCord(), track.getStart().getYCord() + i), false);
-                    }
-                }
+            //adding hidden points
+            for (Point p : getHiddenPoints(track)) {
+                points.put(p, false);
             }
         } else {
+            //adds a track if there is already one or more
             if (!(points.containsKey(track.getStart())) && !(points.containsKey(track.getEnd()))) {
+                //if none of the points exist;
                 throw new IllegalStateException("none of the points are on the track already");
-            } else if (points.containsKey(track.getStart()) && points.containsKey(track.getEnd())) {
-                throw new IllegalStateException("track already exist in either direction");
+            } else if (tracks.containsKey(track)) {
+                //if the track already exists
+                throw new IllegalStateException("track already exist one or another direction");
             } else {
                 if (points.containsKey(track.getStart())) {
                     points.put(track.getEnd(), true);
+                } else {
+                    points.put(track.getStart(), true);
                 }
+                for (Point p : getHiddenPoints(track)) {
+                    points.put(p, false);
+                }
+                tracks.put(track, track.getPoints());
             }
         }
         // TODO der Rest
+    }
+    
+    private Set<Point> getHiddenPoints(Track tr) {
+        Set<Point> ret = new HashSet<>();
+        int diffX = tr.getStart().getXCord() - tr.getEnd().getXCord();
+        int diffY = tr.getStart().getYCord() - tr.getEnd().getYCord();
+        //fills the set with hidden points, to make stopping between track ends possible
+        if (Math.abs(diffX) > 1 && diffY == 0) {
+            if (diffX > 0) {
+                for (int i = diffX - 1; i > 1; i--) {
+                    ret.add(new Point(tr.getStart().getXCord() - i, tr.getStart().getYCord()));
+                }
+            } else {
+                for (int i = Math.abs(diffX) - 1; i > 1; i--) {
+                    ret.add(new Point(tr.getStart().getXCord() + i, tr.getStart().getYCord()));
+                }
+            } 
+        } else if (Math.abs(diffY) > 1 && diffX == 0) {
+            if (diffY > 0) {
+                for (int i = diffX - 1; i > 1; i--) {
+                    ret.add(new Point(tr.getStart().getXCord(), tr.getStart().getYCord() - i));
+                }
+            } else {
+                for (int i = Math.abs(diffX) - 1; i > 1; i--) {
+                    ret.add(new Point(tr.getStart().getXCord(), tr.getStart().getYCord() + i));
+                }
+            }
+        }
+        return ret;
     }
 
     public void addTrack(SwitchTrack sw) {
@@ -88,13 +108,13 @@ public class Model {
         // TODO der rest
     }
 
-    public void putTrain(Train tr, Map<Track, Point> trackDirection) {
-        if (trainsOnTracks.containsKey(tr)) {
-            throw new IllegalStateException("train already on the track");
-        }
-        trainsOnTracks.put(tr, trackDirection);
-        // TODO alles andere
-    }
+//    public void putTrain(Train tr, Map<Track, Point> trackDirection) {
+//        if (trainsOnTracks.containsKey(tr)) {
+//            throw new IllegalStateException("train already on the track");
+//        }
+//        trainsOnTracks.put(tr, trackDirection);
+//        // TODO alles andere
+//    }
 
     public void step(int n) {
         // TODO alles
