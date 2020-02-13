@@ -35,6 +35,15 @@ public class Track {
     }
     
     @Override
+    public boolean equals(Object o) {
+        if(!(o.getClass().equals(this.getClass())))
+            return false;
+        if(o.toString().equals(this.toString()))
+            return true;
+        return false;        
+    }
+    
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("t ");

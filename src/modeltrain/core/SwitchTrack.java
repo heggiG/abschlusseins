@@ -10,6 +10,10 @@ public class SwitchTrack extends Track {
         this.altEnd = altEnd;
     }
     
+    public Point getAltEnd() {
+        return altEnd;
+    }
+    
     @Override
     public Point getOtherPoint(Point po) {
         if (po.equals(super.start))
