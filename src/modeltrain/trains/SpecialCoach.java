@@ -2,8 +2,8 @@ package modeltrain.trains;
 
 public class SpecialCoach extends Coach {
 
-    public SpecialCoach(boolean front, boolean back) {
-        super(front, back);
+    public SpecialCoach(int id, boolean front, boolean back) {
+        super(id, front, back);
     }
-    
+
 }

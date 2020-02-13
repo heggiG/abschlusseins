@@ -4,20 +4,20 @@ public class Point {
 
     private int xCord;
     private int yCord;
-    
+
     public Point(int xCord, int yCord) {
         this.xCord = xCord;
         this.yCord = yCord;
     }
-    
+
     public int getXCord() {
         return this.xCord;
     }
-    
+
     public int getYCord() {
         return this.yCord;
     }
-    
+
     @Override
     public boolean equals(Object o) {
         if (!(o.getClass().equals(this.getClass())))
@@ -26,10 +26,10 @@ public class Point {
             return true;
         return false;
     }
-    
+
     @Override
     public String toString() {
         return "(" + xCord + "),(" + yCord + ")";
     }
-    
+
 }

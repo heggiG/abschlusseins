@@ -1,5 +1,8 @@
 package modeltrain.core;
 
+import java.util.HashSet;
+import java.util.Set;
+
 public class Track {
     
     protected Point start;
@@ -29,9 +32,17 @@ public class Track {
             throw new IllegalStateException("point is not part of the track");
     }
     
+    public Set<Point> getPoints() {
+        Set<Point> points = new HashSet<>();
+        points.add(start);
+        points.add(end);
+        return points;
+    }
+    
     public int getLength() {
-     int xLength = start.getXCord()  - end.getXCord();
-     return xLength != 0 ? Math.abs(xLength) : Math.abs(start.getYCord() - end.getYCord());
+     int xLength = start.getXCord() - end.getXCord();
+     int yLength = start.getYCord() - end.getYCord();
+     return xLength != 0 ? Math.abs(xLength) : Math.abs(yLength);
     }
     
     @Override

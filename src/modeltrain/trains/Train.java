@@ -4,54 +4,53 @@ import java.util.List;
 import java.util.ArrayList;
 
 public class Train {
-    
+
     private final int id;
     private List<RollMaterial> wagons;
-    private Boolean hasPoweredCar;
-    
+    private boolean lastIsPC;
+
     public Train(int id) {
         this.id = id;
         wagons = new ArrayList<>();
     }
-    
+
     public void add(Locomotive lo) {
-        if(hasPoweredCar == null) {
-            hasPoweredCar = false;
+        if (wagons.size() != 0 && !lo.getFrontCoupling()) {
+            throw new IllegalStateException("rollmaterial needs coupling in front");
+        } else if (!wagons.get(wagons.size() - 1).getBackCoupling()) {
+            throw new IllegalStateException("last rollmaterial needs backcoupling");
         }
-        if (hasPoweredCar) {
-            return;
-        }
+        lastIsPC = false;
     }
-    
-    public void add(Coach w) {
-        if(hasPoweredCar == null) {
-            hasPoweredCar = false;
+
+    public void add(Coach co) {
+
+        if (wagons.size() != 0 && !co.getFrontCoupling()) {
+            throw new IllegalStateException("rollmaterial needs coupling in front");
+        } else if (!wagons.get(wagons.size() - 1).getBackCoupling()) {
+            throw new IllegalStateException("last rollmaterial needs backcoupling");
         }
-        if (hasPoweredCar) {
-            return;
-        }
-        if(wagons.get(wagons.size() - 1).getBackCoupling() == false) {
-           throw new IllegalStateException("last wagon needs a back coupler");
-        }
-        if (w.getFrontCoupling() == false) {
-            throw new IllegalStateException("coach needs a coupling on the front");
-        }
+        lastIsPC = false;
     }
-    
+
     public void add(PoweredCart pc) {
-        if(hasPoweredCar == null) {
-            hasPoweredCar = true;
+
+        if (wagons.size() != 0 && !pc.getFrontCoupling()) {
+            throw new IllegalStateException("rollmaterial needs coupling in front");
+        } else if (!wagons.get(wagons.size() - 1).getBackCoupling()) {
+            throw new IllegalStateException("last rollmaterial needs backcoupling");
         }
-        if (!hasPoweredCar) {
-            return;
+        if (lastIsPC && !(pc.getModel().equals(wagons.get(wagons.size() - 1).getModel()))) {
+            throw new IllegalStateException("powered car needs to be of the same model");
         }
+        lastIsPC = true;
     }
-    
+
     @Override
     public int hashCode() {
         return id;
     }
-    
+
     @Override
     public boolean equals(Object o) {
         if (!(o.getClass().equals(this.getClass())))
@@ -60,5 +59,5 @@ public class Train {
             return true;
         return false;
     }
-    
+
 }

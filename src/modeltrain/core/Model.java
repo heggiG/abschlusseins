@@ -8,78 +8,99 @@ import java.util.HashMap;
 import modeltrain.trains.RollMaterial;
 import modeltrain.trains.Train;
 
-
 public class Model {
-    
-    private Set<Track> tracks;
+
+    private Map<Track, Set<Point>> tracks;
     private Set<Train> trains;
-    //Maps points to boolean values whether a point can be seen or if it is hidden
+    // Maps points to boolean values whether a point can be seen or if it is hidden
     private Map<Point, Boolean> points;
     private Set<RollMaterial> rollMaterial;
     private Map<Train, Map<Track, Point>> trainsOnTracks;
-    
+
     public Model() {
-        tracks = new HashSet<>();
+        tracks = new HashMap<>();
         trains = new HashSet<>();
         points = new HashMap<>();
         rollMaterial = new HashSet<>();
         trainsOnTracks = new HashMap<>();
     }
-    
+
     public void addTrack(Track track) {
-        if (track.getStart().getXCord() != track.getEnd().getXCord() //checking for diagonals
-                && track.getStart().getYCord() != track.getEnd().getYCord()) {
-            throw new IllegalStateException("tracks can't be diagonal");
-        }
-        //checking if one point exists
-        if (tracks.size() != 0 && !(points.containsKey(track.getStart())) && !(points.containsKey(track.getEnd()))) {
-            throw new IllegalStateException("none of the given points exist");
-        }
-        //if there are no points, any track will be accepted
         if (tracks.size() == 0) {
-            tracks.add(track);
-            points.put(track.getStart(), true);
-            points.put(track.getEnd(), true);            
+            tracks.put(track, track.getPoints());
+            for (Point p : track.getPoints()) {
+                points.put(p, true);
+            }
+            int diffX = track.getStart().getXCord() - track.getEnd().getXCord();
+            int diffY = track.getStart().getYCord() - track.getEnd().getYCord();
+            //fills the points with hidden ones, to make stopping between track ends possible
+            if (Math.abs(diffX) > 1 && diffY == 0) {
+                if (diffX > 0) {
+                    for (int i = diffX - 1; i > 1; i--) {
+                        points.put(new Point(track.getStart().getXCord() - i, track.getStart().getYCord()), false);
+                    }
+                } else {
+                    for (int i = Math.abs(diffX) - 1; i > 1; i--) {
+                        points.put(new Point(track.getStart().getXCord() + i, track.getStart().getYCord()), false);
+                    }
+                } 
+            } else if (Math.abs(diffY) > 1 && diffX == 0) {
+                if (diffY > 0) {
+                    for (int i = diffX - 1; i > 1; i--) {
+                        points.put(new Point(track.getStart().getXCord(), track.getStart().getYCord() - i), false);
+                    }
+                } else {
+                    for (int i = Math.abs(diffX) - 1; i > 1; i--) {
+                        points.put(new Point(track.getStart().getXCord(), track.getStart().getYCord() + i), false);
+                    }
+                }
+            }
         } else {
-            if (points.containsKey(track.getStart())) {
-                points.put(track.getEnd(), true);
+            if (!(points.containsKey(track.getStart())) && !(points.containsKey(track.getEnd()))) {
+                throw new IllegalStateException("none of the points are on the track already");
+            } else if (points.containsKey(track.getStart()) && points.containsKey(track.getEnd())) {
+                throw new IllegalStateException("track already exist in either direction");
+            } else {
+                if (points.containsKey(track.getStart())) {
+                    points.put(track.getEnd(), true);
+                }
             }
         }
-        //TODO der Rest
+        // TODO der Rest
     }
-    
+
     public void addTrack(SwitchTrack sw) {
-        
+
     }
-    
+
     public void addPoint(Point p) {
         points.put(p, true);
-        //TODO der rest
+        // TODO der rest
     }
-    
+
     public void addTrain(Train tr) {
         trains.add(tr);
-        //TODO der rest
+        // TODO der rest
     }
-    
+
     public void addRollMaterial(RollMaterial rm) {
         rollMaterial.add(rm);
-        //TODO der rest
+        // TODO der rest
     }
-    
+
     public void putTrain(Train tr, Map<Track, Point> trackDirection) {
         if (trainsOnTracks.containsKey(tr)) {
             throw new IllegalStateException("train already on the track");
         }
         trainsOnTracks.put(tr, trackDirection);
-        //TODO alles andere
+        // TODO alles andere
     }
-    
+
     public void step(int n) {
-        //TODO alles
+        // TODO alles
     }
-    
+
     public void removeTrain(Train tr) {
-        
+
     }
 }
