@@ -2,8 +2,26 @@ package modeltrain.ui;
 
 import java.util.HashSet;
 import java.util.Set;
-
-import modeltrain.commands.*;
+import modeltrain.commands.AddSwitch;
+import modeltrain.commands.AddTrack;
+import modeltrain.commands.AddTrain;
+import modeltrain.commands.Command;
+import modeltrain.commands.CreateCoach;
+import modeltrain.commands.CreateEngine;
+import modeltrain.commands.CreateTrainSet;
+import modeltrain.commands.DeleteRollingStock;
+import modeltrain.commands.DeleteTrack;
+import modeltrain.commands.DeleteTrain;
+import modeltrain.commands.Exit;
+import modeltrain.commands.ListCoaches;
+import modeltrain.commands.ListEngines;
+import modeltrain.commands.ListTracks;
+import modeltrain.commands.ListTrainSets;
+import modeltrain.commands.ListTrains;
+import modeltrain.commands.PutTrain;
+import modeltrain.commands.SetSwitch;
+import modeltrain.commands.ShowTrain;
+import modeltrain.commands.Step;
 import modeltrain.core.Model;
 
 public class UserInterface {

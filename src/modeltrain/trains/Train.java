@@ -54,7 +54,7 @@ public class Train {
     
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Train))
+        if (!(o.getClass().equals(this.getClass())))
             return false;
         if (o.hashCode() == this.hashCode())
             return true;

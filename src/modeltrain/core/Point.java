@@ -5,7 +5,7 @@ public class Point {
     private int xCord;
     private int yCord;
     
-    Point(int xCord, int yCord) {
+    public Point(int xCord, int yCord) {
         this.xCord = xCord;
         this.yCord = yCord;
     }
@@ -20,7 +20,7 @@ public class Point {
     
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof Point))
+        if (!(o.getClass().equals(this.getClass())))
             return false;
         if (o.toString().equals(this.toString()))
             return true;
