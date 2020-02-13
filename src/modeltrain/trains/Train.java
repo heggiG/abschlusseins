@@ -30,9 +30,11 @@ public class Train {
         if (hasPoweredCar) {
             return;
         }
-        hasPoweredCar = false;
         if(wagons.get(wagons.size() - 1).getBackCoupling() == false) {
            throw new IllegalStateException("last wagon needs a back coupler");
+        }
+        if (w.getFrontCoupling() == false) {
+            throw new IllegalStateException("coach needs a coupling on the front");
         }
     }
     
