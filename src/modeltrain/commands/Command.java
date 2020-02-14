@@ -6,6 +6,7 @@ import java.util.regex.Pattern;
 import modeltrain.core.Model;
 
 public abstract class Command {
+    
     protected final Model model;
     private final Pattern commandPattern;    
     

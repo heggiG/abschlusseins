@@ -51,6 +51,10 @@ public class Track {
      return xLength != 0 ? Math.abs(xLength) : Math.abs(yLength);
     }
     
+    public int getId() {
+        return id;
+    }
+    
     @Override
     public boolean equals(Object o) {
         if(!(o.getClass().equals(this.getClass())))
