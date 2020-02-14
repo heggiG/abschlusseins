@@ -2,7 +2,6 @@ package modeltrain.core;
 
 import java.util.Set;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import modeltrain.trains.RollMaterial;
@@ -10,12 +9,14 @@ import modeltrain.trains.Train;
 
 public class Model {
 
+    @SuppressWarnings("unused")
     private Map<Track, Set<Point>> tracks;
     private Set<Train> trains;
     // Maps points to boolean values whether a point can be seen or if it is hidden
     private Map<Point, Boolean> points;
     private Set<RollMaterial> rollMaterial;
     //maps trains to points
+    @SuppressWarnings("unused")
     private Map<Train, Point> trainsOnTracks;
 
     public Model() {

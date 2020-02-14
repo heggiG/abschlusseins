@@ -14,11 +14,13 @@ public class Track {
     protected Point start;
     protected Point end;
     protected int id;
+    private boolean trainPlaced;
     
     public Track(Point start, Point end, int id) {
         this.start = start;
         this.end = end;
         this.id = id;
+        trainPlaced = false;
     }
     
     public Point getStart() {
@@ -35,7 +37,7 @@ public class Track {
         else if(po.equals(end))
             return start;
         else
-            throw new IllegalStateException("point is not part of the track");
+            throw new IllegalArgumentException("point is not part of the track");
     }
     
     public Set<Point> getPoints() {
@@ -53,6 +55,14 @@ public class Track {
     
     public int getId() {
         return id;
+    }
+    
+    public boolean getTrainPlaced() {
+        return trainPlaced;
+    }
+    
+    public void setTrainPlaced(boolean change) {
+        this.trainPlaced = change;
     }
     
     @Override

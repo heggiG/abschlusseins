@@ -5,8 +5,6 @@ import java.util.Set;
 import java.util.HashSet;
 import java.util.List;
 import java.util.ArrayList;
-import java.util.Map;
-import java.util.HashMap;
 
 public class TrackNetwork {
     
@@ -18,6 +16,10 @@ public class TrackNetwork {
         points = new HashSet<>();
         tracks = new HashSet<>();
         hiddenPoints = new ArrayList<>();
+    }
+    
+    public void placeAt(Train tr, Point place, Point dir) {
+        
     }
     
     public void addTrack(Track tr) {
@@ -47,19 +49,19 @@ public class TrackNetwork {
                 for (int i = diffX - 1; i > 1; i--) {
                     hiddenPoints.add(index, new Point(tr.getStart().getXCord() + i, tr.getStart().getYCord()));
                 }
-            } else {//TODO richtung ändern
-                for (int i = diffX + 1; i < -1; i++) {
+            } else {
+                for (int i = -1; i > diffX; i--) {
                     hiddenPoints.add(index, new Point(tr.getStart().getXCord() + i, tr.getStart().getYCord()));
                 }
             }
         } else if (Math.abs(diffY) > 0) {
             if (diffY > 0) {
                 for (int i = diffY - 1; i > 1; i--) {
-                    hiddenPoints.add(new Point(tr.getStart().getXCord(), tr.getStart().getYCord() + i));
+                    hiddenPoints.add(index, new Point(tr.getStart().getXCord(), tr.getStart().getYCord() + i));
                 }
-            } else {//TODO richtung ändern
-                for (int i = diffY + 1; i < -1; i++) {
-                    hiddenPoints.add(new Point(tr.getStart().getXCord(), tr.getStart().getYCord() + i));
+            } else {
+                for (int i = -1; i > diffY; i--) {
+                    hiddenPoints.add(index, new Point(tr.getStart().getXCord(), tr.getStart().getYCord() + i));
                 }
             }
         }
