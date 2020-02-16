@@ -56,7 +56,9 @@ public class UserInterface {
     }
 
     private Command getCommand(String command) {
-        return lastFoundCommand = commands.stream().filter(co -> co.matches(command)).findFirst().get();
+        return lastFoundCommand = commands.stream()
+                .filter(co -> co.matches(command))
+                .findFirst().get();
     }
 
     public boolean isExit() {
