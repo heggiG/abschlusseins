@@ -23,6 +23,18 @@ public class TrackNetworkAlt {
         translatedLength = 0;
     }
 
+    public void setTrainOnPoint(Train t, Point p) {
+        try {
+            if (trackMap[p.getXCord() - translatedLength][p.getYCord() - translatedHeight][0] == null) {
+                throw new SemanticsException("no track on the given point");
+            }
+        } catch (ArrayIndexOutOfBoundsException e) {
+            throw new SemanticsException("no track on the given point");
+        }
+        //TODO length of train
+        //TODO PATHFINDING
+    }
+    
     /**
      * Adds a track to the track map
      * 
@@ -38,10 +50,10 @@ public class TrackNetworkAlt {
         }
         if (tracks.size() == 0) {
             try {
-                setAtMap(t);
+                setTrackAtMap(t);
             } catch (ArrayIndexOutOfBoundsException e) {
                 adjustArray(t.getStart().getXCord(), t.getStart().getYCord());
-                setAtMap(t);
+                setTrackAtMap(t);
             } finally {
                 tracks.add(t);
             }
@@ -54,11 +66,11 @@ public class TrackNetworkAlt {
                 throw new SemanticsException("track dosen't have any points to connect to");
             }
             try {
-                setAtMap(t);
+                setTrackAtMap(t);
             } catch (ArrayIndexOutOfBoundsException e) {
                 adjustArray(t.getStart().getXCord(), t.getStart().getYCord());
                 adjustArray(t.getEnd().getXCord(), t.getEnd().getYCord());
-                setAtMap(t);
+                setTrackAtMap(t);
                 // TODO filling up the rest
             }
         }
@@ -69,7 +81,7 @@ public class TrackNetworkAlt {
      * 
      * @param t the track to add
      */
-    private void setAtMap(Track t) {
+    private void setTrackAtMap(Track t) {
         int id = t.getId();
         if (trackMap[t.getStart().getXCord() - translatedLength][t.getStart().getYCord()
                 - translatedHeight][0] == null) {
