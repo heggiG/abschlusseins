@@ -1,6 +1,9 @@
 package modeltrain.trains;
 
 import java.util.List;
+
+import modeltrain.core.Point;
+
 import java.util.ArrayList;
 
 /**
@@ -14,6 +17,7 @@ public class Train {
     private final int id;
     private List<RollMaterial> wagons;
     private boolean isPC;
+    private Point direction;
 
     public Train(int id) {
         this.id = id;
@@ -39,6 +43,7 @@ public class Train {
         } else if (!wagons.get(wagons.size() - 1).getBackCoupling()) {
             throw new IllegalStateException("last rollmaterial needs backcoupling");
         }
+        //TODO
     }
 
     public void add(Coach co) {
@@ -53,6 +58,7 @@ public class Train {
         } else if (!wagons.get(wagons.size() - 1).getBackCoupling()) {
             throw new IllegalStateException("last rollmaterial needs backcoupling");
         }
+        //TODO
     }
 
     public void add(PoweredCart pc) {
@@ -67,7 +73,15 @@ public class Train {
         } else if (!wagons.get(wagons.size() - 1).getBackCoupling()) {
             throw new IllegalStateException("last rollmaterial needs backcoupling");
         }
-        
+        //TODO
+    }
+    
+    public void setDirection(Point direction) {
+        this.direction = direction;
+    }
+    
+    public Point getDirection() {
+        return direction;
     }
     
     public int getLength() {

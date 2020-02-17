@@ -16,8 +16,6 @@ public class TrackNetworkAlt {
     private Set<Track> tracks;
     private int translatedLength;
     private int translatedHeight;
-    private int nextTrainId;
-    private List<Integer> nextFreeId;
 
     public TrackNetworkAlt() {
         // acts as a double layer array, first level is indices of the track at that
@@ -25,12 +23,15 @@ public class TrackNetworkAlt {
         trackMap = new Integer[1][1][2];
         tracks = new HashSet<>();
         trains = new HashSet<>();
-        nextFreeId = new ArrayList<>();
         translatedHeight = 0;
         translatedLength = 0;
-        nextTrainId = 0;
     }
 
+    /**
+     * Adds a track to the track map
+     * 
+     * @param t the Track to add
+     */
     public void addTrack(Track t) {
         int diffX = t.getEnd().getXCord() - t.getStart().getXCord();
         int diffY = t.getEnd().getYCord() - t.getStart().getYCord();
@@ -41,26 +42,56 @@ public class TrackNetworkAlt {
         }
         if (tracks.size() == 0) {
             try {
-                setAtMap(t.getStart(), t);
+                setAtMap(t);
             } catch (ArrayIndexOutOfBoundsException e) {
                 adjustArray(t.getStart().getXCord(), t.getStart().getYCord());
-                setAtMap(t.getStart(), t);
-                //TODO filling up the rest
+                setAtMap(t);
+                // TODO filling up the rest
+            } finally {
+                tracks.add(t);
             }
         } else {
+            if (trackMap[t.getStart().getXCord() - translatedLength][t.getStart().getYCord()
+                    - translatedHeight][0] == null
+                    && trackMap[t.getEnd().getXCord() - translatedLength][t.getEnd().getYCord()
+                            - translatedHeight][0] == null) {
+                // track needs one point to exist already
+                throw new IllegalStateException("track dosen't have any points to connect to");
+            }
             try {
-                setAtMap(t.getStart(), t);
+                setAtMap(t);
             } catch (ArrayIndexOutOfBoundsException e) {
                 adjustArray(t.getStart().getXCord(), t.getStart().getYCord());
-                setAtMap(t.getStart(), t);
-                //TODO filling up the rest
+                adjustArray(t.getEnd().getXCord(), t.getEnd().getYCord());
+                setAtMap(t);
+                // TODO filling up the rest
             }
         }
 
     }
 
-    private void setAtMap(Point p, Track t) {
-        trackMap[p.getXCord()][p.getYCord()][0] = t.getId();
+    /**
+     * Sets a track at all Points on the trackmap
+     * 
+     * @param t the track to add
+     */
+    private void setAtMap(Track t) {
+        int id = t.getId();
+        if (trackMap[t.getStart().getXCord() - translatedLength][t.getStart().getYCord()
+                - translatedHeight][0] == null) {
+
+            trackMap[t.getStart().getXCord() - translatedLength][t.getStart().getYCord() - translatedHeight][0] = id;
+        }
+        if (trackMap[t.getEnd().getXCord() - translatedLength][t.getEnd().getYCord() - translatedHeight][0] == null) {
+            trackMap[t.getEnd().getXCord() - translatedLength][t.getEnd().getYCord() - translatedHeight][0] = id;
+        }
+        // fills up the points between start and end
+        for (int i = t.getStart().getXCord() - translatedLength + 1; i < t.getEnd().getXCord(); i++) {
+            for (int p = t.getStart().getXCord() - translatedLength + 1; p < t.getEnd().getXCord(); p++) {
+                trackMap[i][p][0] = id;
+            }
+        }
+
     }
 
     /**
@@ -138,7 +169,7 @@ public class TrackNetworkAlt {
         } else if (trackMap[p.getXCord()][p.getYCord()] == null) {
             throw new IllegalStateException("there is no track at the given point");
         } else if (true) {
-
+            // TODO
         }
     }
 
@@ -150,10 +181,6 @@ public class TrackNetworkAlt {
         if (trains.contains(t)) {
             throw new IllegalArgumentException("Train already exists");
         }
-    }
-
-    private int getNextTrainId() {
-        return ++nextTrainId;
     }
 
 }
