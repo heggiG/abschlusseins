@@ -1,7 +1,5 @@
 package modeltrain.ui;
 
-import java.util.Arrays;
-
 import edu.kit.informatik.Terminal;
 import modeltrain.core.Model;
 

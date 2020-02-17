@@ -1,7 +1,5 @@
 package modeltrain.commands;
 
-import java.util.regex.MatchResult;
-
 import modeltrain.core.Model;
 
 public class AddTrack extends Command {
@@ -14,7 +12,7 @@ public class AddTrack extends Command {
     
     @Override
     public void execute(String command) {
-        MatchResult mr = getMatcher(command);
+        
     }
 
 }

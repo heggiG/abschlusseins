@@ -5,7 +5,6 @@ import modeltrain.core.Model;
 import modeltrain.trains.Coach;
 import modeltrain.trains.FreightCoach;
 import modeltrain.trains.PassengerCoach;
-import modeltrain.trains.RollMaterial;
 import modeltrain.trains.SpecialCoach;
 
 public class CreateCoach extends Command {

@@ -37,7 +37,7 @@ public class Track {
         else if(po.equals(end))
             return start;
         else
-            throw new IllegalArgumentException("point is not part of the track");
+            throw new SemanticsException("point is not part of the track");
     }
     
     public Set<Point> getPoints() {

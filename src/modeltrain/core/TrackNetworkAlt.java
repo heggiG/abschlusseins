@@ -1,10 +1,6 @@
 package modeltrain.core;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import modeltrain.trains.Train;
@@ -36,9 +32,9 @@ public class TrackNetworkAlt {
         int diffX = t.getEnd().getXCord() - t.getStart().getXCord();
         int diffY = t.getEnd().getYCord() - t.getStart().getYCord();
         if (diffX != 0 && diffY != 0) { // no diagonal tracks (won't happen due to assignement)
-            throw new IllegalArgumentException("no diagonal tracks");
+            throw new SemanticsException("no diagonal tracks");
         } else if (diffX == 0 && diffY == 0) {
-            throw new IllegalArgumentException("track is of length 0");
+            throw new SemanticsException("track is of length 0");
         }
         if (tracks.size() == 0) {
             try {
@@ -46,7 +42,6 @@ public class TrackNetworkAlt {
             } catch (ArrayIndexOutOfBoundsException e) {
                 adjustArray(t.getStart().getXCord(), t.getStart().getYCord());
                 setAtMap(t);
-                // TODO filling up the rest
             } finally {
                 tracks.add(t);
             }
@@ -56,7 +51,7 @@ public class TrackNetworkAlt {
                     && trackMap[t.getEnd().getXCord() - translatedLength][t.getEnd().getYCord()
                             - translatedHeight][0] == null) {
                 // track needs one point to exist already
-                throw new IllegalStateException("track dosen't have any points to connect to");
+                throw new SemanticsException("track dosen't have any points to connect to");
             }
             try {
                 setAtMap(t);
@@ -67,7 +62,6 @@ public class TrackNetworkAlt {
                 // TODO filling up the rest
             }
         }
-
     }
 
     /**
@@ -91,9 +85,28 @@ public class TrackNetworkAlt {
                 trackMap[i][p][0] = id;
             }
         }
-
+    }    
+    
+    public void addTrain(Train tr, Point p, Point dir) {
+        if (trains.contains(tr)) {
+            throw new SemanticsException("train is already on the track");
+        } else if (trackMap[p.getXCord()][p.getYCord()] == null) {
+            throw new SemanticsException("there is no track at the given point");
+        } else if (true) { //TODO
+            // TODO
+        }
     }
 
+    public Optional<Train> getTrain(int id) {
+        return trains.stream().filter(c -> c.hashCode() == id).findFirst();
+    }
+
+    public void addTrain(Train t) {
+        if (trains.contains(t)) {
+            throw new SemanticsException("Train already exists");
+        }
+    }
+    
     /**
      * Combines {@code translate()} and {@code widen()} to adjust the array using
      * the right parameters.
@@ -112,7 +125,7 @@ public class TrackNetworkAlt {
             trackMap = translate(x, y, trackMap);
         }
     }
-
+    
     /**
      * Translates the track array by a negative value to compensate negative inputs
      * 
@@ -123,7 +136,7 @@ public class TrackNetworkAlt {
      */
     private Integer[][][] translate(int length, int heigth, Integer[][][] old) {
         if (length > 0 || heigth > 0) {
-            throw new IllegalArgumentException("method is meant to translate by negative numbers");
+            throw new SemanticsException("method is meant to translate by negative numbers");
         }
         Integer[][][] newArray = new Integer[old.length + length][old[0].length + heigth][old[0][0].length];
         for (int i = 0; i < old.length; i++) {
@@ -149,7 +162,7 @@ public class TrackNetworkAlt {
      */
     private Integer[][][] widen(int x, int y, Integer[][][] old) {
         if (x < 0 || y < 0) {
-            throw new IllegalArgumentException("method is meant to widen an array by positive integers");
+            throw new SemanticsException("method is meant to widen an array by positive integers");
         }
         Integer[][][] returnArray = new Integer[old.length > x ? old.length : x + 1][old[0].length > y ? old.length
                 : y + 1][old[0][0].length];
@@ -162,25 +175,4 @@ public class TrackNetworkAlt {
         }
         return returnArray;
     }
-
-    public void addTrain(Train tr, Point p, Point dir) {
-        if (trains.contains(tr)) {
-            throw new IllegalStateException("train is already on the track");
-        } else if (trackMap[p.getXCord()][p.getYCord()] == null) {
-            throw new IllegalStateException("there is no track at the given point");
-        } else if (true) {
-            // TODO
-        }
-    }
-
-    public Optional<Train> getTrain(int id) {
-        return trains.stream().filter(c -> c.hashCode() == id).findFirst();
-    }
-
-    public void addTrain(Train t) {
-        if (trains.contains(t)) {
-            throw new IllegalArgumentException("Train already exists");
-        }
-    }
-
 }

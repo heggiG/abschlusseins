@@ -1,5 +1,7 @@
 package modeltrain.trains;
 
+import modeltrain.core.SemanticsException;
+
 public abstract class Coach extends RollMaterial {
 
     private final String id;
@@ -16,11 +18,11 @@ public abstract class Coach extends RollMaterial {
 
     @Override
     public String getName() {
-        throw new IllegalStateException("coaches have no name");
+        throw new SemanticsException("coaches have no name");
     }
 
     @Override
     public String getModel() {
-        throw new IllegalStateException("coaches have no model type");
+        throw new SemanticsException("coaches have no model type");
     }
 }
