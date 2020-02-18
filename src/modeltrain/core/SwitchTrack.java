@@ -12,6 +12,7 @@ public class SwitchTrack extends Track {
 
     private Point altEnd;
     private Point currentSwitch;
+    private Set<Point> points;
 
     public SwitchTrack(Point start, Point end, Point altEnd, int id) {
         super(start, end, id);
@@ -23,12 +24,15 @@ public class SwitchTrack extends Track {
     }
 
     public Point toggle() {
-        if (currentSwitch.equals(end)) {
+        if (currentSwitch.equals(end))
             currentSwitch = altEnd;
-        } else {
+        else
             currentSwitch = end;
-        }
         return currentSwitch;
+    }
+    
+    public Point getNext(Point p) {
+        
     }
 
     @Override

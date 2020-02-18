@@ -6,11 +6,11 @@ import modeltrain.core.Model;
 public class Main {
     
     public static void main(String[] args) {
-        Model model = new Model();
-        UserInterface userInterface = new UserInterface(model);
-        do {
-            userInterface.executeCommand(Terminal.readLine());
-        } while (!userInterface.isExit()); 
+//        Model model = new Model();
+//        UserInterface userInterface = new UserInterface(model);
+//        do {
+//            userInterface.executeCommand(Terminal.readLine());
+//        } while (!userInterface.isExit()); 
         
     }
 }

@@ -23,12 +23,35 @@ public class Point {
     public int getYCord() {
         return this.yCord;
     }
+    
+    public Point add(Point p) {
+        return new Point(p.xCord + this.xCord, p.yCord + this.yCord);
+    }
+    
+    public Point sub(Point p) {
+        return new Point(p.xCord - this.xCord, p.yCord - this.yCord);
+    }
+    
+    public Point scale(int n) {
+        return new Point(this.xCord * n, this.yCord * n);
+    }
+    
+    public Point negate() {
+        return new Point(-this.xCord, -this.yCord);
+    }
+    
+    public Point reduce() {
+        int reducedX = this.xCord == 0 ? 0 : this.xCord / Math.abs(this.xCord);
+        int reducedY = this.yCord == 0 ? 0 : this.yCord / Math.abs(this.yCord);
+        return new Point(reducedX, reducedY);
+    }
 
     @Override
     public boolean equals(Object o) {
-        if (!(o.getClass().equals(this.getClass())))
+        if (o.getClass() != this.getClass())
             return false;
-        if (o.toString().equals(this.toString()))
+        Point p = (Point) o;
+        if (p.xCord == this.xCord && p.yCord == this.yCord)
             return true;
         return false;
     }
