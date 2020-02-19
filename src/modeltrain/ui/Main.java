@@ -11,6 +11,5 @@ public class Main {
 //        do {
 //            userInterface.executeCommand(Terminal.readLine());
 //        } while (!userInterface.isExit()); 
-        
     }
 }

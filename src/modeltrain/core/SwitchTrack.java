@@ -1,5 +1,6 @@
 package modeltrain.core;
 
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -12,11 +13,20 @@ public class SwitchTrack extends Track {
 
     private Point altEnd;
     private Point currentSwitch;
-    private Set<Point> points;
 
     public SwitchTrack(Point start, Point end, Point altEnd, int id) {
         super(start, end, id);
         this.altEnd = altEnd;
+        currentSwitch = end;
+    }
+    
+    public Set<Point> getPointsBetween() {
+        Set<Point> ret = new HashSet<>();
+        Point adder = currentSwitch.sub(start).reduce();
+        for (int i = 1; i < Point.lengthBetweenPoints(start, end) - 1; i++) {
+            ret.add(start.add(adder.scale(i)));
+        }
+        return ret;
     }
 
     public Point getAltEnd() {
@@ -31,9 +41,7 @@ public class SwitchTrack extends Track {
         return currentSwitch;
     }
     
-    public Point getNext(Point p) {
-        
-    }
+    
 
     @Override
     public Point getOtherPoint(Point po) {
@@ -43,13 +51,6 @@ public class SwitchTrack extends Track {
             return start;
         else
             throw new IllegalStateException("Point is not part of the track/switch is in wrong position");
-    }
-
-    @Override
-    public Set<Point> getPoints() {
-        Set<Point> points = super.getPoints();
-        points.add(altEnd);
-        return points;
     }
 
     @Override

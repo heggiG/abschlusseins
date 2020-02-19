@@ -45,6 +45,12 @@ public class Point {
         int reducedY = this.yCord == 0 ? 0 : this.yCord / Math.abs(this.yCord);
         return new Point(reducedX, reducedY);
     }
+    
+    public static int lengthBetweenPoints(Point p1, Point p2) {
+        int diffX = p1.xCord - p2.xCord;
+        int diffY = p1.yCord - p2.yCord;
+        return (int) Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
+    }
 
     @Override
     public boolean equals(Object o) {

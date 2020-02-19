@@ -14,13 +14,11 @@ public class Track {
     protected Point start;
     protected Point end;
     protected int id;
-    private boolean trainPlaced;
     
     public Track(Point start, Point end, int id) {
         this.start = start;
         this.end = end;
         this.id = id;
-        trainPlaced = false;
     }
     
     public Point getStart() {
@@ -40,13 +38,6 @@ public class Track {
             throw new SemanticsException("point is not part of the track");
     }
     
-    public Set<Point> getPoints() {
-        Set<Point> points = new HashSet<>();
-        points.add(start);
-        points.add(end);
-        return points;
-    }
-    
     public int getLength() {
      int xLength = start.getXCord() - end.getXCord();
      int yLength = start.getYCord() - end.getYCord();
@@ -57,12 +48,13 @@ public class Track {
         return id;
     }
     
-    public boolean getTrainPlaced() {
-        return trainPlaced;
-    }
-    
-    public void setTrainPlaced(boolean change) {
-        this.trainPlaced = change;
+    public Set<Point> getPointsBetween() {
+        Set<Point> ret = new HashSet<>();
+        Point adder = end.sub(start).reduce();
+        for (int i = 1; i < Point.lengthBetweenPoints(start, end) - 1; i++) {
+            ret.add(start.add(adder.scale(i)));
+        }
+        return ret;
     }
     
     @Override
