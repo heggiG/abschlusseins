@@ -1,5 +1,6 @@
 package modeltrain.core;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -22,6 +23,19 @@ public class TrackNetworkTwo {
         if (trackMap.get(place) == null || trackMap.get(place) == false) {
             throw new SemanticsException("no such point on the track");
         }
+        Point newDir = dir.negate();
+        List<Point> points = new ArrayList<>();
+        points.add(place);
+        for (int i = 1; i < t.getLength(); i++) {
+            Tuple<Point> ret = getNextPoint(points.get(points.size() - 1), newDir);
+            if (ret != null) {
+                points.add(ret.getFirst());
+                newDir = ret.getSecond();
+            } else {
+                throw new SemanticsException("not enough space on the track");
+            }
+        }
+        trainsOnTrack.put(t, points);
     }
 
     /**
@@ -104,7 +118,6 @@ public class TrackNetworkTwo {
      */
     private Point getLeft(Point dir) {
         return new Point(-dir.getYCord(), dir.getXCord());
-
     }
 
     /**

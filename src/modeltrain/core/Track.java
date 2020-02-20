@@ -59,9 +59,10 @@ public class Track {
     
     @Override
     public boolean equals(Object o) {
-        if(!(o.getClass().equals(this.getClass())))
+        if(o.getClass() != this.getClass())
             return false;
-        if(o.toString().equals(this.toString()))
+        Track t = (Track) o;
+        if(t.start.equals(this.start) && t.end.equals(this.end))
             return true;
         return false;        
     }

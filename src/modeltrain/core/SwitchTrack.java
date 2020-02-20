@@ -59,6 +59,18 @@ public class SwitchTrack extends Track {
         int yLength = start.getYCord() - currentSwitch.getYCord();
         return (int) Math.sqrt(Math.pow(xLength, 2) + Math.pow(yLength, 2));
     }
+    
+    @Override
+    public boolean equals(Object o) {
+        if (o.getClass() != this.getClass())
+            return false;
+        SwitchTrack st = (SwitchTrack) o;
+        if (st.start.equals(this.start) && st.altEnd.equals(this.altEnd) && st.end.equals(this.end))
+            return true;
+        else if (st.id == this.id)
+            return true;
+        return false;
+    }
 
     @Override
     public String toString() {
