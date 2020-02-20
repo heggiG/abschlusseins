@@ -23,7 +23,7 @@ public class SwitchTrack extends Track {
     public Set<Point> getPointsBetween() {
         Set<Point> ret = new HashSet<>();
         Point adder = currentSwitch.sub(start).reduce();
-        for (int i = 1; i < Point.lengthBetweenPoints(start, end) - 1; i++) {
+        for (int i = 1; i < start.lengthBetweenPoints(end) - 1; i++) {
             ret.add(start.add(adder.scale(i)));
         }
         return ret;

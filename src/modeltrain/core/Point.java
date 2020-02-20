@@ -46,10 +46,14 @@ public class Point {
         return new Point(reducedX, reducedY);
     }
     
-    public static int lengthBetweenPoints(Point p1, Point p2) {
-        int diffX = p1.xCord - p2.xCord;
-        int diffY = p1.yCord - p2.yCord;
+    public int lengthBetweenPoints(Point p1) {
+        int diffX = p1.xCord - this.xCord;
+        int diffY = p1.yCord - this.yCord;
         return (int) Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
+    }
+    
+    public int getLength() {
+        return (int) Math.sqrt(Math.pow(xCord, 2) + Math.pow(yCord, 2));
     }
 
     @Override
