@@ -2,9 +2,7 @@ package modeltrain.ui;
 
 import java.util.HashSet;
 import java.util.Set;
-import modeltrain.commands.AddSwitch;
-import modeltrain.commands.AddTrack;
-import modeltrain.commands.AddTrain;
+import modeltrain.commands.Add;
 import modeltrain.commands.Command;
 import modeltrain.commands.CreateCoach;
 import modeltrain.commands.CreateEngine;
@@ -13,7 +11,7 @@ import modeltrain.commands.DeleteRollingStock;
 import modeltrain.commands.DeleteTrack;
 import modeltrain.commands.DeleteTrain;
 import modeltrain.commands.Exit;
-import modeltrain.commands.ListCoaches;
+import modeltrain.commands.List;
 import modeltrain.commands.ListEngines;
 import modeltrain.commands.ListTracks;
 import modeltrain.commands.ListTrainSets;
@@ -30,9 +28,7 @@ public class UserInterface {
     private Command lastFoundCommand;
 
     public UserInterface(Model model) {
-        commands.add(new AddTrack(model));
-        commands.add(new AddSwitch(model));
-        commands.add(new AddTrain(model));
+        commands.add(new Add(model));
         commands.add(new CreateCoach(model));
         commands.add(new CreateEngine(model));
         commands.add(new CreateTrainSet(model));
@@ -40,7 +36,7 @@ public class UserInterface {
         commands.add(new DeleteTrack(model));
         commands.add(new DeleteTrain(model));
         commands.add(new Exit(model));
-        commands.add(new ListCoaches(model));
+        commands.add(new List(model));
         commands.add(new ListEngines(model));
         commands.add(new ListTracks(model));
         commands.add(new ListTrains(model));

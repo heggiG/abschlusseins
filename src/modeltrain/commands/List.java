@@ -2,11 +2,11 @@ package modeltrain.commands;
 
 import modeltrain.core.Model;
 
-public class ListCoaches extends Command {
+public class List extends Command {
 
-    public static final String REGEX = "list coaches";
+    public static final String REGEX = "list //s*//S*";
     
-    public ListCoaches(Model model) {
+    public List(Model model) {
         super(model, REGEX);
     }
     

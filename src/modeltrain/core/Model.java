@@ -23,13 +23,17 @@ public class Model {
         trainsNotOnTrack = new HashMap<>();
     }
 
-    public Tuple<Set<Tuple<Integer, Point>>, Set<Integer>> step(int n) {
+//    private boolean checkTrack(Track toRemove) {
+//        
+//    }
+    
+    public Tuple<Set<Tuple<Integer, Point>>, Set<Integer>> step(short n) {
         if (trainsOnTrack.size() == 0) {
             return null;
         }
         Set<Tuple<Integer, Point>> locations = new HashSet<>();
         Set<Integer> crashes = new HashSet<>();
-        for (int i = 0; i < n; i++) {
+        for (short i = 0; i < n; i++) {
             for (Train t : trainsOnTrack.keySet()) {
                 List<Point> current = trainsOnTrack.get(t);
                 for (int o = current.size() - 1; o > 0; o--) {
@@ -44,7 +48,6 @@ public class Model {
                     Tuple<Point, Point> next = getNextPoint(current.get(0), t.getDirection());
                     current.set(0, next.getFirst());
                     t.setDirection(next.getSecond());
-                    locations.add(new Tuple<Integer, Point>(t.getId(), next.getFirst()));
                 }
             }
             //needed to avoid concurrent modification exception
@@ -64,6 +67,9 @@ public class Model {
             
             for (Train t : removals)
                 trainsOnTrack.remove(t);
+        }
+        for (Train t : trainsOnTrack.keySet()) {
+            locations.add(new Tuple<>(t.getId(), trainsOnTrack.get(t).get(0)));
         }
         return new Tuple<Set<Tuple<Integer, Point>>, Set<Integer>>(locations, crashes);
     }

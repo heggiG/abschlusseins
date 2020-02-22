@@ -41,7 +41,7 @@ public class Track {
     public int getLength() {
      int xLength = start.getXCord() - end.getXCord();
      int yLength = start.getYCord() - end.getYCord();
-     return xLength != 0 ? Math.abs(xLength) : Math.abs(yLength);
+     return (int) Math.round(Math.sqrt(xLength * xLength + yLength * yLength));
     }
     
     public int getId() {

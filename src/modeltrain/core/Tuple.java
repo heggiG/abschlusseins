@@ -43,4 +43,15 @@ public class Tuple<E, F> {
     public F getSecond() {
         return elementTwo;
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        sb.append(elementOne);
+        sb.append(",");
+        sb.append(elementTwo);
+        sb.append("]");
+        return sb.toString();
+    }
 }

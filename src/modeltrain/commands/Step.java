@@ -19,7 +19,7 @@ public class Step extends Command {
     @Override
     public void execute(String command) {
         MatchResult mr = getMatcher(command);
-        int steps = Integer.parseInt(mr.group(1));
+        short steps = Short.parseShort(mr.group(1));
         if (steps < 1) {
             throw new SyntaxException("amount of steps need to be greater than 0");
         } else {
