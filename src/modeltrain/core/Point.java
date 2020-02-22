@@ -29,7 +29,7 @@ public class Point {
     }
     
     public Point sub(Point p) {
-        return new Point(p.xCord - this.xCord, p.yCord - this.yCord);
+        return new Point(this.xCord - p.xCord, this.yCord - p.yCord);
     }
     
     public Point scale(int n) {
@@ -52,10 +52,15 @@ public class Point {
         return (int) Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
     }
     
-    public int getLength() {
-        return (int) Math.sqrt(Math.pow(xCord, 2) + Math.pow(yCord, 2));
-    }
+//    public int getLength() {
+//        return (int) Math.sqrt(Math.pow(xCord, 2) + Math.pow(yCord, 2));
+//    }
 
+    @Override
+    public int hashCode() {
+        return (xCord << 16) + yCord;
+    }
+    
     @Override
     public boolean equals(Object o) {
         if (o.getClass() != this.getClass())

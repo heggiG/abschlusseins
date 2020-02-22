@@ -51,7 +51,7 @@ public class Track {
     public Set<Point> getPointsBetween() {
         Set<Point> ret = new HashSet<>();
         Point adder = end.sub(start).reduce();
-        for (int i = 1; i < start.lengthBetweenPoints(end) - 1; i++) {
+        for (int i = 1; i < start.lengthBetweenPoints(end); i++) {
             ret.add(start.add(adder.scale(i)));
         }
         return ret;
@@ -59,10 +59,10 @@ public class Track {
     
     @Override
     public boolean equals(Object o) {
-        if(o.getClass() != this.getClass())
+        if (o.getClass() != this.getClass())
             return false;
         Track t = (Track) o;
-        if(t.start.equals(this.start) && t.end.equals(this.end))
+        if (t.start.equals(this.start) && t.end.equals(this.end))
             return true;
         return false;        
     }

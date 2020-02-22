@@ -37,7 +37,7 @@ public class CreateCoach extends Command {
             coach = new SpecialCoach(getNextId(), front, back, length);
             break;
         }
-        model.addRollMaterial(coach);
+//        model.addRollMaterial(coach);
     }
     
     private int getNextId() {

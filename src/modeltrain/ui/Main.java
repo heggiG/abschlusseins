@@ -5,6 +5,8 @@ import modeltrain.core.Model;
 
 public class Main {
     
+    private Main() {};
+    
     public static void main(String[] args) {
 //        Model model = new Model();
 //        UserInterface userInterface = new UserInterface(model);
