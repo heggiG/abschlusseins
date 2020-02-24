@@ -1,5 +1,8 @@
 package modeltrain.core;
 
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Implements a standard Point in the way of a coordinate
  * 
@@ -46,15 +49,20 @@ public class Point {
         return new Point(reducedX, reducedY);
     }
 
-    public int lengthBetweenPoints(Point p1) {
-        int diffX = p1.xCord - this.xCord;
-        int diffY = p1.yCord - this.yCord;
+    public int lengthBetweenPoints(Point p) {
+        int diffX = p.xCord - this.xCord;
+        int diffY = p.yCord - this.yCord;
         return (int) Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
     }
 
-//    public int getLength() {
-//        return (int) Math.sqrt(Math.pow(xCord, 2) + Math.pow(yCord, 2));
-//    }
+    public Set<Point> pointsBetween(Point p) {
+        Set<Point> ret = new HashSet<>();
+        Point adder = p.sub(this).reduce();
+        for (int i = 0; i < this.lengthBetweenPoints(p); i++) {
+            ret.add(this.add(adder.scale(i)));
+        }
+        return ret;
+    }
 
     @Override
     public int hashCode() {

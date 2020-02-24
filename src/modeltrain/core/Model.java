@@ -23,10 +23,20 @@ public class Model {
         trainsNotOnTrack = new HashMap<>();
     }
 
-//    private boolean checkTrack(Track toRemove) {
+    private void removeTrack(int id) {
+        if (!tracks.containsKey(id)) {
+            throw new SemanticsException("no such track id");
+        } else {
+            Track toRemove = tracks.get(id);
+           
+        }
+
+    }
+    
+//    private boolean checkTracks(Track start, Track toFind) {
 //        
 //    }
-    
+
     public Tuple<Set<Tuple<Integer, Point>>, Set<Integer>> step(short n) {
         if (trainsOnTrack.size() == 0) {
             return null;
@@ -50,7 +60,7 @@ public class Model {
                     t.setDirection(next.getSecond());
                 }
             }
-            //needed to avoid concurrent modification exception
+            // needed to avoid concurrent modification exception
             Set<Train> removals = new HashSet<>();
             for (Train t : trainsOnTrack.keySet()) {
                 for (Train k : trainsOnTrack.keySet()) {
@@ -64,7 +74,7 @@ public class Model {
                     }
                 }
             }
-            
+
             for (Train t : removals)
                 trainsOnTrack.remove(t);
         }
@@ -72,6 +82,37 @@ public class Model {
             locations.add(new Tuple<>(t.getId(), trainsOnTrack.get(t).get(0)));
         }
         return new Tuple<Set<Tuple<Integer, Point>>, Set<Integer>>(locations, crashes);
+    }
+
+    public void switchSwitch(int id, Point dest) {
+        if (!tracks.containsKey(id)) {
+            throw new SemanticsException("no such track id");
+        }
+        SwitchTrack toSwitch;
+        try {
+            toSwitch = (SwitchTrack) tracks.get(id);
+        } catch (ClassCastException e) {
+            throw new SemanticsException("the track with the id " + id + " is not a switchtrack");
+        }
+        if (dest.equals(toSwitch.getStart())) {
+            throw new SemanticsException("the given point is not one to switch to");
+        } else if (dest.equals(toSwitch.getEnd())) {
+            for (Point p : toSwitch.pointsBetweenEnd()) {
+                trackMap.replace(p, true);
+            }
+            for (Point p : toSwitch.pointsBetweenAltEnd()) {
+                trackMap.replace(p, false);
+            }
+        } else if (dest.equals(toSwitch.getAltEnd())) {
+            for (Point p : toSwitch.pointsBetweenEnd()) {
+                trackMap.replace(p, false);
+            }
+            for (Point p : toSwitch.pointsBetweenAltEnd()) {
+                trackMap.replace(p, true);
+            }
+        } else {
+            throw new SemanticsException("an unknown error occurred");
+        }
     }
 
     /**
@@ -82,7 +123,10 @@ public class Model {
      * @param dir   The dierction the train is heading
      */
     public void putTrain(Train t, Point place, Point dir) {
-        if (trackMap.get(place) == null /* || trackMap.get(place) == false */) {
+        if (!t.isValid()) {
+            throw new SemanticsException("train is not valid");
+        }
+        if (trackMap.get(place) == null) {
             throw new SemanticsException("no such point on the track");
         }
         Point newDir = dir.negate();
@@ -111,11 +155,11 @@ public class Model {
      * @return The next point on the track and the direction from which it came
      */
     private Tuple<Point, Point> getNextPoint(Point p, Point dir) {
-        if (trackMap.get(p.add(dir)) != null) {
+        if (trackMap.get(p.add(dir))) {
             return new Tuple<Point, Point>(p.add(dir), dir);
-        } else if (trackMap.get(p.add(getLeft(dir))) != null) {
+        } else if (trackMap.get(p.add(getLeft(dir)))) {
             return new Tuple<Point, Point>(p.add(getLeft(dir)), getLeft(dir));
-        } else if (trackMap.get(p.add(getRight(dir))) != null) {
+        } else if (trackMap.get(p.add(getRight(dir)))) {
             return new Tuple<Point, Point>(p.add(getRight(dir)), getRight(dir));
         } else {
             return null;
@@ -174,7 +218,7 @@ public class Model {
         trackMap.put(t.getStart(), true);
         trackMap.put(t.getEnd(), true);
         for (Point p : t.getPointsBetween()) {
-            trackMap.put(p, false);
+            trackMap.put(p, true);
         }
     }
 
@@ -182,9 +226,9 @@ public class Model {
         trackMap.put(st.getStart(), true);
         trackMap.put(st.getEnd(), true);
         trackMap.put(st.getAltEnd(), true);
-//        for (Point p : st.getPointsBetween()) {
-//            trackMap.put(p, false);
-//        }
+        for (Point p : st.getPointsBetween()) {
+            trackMap.put(p, false);
+        }
     }
 
     /**

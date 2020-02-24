@@ -11,6 +11,8 @@ import java.util.Set;
  */
 public class Track {
     
+    private Track nextStart;
+    private Track nextEnd;
     protected Point start;
     protected Point end;
     protected int id;
@@ -55,6 +57,32 @@ public class Track {
             ret.add(start.add(adder.scale(i)));
         }
         return ret;
+    }
+    
+    public Track getNextStart() {
+        return nextStart;
+    }
+    
+    public void setNextStart(Track t) {
+        nextStart = t;
+    }
+    
+    public Track getNextEnd() {
+        return nextEnd;
+    }
+    
+    public void setNextEnd(Track t) {
+        nextEnd = t;
+    }
+    
+    public void setFromPoint(Point p, Track t) {
+        if (p.equals(start)) {
+            nextStart = t;
+        } else if (p.equals(end)) {
+            nextEnd = t;
+        } else {
+            throw new SemanticsException("point");
+        }
     }
     
     @Override

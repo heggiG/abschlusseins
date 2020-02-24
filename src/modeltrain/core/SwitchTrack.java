@@ -19,11 +19,27 @@ public class SwitchTrack extends Track {
         this.altEnd = altEnd;
         currentSwitch = end;
     }
-    
+
     public Set<Point> getPointsBetween() {
         Set<Point> ret = new HashSet<>();
-        Point adder = currentSwitch.sub(start).reduce();
-        for (int i = 1; i < start.lengthBetweenPoints(end) - 1; i++) {
+        ret.addAll(pointsBetweenEnd());
+        ret.addAll(pointsBetweenAltEnd());
+        return ret;
+    }
+    
+    public Set<Point> pointsBetweenEnd() {
+        Set<Point> ret = new HashSet<>();
+        Point adder = end.sub(start).reduce();
+        for (int i = 1; i < start.lengthBetweenPoints(end); i++) {
+            ret.add(start.add(adder.scale(i)));
+        }
+        return ret;
+    }
+    
+    public Set<Point> pointsBetweenAltEnd() {
+        Set<Point> ret = new HashSet<>();
+        Point adder = altEnd.sub(start).reduce();
+        for (int i = 1; i < start.lengthBetweenPoints(altEnd); i++) {
             ret.add(start.add(adder.scale(i)));
         }
         return ret;
@@ -40,8 +56,6 @@ public class SwitchTrack extends Track {
             currentSwitch = end;
         return currentSwitch;
     }
-    
-    
 
     @Override
     public Point getOtherPoint(Point po) {
@@ -59,7 +73,7 @@ public class SwitchTrack extends Track {
         int yLength = start.getYCord() - currentSwitch.getYCord();
         return (int) Math.sqrt(Math.pow(xLength, 2) + Math.pow(yLength, 2));
     }
-    
+
     @Override
     public boolean equals(Object o) {
         if (o.getClass() != this.getClass())
