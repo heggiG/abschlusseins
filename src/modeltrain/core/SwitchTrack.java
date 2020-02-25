@@ -13,6 +13,7 @@ public class SwitchTrack extends Track {
 
     private Point altEnd;
     private Point currentSwitch;
+    private Track nextAltEnd;
 
     public SwitchTrack(Point start, Point end, Point altEnd, int id) {
         super(start, end, id);
@@ -20,6 +21,7 @@ public class SwitchTrack extends Track {
         currentSwitch = end;
     }
 
+    @Override
     public Set<Point> getPointsBetween() {
         Set<Point> ret = new HashSet<>();
         ret.addAll(pointsBetweenEnd());
@@ -55,6 +57,14 @@ public class SwitchTrack extends Track {
         else
             currentSwitch = end;
         return currentSwitch;
+    }
+
+    public Track nextAltEnd() {
+        return nextAltEnd;
+    }
+
+    public void setNextAltEnd(Track nextAltEnd) {
+        this.nextAltEnd = nextAltEnd;
     }
 
     @Override

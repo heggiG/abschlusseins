@@ -11,6 +11,7 @@ public class TrackTest {
         Model test = new Model();
         Point p = new Point(10, 0);
         test.addTrack(new Track(new Point(0, 0), p, 0));
+        test.addTrack(new Track(new Point(10, 0), new Point(20, 0), 1));
         Train t = new Train(1);
         t.add(new DieselLocomotive("Bruh", "Homie", false, true, 1));
         test.putTrain(t, new Point(2, 0), new Point(1, 0));

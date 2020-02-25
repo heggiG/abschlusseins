@@ -96,6 +96,11 @@ public class Track {
     }
     
     @Override
+    public int hashCode() {
+        return (start.hashCode() + end.hashCode()) / 2;
+    }
+    
+    @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("t ");

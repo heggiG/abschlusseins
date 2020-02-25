@@ -11,10 +11,10 @@ import modeltrain.trains.Train;
 
 public class Model {
 
+    private Map<Integer, Track> tracks;
     private Map<Integer, Train> trainsNotOnTrack;
     private Map<Point, Boolean> trackMap;
     private Map<Train, List<Point>> trainsOnTrack;
-    private Map<Integer, Track> tracks;
 
     public Model() {
         tracks = new HashMap<>();
@@ -28,14 +28,53 @@ public class Model {
             throw new SemanticsException("no such track id");
         } else {
             Track toRemove = tracks.get(id);
-           
+            boolean legalOperation;
+            try {
+                SwitchTrack st = (SwitchTrack) toRemove;
+//               legalOperation = checkTracks(toRemove.getNextEnd(), toRemove.getNextStart());
+            } catch (ClassCastException e) {
+
+            }
         }
 
     }
+
+    private boolean checkTracks(Track toFind, Track current, Track prev, Set<Track> alreadyChecked) {
+        if (alreadyChecked == null) {
+            alreadyChecked = new HashSet<>();
+        }
+        if (current.equals(toFind)) {
+            return true;
+        } else if (current.getNextEnd().equals(toFind) || current.getNextStart().equals(toFind)) {
+            return true;
+        } else {
+            alreadyChecked.add(current);
+            if (prev.equals(current.getNextEnd())) {
+                if (alreadyChecked.contains(current.getNextStart())) {
+                    return false;
+                }
+                return checkTracks(toFind, current.getNextStart(), current, alreadyChecked);
+            } else if (prev.equals(current.getNextStart())) {
+                if (alreadyChecked.contains(current.getNextEnd())) {
+                    return false;
+                }
+                return checkTracks(toFind, current.getNextEnd(), current, alreadyChecked);
+            }
+        }
+        return false;
+    }
     
-//    private boolean checkTracks(Track start, Track toFind) {
-//        
-//    }
+    private boolean checkTracks(Track toFind, SwitchTrack current, Track prev, Set<Track> alreadyChecked) {
+        if (alreadyChecked == null) {
+            alreadyChecked = new HashSet<>();
+        }
+        if (current.equals(toFind)) {
+            return true;
+        } else if (current.getNextEnd().equals(toFind) || current.getNextStart().equals(toFind)) {
+                        
+        }
+        return false;
+    }
 
     public Tuple<Set<Tuple<Integer, Point>>, Set<Integer>> step(short n) {
         if (trainsOnTrack.size() == 0) {
@@ -182,6 +221,21 @@ public class Model {
             } else {
                 addPointsFromTrack(t);
                 tracks.put(t.getId(), t);
+                for (Integer id : tracks.keySet()) {
+                    if (tracks.get(id).getEnd().equals(t.getStart())) {
+                        t.setNextStart(tracks.get(id));
+                        tracks.get(id).setNextEnd(t);
+                    } else if (tracks.get(id).getStart().equals(t.getStart())) {
+                        t.setNextStart(tracks.get(id));
+                        tracks.get(id).setNextStart(t);
+                    } else if (tracks.get(id).getEnd().equals(t.getEnd())) {
+                        t.setNextEnd(tracks.get(id));
+                        tracks.get(id).setNextEnd(t);
+                    } else if (tracks.get(id).getStart().equals(t.getEnd())) {
+                        t.setNextEnd(tracks.get(id));
+                        tracks.get(id).setNextStart(t);
+                    }
+                }
             }
         }
     }
@@ -205,6 +259,7 @@ public class Model {
             } else {
                 addPointsFromTrack(st);
                 tracks.put(st.getId(), st);
+
             }
         }
     }
