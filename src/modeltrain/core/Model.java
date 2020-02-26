@@ -23,23 +23,43 @@ public class Model {
         trainsNotOnTrack = new HashMap<>();
     }
 
-    private void removeTrack(int id) {
+    public boolean removeTrack(int id) {
         if (!tracks.containsKey(id)) {
             throw new SemanticsException("no such track id");
         } else {
             Track toRemove = tracks.get(id);
-            boolean legalOperation;
-            try {
-                SwitchTrack st = (SwitchTrack) toRemove;
-//               legalOperation = checkTracks(toRemove.getNextEnd(), toRemove.getNextStart());
-            } catch (ClassCastException e) {
-
+            if (toRemove.getNextEnd() == null || toRemove.getNextStart() == null) {
+                if (toRemove.getNextEnd() == null) {
+                    trackMap.remove(toRemove.getEnd());
+                }
+                if (toRemove.getNextStart() == null) {
+                    trackMap.remove(toRemove.getStart());
+                }
+                for (Point p : toRemove.getPointsBetween()) {
+                    trackMap.remove(p);
+                }
+                return true;
+            } else if (checkTracks(toRemove.getNextEnd(), toRemove.getNextStart(), toRemove, null)) {
+                for (Point p : toRemove.getPointsBetween()) {
+                    trackMap.remove(p);
+                }
+                return true;
+            } else {
+                return false;
             }
         }
-
     }
 
     private boolean checkTracks(Track toFind, Track current, Track prev, Set<Track> alreadyChecked) {
+        try {
+            SwitchTrack st = (SwitchTrack) current;
+            return checkTracks(toFind, st, prev, alreadyChecked);
+        } catch (ClassCastException e) {
+            // continues the normal method
+        }
+        if (current == null) {
+            return false;
+        }
         if (alreadyChecked == null) {
             alreadyChecked = new HashSet<>();
         }
@@ -63,19 +83,44 @@ public class Model {
         }
         return false;
     }
-    
+
     private boolean checkTracks(Track toFind, SwitchTrack current, Track prev, Set<Track> alreadyChecked) {
         if (alreadyChecked == null) {
             alreadyChecked = new HashSet<>();
         }
+        if (current == null) {
+            return false;
+        }
         if (current.equals(toFind)) {
             return true;
-        } else if (current.getNextEnd().equals(toFind) || current.getNextStart().equals(toFind)) {
-                        
+        } else if (current.getNextEnd().equals(toFind) || current.getNextStart().equals(toFind)
+                || current.getNextAltEnd().equals(toFind)) {
+            return true;
+        } else if (alreadyChecked.contains(current)) {
+            return false;
+        } else {
+            alreadyChecked.add(current);
+            if (prev.equals(current.getNextStart())) {
+                return checkTracks(toFind, current.getNextEnd(), current, alreadyChecked)
+                        || checkTracks(toFind, current.getNextAltEnd(), current, alreadyChecked);
+            } else if (prev.equals(current.getNextEnd())) {
+                return checkTracks(toFind, current.getNextAltEnd(), current, alreadyChecked)
+                        || checkTracks(toFind, current.getNextStart(), current, alreadyChecked);
+            } else if (prev.equals(current.getNextAltEnd())) {
+                return checkTracks(toFind, current.getNextStart(), current, alreadyChecked)
+                        || checkTracks(toFind, current.getNextEnd(), current, alreadyChecked);
+            }
         }
         return false;
     }
 
+    /**
+     * Moves all trains by n steps forward.
+     * 
+     * @param n The amount of steps to make
+     * @return A tuple containing: A set of all train id's and the point at which
+     *         they stand, and a set containing all id's of crashed trains
+     */
     public Tuple<Set<Tuple<Integer, Point>>, Set<Integer>> step(short n) {
         if (trainsOnTrack.size() == 0) {
             return null;
@@ -92,7 +137,6 @@ public class Model {
                     crashes.add(t.getId());
                     trainsNotOnTrack.put(t.getId(), t);
                     trainsOnTrack.remove(t);
-                    continue;
                 } else {
                     Tuple<Point, Point> next = getNextPoint(current.get(0), t.getDirection());
                     current.set(0, next.getFirst());
@@ -123,7 +167,13 @@ public class Model {
         return new Tuple<Set<Tuple<Integer, Point>>, Set<Integer>>(locations, crashes);
     }
 
-    public void switchSwitch(int id, Point dest) {
+    /**
+     * Switches a switchtracks switch to a point.
+     * 
+     * @param id   The track's id to switch
+     * @param dest The Point to switch to
+     */
+    public void toggleSwitch(int id, Point dest) {
         if (!tracks.containsKey(id)) {
             throw new SemanticsException("no such track id");
         }
@@ -216,13 +266,16 @@ public class Model {
             tracks.put(t.getId(), t);
         } else {
             if (trackMap.get(t.getStart()) == null && trackMap.get(t.getEnd()) == null
-                    || trackMap.get(t.getStart()) == false && trackMap.get(t.getStart()) == false) {
+                    || trackMap.get(t.getStart()) == false && trackMap.get(t.getEnd()) == false) {
                 throw new SemanticsException("track contains none of the points from the track");
             } else {
                 addPointsFromTrack(t);
                 tracks.put(t.getId(), t);
                 for (Integer id : tracks.keySet()) {
                     if (tracks.get(id).getEnd().equals(t.getStart())) {
+                        if (t.getNextStart() != null) {
+                            throw new SemanticsException("");
+                        }
                         t.setNextStart(tracks.get(id));
                         tracks.get(id).setNextEnd(t);
                     } else if (tracks.get(id).getStart().equals(t.getStart())) {
@@ -264,11 +317,6 @@ public class Model {
         }
     }
 
-    /**
-     * Adds the Track ends and the points between ends
-     * 
-     * @param t The track from which to add points
-     */
     private void addPointsFromTrack(Track t) {
         trackMap.put(t.getStart(), true);
         trackMap.put(t.getEnd(), true);
@@ -306,5 +354,4 @@ public class Model {
     private Point getRight(Point dir) {
         return getLeft(dir).negate();
     }
-
 }

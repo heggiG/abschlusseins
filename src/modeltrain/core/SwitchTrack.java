@@ -59,7 +59,7 @@ public class SwitchTrack extends Track {
         return currentSwitch;
     }
 
-    public Track nextAltEnd() {
+    public Track getNextAltEnd() {
         return nextAltEnd;
     }
 
