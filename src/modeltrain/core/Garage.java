@@ -27,19 +27,43 @@ public class Garage {
         inTrains = new HashMap<>();
         nextTrainId = 1;
     }
+    
+    public Locomotive getLoc(String id) {
+        return locGarage.get(id);
+    }
+    
+    public PoweredCart getPc(String id) {
+        return pcGarage.get(id);
+    }
+    
+    public Coach getCoach(String id) {
+        return coachGarage.get(id);
+    }
 
     public void createEngine(Locomotive lo) {
-        
+        if (locGarage.containsKey(lo.getId())) {
+            throw new SemanticsException("another locomotive with the id already exists");
+        } else {
+            locGarage.put(lo.getId(), lo);
+        }
     }
 
     public void createCoach(Coach co) {
-
+        if (coachGarage.containsKey(co.getId())) {
+            throw new SemanticsException("another locomotive with the id already exists");
+        } else {
+            coachGarage.put(co.getId(), co);
+        }
     }
 
     public void createPoweredCart(PoweredCart pc) {
-
+        if (pcGarage.containsKey(pc.getId())) {
+            throw new SemanticsException("another locomotive with the id already exists");
+        } else {
+            pcGarage.put(pc.getId(), pc);
+        }
     }
-    
+
     public void removeTrain(int id) {
         if (trainGarage.containsKey(id)) {
             trainGarage.remove(id);
@@ -47,7 +71,7 @@ public class Garage {
             throw new SemanticsException("no train with such id");
         }
     }
-    
+
     public void deleteRS(String id) {
         if (inTrains.containsKey(id)) {
             throw new SemanticsException("rolling stock is placed in a train");
@@ -94,29 +118,29 @@ public class Garage {
         if (inTrains.containsKey(rmId)) {
             throw new SemanticsException("rollmaterial is already in another train");
         }
-        if (locGarage.containsKey(rmId)) {
-            if (!trainGarage.containsKey(id)) {
-                trainGarage.put(nextTrainId, new Train(nextTrainId));
-                nextTrainId++;
-            }
+        if (!pcGarage.containsKey(rmId) && !locGarage.containsKey(rmId) && !coachGarage.containsKey(rmId)) {
+            throw new SemanticsException("no rollmaterial with such id");
+        } else if (locGarage.containsKey(rmId)) {      
+            newTrain(id);
             trainGarage.get(id).add(locGarage.get(rmId));
             inTrains.put(rmId, locGarage.get(rmId));
         } else if (pcGarage.containsKey(rmId)) {
-            if (!trainGarage.containsKey(id)) {
-                trainGarage.put(nextTrainId, new Train(nextTrainId));
-                nextTrainId++;
-            }
+            newTrain(id);
             trainGarage.get(id).add(pcGarage.get(rmId));
             inTrains.put(rmId, pcGarage.get(rmId));
         } else if (coachGarage.containsKey(rmId)) {
-            if (!trainGarage.containsKey(id)) {
-                trainGarage.put(nextTrainId, new Train(nextTrainId));
-                nextTrainId++;
-            }
+            newTrain(id);
             trainGarage.get(id).add(coachGarage.get(rmId));
             inTrains.put(rmId, coachGarage.get(rmId));
-        } else {
-            throw new SemanticsException("no rollmaterial with such id");
+        }
+    }
+    
+    private void newTrain(int id) {
+        if (!trainGarage.containsKey(id) && id == nextTrainId) {
+            trainGarage.put(nextTrainId, new Train(nextTrainId));
+            nextTrainId++;
+        } else if (id != nextTrainId) {
+            throw new SemanticsException("given id dosen't match the next expected id");
         }
     }
 
