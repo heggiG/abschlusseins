@@ -40,13 +40,24 @@ public class Garage {
 
     }
     
+    public void removeTrain(int id) {
+        if (trainGarage.containsKey(id)) {
+            trainGarage.remove(id);
+        } else {
+            throw new SemanticsException("no train with such id");
+        }
+    }
+    
     public void deleteRS(String id) {
+        if (inTrains.containsKey(id)) {
+            throw new SemanticsException("rolling stock is placed in a train");
+        }
         if (locGarage.containsKey(id)) {
-            
+            locGarage.remove(id);
         } else if (pcGarage.containsKey(id)) {
-            
+            pcGarage.remove(id);
         } else if (coachGarage.containsKey(id)) {
-            
+            coachGarage.remove(id);
         } else {
             throw new SemanticsException("no rolling stock with such id");
         }
@@ -113,8 +124,14 @@ public class Garage {
         return trainGarage.get(id);
     }
 
-    public List<Train> listTrains() {
-        List<Train> ret = new ArrayList<>();
+    public List<String> listTrains() {
+        if (trainGarage.size() == 0) {
+            throw new SemanticsException("no trains have been added yet");
+        }
+        List<String> ret = new ArrayList<>();
+        for (Integer i : trainGarage.keySet()) {
+            ret.add(trainGarage.get(i).toString());
+        }
         return ret;
     }
 
