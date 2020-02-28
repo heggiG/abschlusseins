@@ -54,6 +54,14 @@ public class Point {
         int diffY = p.yCord - this.yCord;
         return (int) Math.sqrt(Math.pow(diffX, 2) + Math.pow(diffY, 2));
     }
+    
+    public Point getLeft() {
+        return new Point(-yCord, xCord);
+    }
+    
+    public Point getRight() {
+        return getLeft().negate();
+    }
 
     public Set<Point> pointsBetween(Point p) {
         Set<Point> ret = new HashSet<>();

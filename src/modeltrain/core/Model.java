@@ -51,14 +51,12 @@ public class Model extends Garage {
     }
 
     private boolean checkTracks(Track toFind, Track current, Track prev, Set<Track> alreadyChecked) {
-        try {
-            SwitchTrack st = (SwitchTrack) current;
-            return checkTracks(toFind, st, prev, alreadyChecked);
-        } catch (ClassCastException e) {
-            // continues the normal method
-        }
         if (current == null) {
             return false;
+        }
+        if (current.toString().charAt(0) == 's') {
+            SwitchTrack st = (SwitchTrack) current;
+            return checkTracks(toFind, st, prev, alreadyChecked);
         }
         if (alreadyChecked == null) {
             alreadyChecked = new HashSet<>();
@@ -246,10 +244,10 @@ public class Model extends Garage {
     private Tuple<Point, Point> getNextPoint(Point p, Point dir) {
         if (trackMap.get(p.add(dir))) {
             return new Tuple<Point, Point>(p.add(dir), dir);
-        } else if (trackMap.get(p.add(getLeft(dir)))) {
-            return new Tuple<Point, Point>(p.add(getLeft(dir)), getLeft(dir));
-        } else if (trackMap.get(p.add(getRight(dir)))) {
-            return new Tuple<Point, Point>(p.add(getRight(dir)), getRight(dir));
+        } else if (trackMap.get(p.add(dir.getLeft()))) {
+            return new Tuple<Point, Point>(p.add(dir.getLeft()), dir.getLeft());
+        } else if (trackMap.get(p.add(dir.getRight()))) {
+            return new Tuple<Point, Point>(p.add(dir.getRight()), dir.getRight());
         } else {
             return null;
         }
@@ -338,26 +336,5 @@ public class Model extends Garage {
         for (Point p : st.getPointsBetween()) {
             trackMap.put(p, false);
         }
-    }
-
-    /**
-     * Returns a point that is 90 degrees to the left of any given point (90°
-     * anti-clockwise)
-     * 
-     * @param dir the point to rotate
-     * @return The rotated point
-     */
-    private Point getLeft(Point dir) {
-        return new Point(-dir.getYCord(), dir.getXCord());
-    }
-
-    /**
-     * Returns a point that is rotated 90 degrees to the right (90° clockwise)
-     * 
-     * @param dir
-     * @return
-     */
-    private Point getRight(Point dir) {
-        return getLeft(dir).negate();
     }
 }
