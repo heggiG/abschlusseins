@@ -9,10 +9,10 @@ import java.util.Set;
 
 import modeltrain.trains.Train;
 
-public class Model {
+public class Model extends Garage {
 
     private Map<Integer, Track> tracks;
-    private Map<Integer, Train> trainsNotOnTrack;
+//    private Map<Integer, Train> trainsNotOnTrack;
     private Map<Point, Boolean> trackMap;
     private Map<Train, List<Point>> trainsOnTrack;
 
@@ -20,7 +20,7 @@ public class Model {
         tracks = new HashMap<>();
         trackMap = new HashMap<>();
         trainsOnTrack = new HashMap<>();
-        trainsNotOnTrack = new HashMap<>();
+//        trainsNotOnTrack = new HashMap<>();
     }
 
     public boolean removeTrack(int id) {
@@ -65,6 +65,10 @@ public class Model {
         }
         if (current.equals(toFind)) {
             return true;
+        } else if (prev == current.getNextStart() && current.getNextEnd() == null) {
+            return false;
+        } else if (prev == current.getNextEnd() && current.getNextStart() == null) {
+            return false;
         } else if (current.getNextEnd().equals(toFind) || current.getNextStart().equals(toFind)) {
             return true;
         } else {
@@ -234,14 +238,10 @@ public class Model {
         trainsOnTrack.put(t, points);
     }
 
-    /**
+    /*
      * Returns the next Point of a given point and a given direction as a Tuple,
      * where the first element is the new Point and the second element is the
      * direction that may have been updated.
-     * 
-     * @param p   The point from which to get the next Point
-     * @param dir The direction from which the next point is determined
-     * @return The next point on the track and the direction from which it came
      */
     private Tuple<Point, Point> getNextPoint(Point p, Point dir) {
         if (trackMap.get(p.add(dir))) {
@@ -269,9 +269,15 @@ public class Model {
                     || trackMap.get(t.getStart()) == false && trackMap.get(t.getEnd()) == false) {
                 throw new SemanticsException("track contains none of the points from the track");
             } else {
+                if (tracks.containsValue(t)) {
+                    throw new SemanticsException("track already exists");
+                }
                 addPointsFromTrack(t);
                 tracks.put(t.getId(), t);
                 for (Integer id : tracks.keySet()) {
+                    if (t.getId() == id) {
+                        continue;
+                    }
                     if (tracks.get(id).getEnd().equals(t.getStart())) {
                         if (t.getNextStart() != null) {
                             throw new SemanticsException("");

@@ -9,7 +9,7 @@ import java.util.Set;
  * @author Florian Heck
  * @version 1.0
  */
-public class Track {
+public class Track implements Comparable<Track> {
     
     private Track nextStart;
     private Track nextEnd;
@@ -83,6 +83,11 @@ public class Track {
         } else {
             throw new SemanticsException("point");
         }
+    }
+
+    @Override
+    public int compareTo(Track o) {
+        return this.id - o.id;
     }
     
     @Override

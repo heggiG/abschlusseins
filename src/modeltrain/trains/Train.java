@@ -106,6 +106,27 @@ public class Train {
     public int getId() {
         return id;
     }
+    
+    public String[] show() {
+        if (wagons.size() == 0) {
+            return null;
+        } else {
+            String[] ret = new String[wagons.get(0).show().length];
+            for (RollMaterial rm : wagons) {
+                for (int i = 0; i < rm.show().length; i++) {
+                    if (ret[i] != null) {
+                        ret[i].concat(" ");
+                    }
+                    ret[i].concat(rm.show()[i]);
+                }
+            }
+        return ret;
+        }        
+    }
+    
+    public List<RollMaterial> getWagons() {
+        return wagons;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -122,6 +143,11 @@ public class Train {
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
+        sb.append(id);
+        for (RollMaterial rm : wagons) {
+            sb.append(" ");
+            sb.append(rm);
+        }
         return sb.toString();
     }
 

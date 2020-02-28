@@ -10,7 +10,7 @@ public abstract class Command {
     protected final Model model;
     private final Pattern commandPattern;    
     
-    public static final String COORDINATE = "\\((-|+|)\\d+),((-|+|)\\d+)\\)";
+    public static final String COORDINATE = "\\(((-|\\+|)\\d+),((-|\\+|)\\d+)\\)";
     public static final String ENGINE_TYPE = "electrical|steam|diesel";
     public static final String COACH_TYPE = "passenger|freight|special";
     public static final String COUPLING = "true|false";    

@@ -8,7 +8,7 @@ public abstract class Coach extends RollMaterial {
 
     public Coach(Integer id, boolean front, boolean back, int length) {
         super("", "", front, back, length);
-        this.id = id.toString();
+        this.id = "W" + id;
     }
 
     @Override

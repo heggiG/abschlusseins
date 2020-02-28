@@ -58,6 +58,9 @@ public class UserInterface {
     }
 
     public boolean isExit() {
+        if (lastFoundCommand == null) {
+            return false;
+        }
         return lastFoundCommand.isExit();
     }
 }

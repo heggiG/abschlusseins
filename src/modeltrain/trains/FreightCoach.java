@@ -6,4 +6,11 @@ public class FreightCoach extends Coach {
         super(id, front, back, length);
     }
 
+    @Override
+    public String[] show() {
+        return new String[] { "                    ", "                    ", "                    ",
+                "|                  |", "|                  |", "|                  |", "|__________________|",
+                "   (O)        (O)   "};
+    }
+
 }

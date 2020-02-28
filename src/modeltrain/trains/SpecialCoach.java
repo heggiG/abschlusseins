@@ -6,4 +6,11 @@ public class SpecialCoach extends Coach {
         super(id, front, back, length);
     }
 
+    @Override
+    public String[] show() {
+        return new String[] { "                   ", "               ____", "/--------------|  |",
+                "\\--------------|  |", "  | |          |  |", " _|_|__________|  |", "|_________________|",
+                "   (O)       (O)   " };
+    }
+
 }

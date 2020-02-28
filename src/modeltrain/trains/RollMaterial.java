@@ -47,4 +47,18 @@ public abstract class RollMaterial {
     public int getLength() {
         return length;
     }
+    
+    public abstract String[] show();
+    
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) 
+            return true;
+        else if (getClass() != o.getClass())
+            return false;
+        RollMaterial rm = (RollMaterial) o;
+        if (rm.id.equals(id))
+            return true;
+        return false;
+    }
 }

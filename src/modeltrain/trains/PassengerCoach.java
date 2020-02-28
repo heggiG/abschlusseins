@@ -6,4 +6,11 @@ public class PassengerCoach extends Coach {
         super(id, front, back, length);
     }
 
+    @Override
+    public String[] show() {
+        return new String[] { "                    ", "                    ", "____________________",
+                "|  ___ ___ ___ ___ |", "|  ___ ___ ___ ___ |", "|__________________|", "|__________________|",
+                "   (O)        (O)   " };
+    }
+
 }

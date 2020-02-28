@@ -5,5 +5,11 @@ public class SteamLocomotive extends Locomotive {
     public SteamLocomotive(String modelSeries, String name, boolean front, boolean back, int length) {
         super(modelSeries, name, front, back, length);
     }
-    
+
+    @Override
+    public String[] show() {
+        return new String[] { "                    ", "     ++      +------", "     ||      |+-+ | ",
+                "   /---------|| | | ", "  + ========  +-+ | ", " _|--/~\\------/~\\-+ ", "//// \\_/      \\_/   "};
+    }
+
 }

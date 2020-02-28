@@ -10,7 +10,7 @@ import modeltrain.core.Tuple;
 
 public class Step extends Command {
 
-    public static final String REGEX = "step ((-|+|)\\d+)";
+    public static final String REGEX = "step ((-|\\+|)\\d+)";
 
     public Step(Model model) {
         super(model, REGEX);

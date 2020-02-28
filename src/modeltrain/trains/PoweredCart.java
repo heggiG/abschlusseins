@@ -6,4 +6,11 @@ public class PoweredCart extends RollMaterial {
         super(model, name, front, back, length);
     }
 
+    @Override
+    public String[] show() {
+        return new String[] { "         ++         ", "         ||         ", "_________||_________",
+                "|  ___ ___ ___ ___ |", "|  |_| |_| |_| |_| |", "|__________________|", "|__________________|",
+                "   (O)        (O)   "};
+    }
+
 }

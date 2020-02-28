@@ -1,10 +1,5 @@
 package modeltrain.core;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-
 /**
  * A generic Tuple of type E
  * 
