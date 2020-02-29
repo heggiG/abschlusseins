@@ -8,16 +8,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import edu.kit.informatik.Terminal;
 import modeltrain.trains.*;
 
 public class Garage {
 
     private Map<String, Locomotive> locGarage;
     private Map<String, Coach> coachGarage;
-    private Map<String, PoweredCart> pcGarage;
+    private Map<String, TrainSet> pcGarage;
     private Map<String, RollMaterial> inTrains;
     private Map<Integer, Train> trainGarage;
     private int nextTrainId;
+    private int nextCoachId;
 
     public Garage() {
         locGarage = new HashMap<>();
@@ -26,18 +28,27 @@ public class Garage {
         trainGarage = new HashMap<>();
         inTrains = new HashMap<>();
         nextTrainId = 1;
+        nextCoachId = 1;
     }
-    
+
     public Locomotive getLoc(String id) {
         return locGarage.get(id);
     }
-    
-    public PoweredCart getPc(String id) {
+
+    public TrainSet getPc(String id) {
         return pcGarage.get(id);
     }
-    
+
     public Coach getCoach(String id) {
         return coachGarage.get(id);
+    }
+
+    public RollMaterial getRollMaterial(String id) {
+        if (id.charAt(0) == 'W') {
+            return getCoach(id);
+        } else {
+            return getPc(id) != null ? getPc(id) : getLoc(id);
+        }
     }
 
     public void createEngine(Locomotive lo) {
@@ -48,15 +59,11 @@ public class Garage {
         }
     }
 
-    public void createCoach(Coach co) {
-        if (coachGarage.containsKey(co.getId())) {
-            throw new SemanticsException("another locomotive with the id already exists");
-        } else {
-            coachGarage.put(co.getId(), co);
-        }
+    public void createCoach(boolean front, boolean back, int len, String type) {
+        
     }
 
-    public void createPoweredCart(PoweredCart pc) {
+    public void createPoweredCart(TrainSet pc) {
         if (pcGarage.containsKey(pc.getId())) {
             throw new SemanticsException("another locomotive with the id already exists");
         } else {
@@ -84,6 +91,16 @@ public class Garage {
             coachGarage.remove(id);
         } else {
             throw new SemanticsException("no rolling stock with such id");
+        }
+        Terminal.printLine("OK");
+    }
+    
+    public void deleteTrain(int id) {
+        if (trainGarage.containsKey(id)) {
+            trainGarage.remove(id);
+            Terminal.printLine("OK");
+        } else {
+            Terminal.printError("no train with such id");
         }
     }
 
@@ -120,7 +137,7 @@ public class Garage {
         }
         if (!pcGarage.containsKey(rmId) && !locGarage.containsKey(rmId) && !coachGarage.containsKey(rmId)) {
             throw new SemanticsException("no rollmaterial with such id");
-        } else if (locGarage.containsKey(rmId)) {      
+        } else if (locGarage.containsKey(rmId)) {
             newTrain(id);
             trainGarage.get(id).add(locGarage.get(rmId));
             inTrains.put(rmId, locGarage.get(rmId));
@@ -134,7 +151,7 @@ public class Garage {
             inTrains.put(rmId, coachGarage.get(rmId));
         }
     }
-    
+
     private void newTrain(int id) {
         if (!trainGarage.containsKey(id) && id == nextTrainId) {
             trainGarage.put(nextTrainId, new Train(nextTrainId));

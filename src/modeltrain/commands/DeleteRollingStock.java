@@ -4,7 +4,7 @@ import modeltrain.core.Model;
 
 public class DeleteRollingStock extends Command {
 
-    public static final String REGEX = "delete rolling stock (\\S+)";
+    public static final String REGEX = "delete rolling stock ((-|\\+|)\\d+)";
     
     public DeleteRollingStock(Model model) {
         super(model, REGEX);
@@ -12,7 +12,6 @@ public class DeleteRollingStock extends Command {
     
     @Override
     public void execute(String command) {
-        // TODO Auto-generated method stub
 
     }
 

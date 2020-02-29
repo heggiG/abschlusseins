@@ -1,6 +1,7 @@
 package modeltrain.core;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -11,7 +12,6 @@ import modeltrain.trains.Train;
 
 public class TrackNetwork {
     private Map<Integer, Track> tracks;
-    private Map<Integer, Train> trainsNotOnTrack;
     private Map<Point, Boolean> trackMap;
     private Map<Train, List<Point>> trainsOnTrack;
 
@@ -19,12 +19,19 @@ public class TrackNetwork {
         tracks = new HashMap<>();
         trackMap = new HashMap<>();
         trainsOnTrack = new HashMap<>();
-        trainsNotOnTrack = new HashMap<>();
+    }
+
+    public void deleteTrain(Train t) {
+        if (trainsOnTrack.containsKey(t))
+            trainsOnTrack.remove(t);
+        else
+            throw new SemanticsException("no such train on any track");
+
     }
 
     public boolean removeTrack(int id) {
         if (!tracks.containsKey(id)) {
-            throw new SemanticsException("no such track id");
+            return false;
         } else {
             Track toRemove = tracks.get(id);
             if (toRemove.getNextEnd() == null || toRemove.getNextStart() == null) {
@@ -44,7 +51,7 @@ public class TrackNetwork {
                 }
                 return true;
             } else {
-                return false;
+                throw new SemanticsException("removing track would create two seperate tracks");
             }
         }
     }
@@ -116,56 +123,86 @@ public class TrackNetwork {
     }
 
     /**
-     * Moves all trains by n steps forward.
+     * Moves all trains by n steps forward or backwards.
      * 
      * @param n The amount of steps to make
-     * @return A tuple containing: A set of all train id's and the point at which
-     *         they stand, and a set containing all id's of crashed trains
+     * @return
      */
-    public Tuple<Set<Tuple<Integer, Point>>, Set<Integer>> step(short n) {
+    public Map<Integer, Boolean> step(short n) {
         if (trainsOnTrack.size() == 0) {
             return null;
         }
-        Set<Tuple<Integer, Point>> locations = new HashSet<>();
-        Set<Integer> crashes = new HashSet<>();
-        for (short i = 0; i < n; i++) {
-            for (Train t : trainsOnTrack.keySet()) {
-                List<Point> current = trainsOnTrack.get(t);
-                for (int o = current.size() - 1; o > 0; o--) {
-                    current.set(o, current.get(o - 1));
+        Map<Integer, Boolean> crashes = new HashMap<>();
+        if (n > 0) {
+            for (short i = 0; i < n; i++) {
+                for (Train t : trainsOnTrack.keySet()) {
+                    List<Point> current = trainsOnTrack.get(t);
+                    for (int o = current.size() - 1; o > 0; o--) {
+                        current.set(o, current.get(o - 1));
+                    }
+                    if (getNextPoint(current.get(0), t.getDirection()) == null) {
+                        crashes.put(t.getId(), false);
+                        trainsOnTrack.remove(t);
+                    } else {
+                        Tuple<Point, Point> next = getNextPoint(current.get(0), t.getDirection());
+                        current.set(0, next.getFirst());
+                        t.setDirection(next.getSecond());
+                    }
                 }
-                if (getNextPoint(current.get(0), t.getDirection()) == null) {
-                    crashes.add(t.getId());
-                    trainsNotOnTrack.put(t.getId(), t);
-                    trainsOnTrack.remove(t);
-                } else {
-                    Tuple<Point, Point> next = getNextPoint(current.get(0), t.getDirection());
-                    current.set(0, next.getFirst());
-                    t.setDirection(next.getSecond());
-                }
-            }
-            // needed to avoid concurrent modification exception
-            Set<Train> removals = new HashSet<>();
-            for (Train t : trainsOnTrack.keySet()) {
-                for (Train k : trainsOnTrack.keySet()) {
-                    if (t != k) {
-                        if (trainsOnTrack.get(k).contains(trainsOnTrack.get(t).get(0))) {
-                            removals.add(t);
-                            removals.add(k);
-                            crashes.add(t.getId());
-                            crashes.add(k.getId());
+                // needed to avoid concurrent modification exception
+                Set<Train> removals = new HashSet<>();
+                for (Train t : trainsOnTrack.keySet()) {
+                    for (Train k : trainsOnTrack.keySet()) {
+                        if (t != k) {
+                            if (trainsOnTrack.get(k).contains(trainsOnTrack.get(t).get(0))) {
+                                removals.add(t);
+                                removals.add(k);
+                                crashes.put(t.getId(), true);
+                                crashes.put(k.getId(), true);
+                            }
                         }
                     }
                 }
+                for (Train t : removals)
+                    trainsOnTrack.remove(t);
             }
-
-            for (Train t : removals)
-                trainsOnTrack.remove(t);
+        } else {
+            for (short i = 0; i < Math.abs(n); i++) {
+                for (Train t : trainsOnTrack.keySet()) {
+                    List<Point> current = trainsOnTrack.get(t);
+                    for (int o = 0; o < current.size() - 1; o++) {
+                        current.set(o, current.get(o + 1));
+                    }
+                    if (getNextPoint(current.get(current.size() - 1), t.getDirection().negate()) == null) {
+                        crashes.put(t.getId(), false);
+                        trainsOnTrack.remove(t);
+                    } else {
+                        Tuple<Point, Point> next = getNextPoint(current.get(current.size() - 1),
+                                t.getDirection().negate());
+                        current.set(0, next.getFirst());
+                        t.setDirection(next.getSecond());
+                    }
+                }
+                // needed to avoid concurrent modification exception
+                Set<Train> removals = new HashSet<>();
+                for (Train t : trainsOnTrack.keySet()) {
+                    for (Train k : trainsOnTrack.keySet()) {
+                        if (t != k) {
+                            if (trainsOnTrack.get(k)
+                                    .contains(trainsOnTrack.get(t).get(trainsOnTrack.get(t).size() - 1))) {
+                                removals.add(t);
+                                removals.add(k);
+                                crashes.put(t.getId(), true);
+                                crashes.put(k.getId(), true);
+                            }
+                        }
+                    }
+                }
+                for (Train t : removals)
+                    trainsOnTrack.remove(t);
+            }
         }
-        for (Train t : trainsOnTrack.keySet()) {
-            locations.add(new Tuple<>(t.getId(), trainsOnTrack.get(t).get(0)));
-        }
-        return new Tuple<Set<Tuple<Integer, Point>>, Set<Integer>>(locations, crashes);
+        return crashes;
     }
 
     /**
@@ -177,13 +214,10 @@ public class TrackNetwork {
     public void toggleSwitch(int id, Point dest) {
         if (!tracks.containsKey(id)) {
             throw new SemanticsException("no such track id");
+        } else if (tracks.get(id).toString().charAt(0) != 's') {
+            throw new SemanticsException("track with the id " + id + " is not a switch track");
         }
-        SwitchTrack toSwitch;
-        try {
-            toSwitch = (SwitchTrack) tracks.get(id);
-        } catch (ClassCastException e) {
-            throw new SemanticsException("the track with the id " + id + " is not a switchtrack");
-        }
+        SwitchTrack toSwitch = (SwitchTrack) tracks.get(id);
         if (dest.equals(toSwitch.getStart())) {
             throw new SemanticsException("the given point is not one to switch to");
         } else if (dest.equals(toSwitch.getEnd())) {
@@ -200,8 +234,6 @@ public class TrackNetwork {
             for (Point p : toSwitch.pointsBetweenAltEnd()) {
                 trackMap.replace(p, true);
             }
-        } else {
-            throw new SemanticsException("an unknown error occurred");
         }
     }
 
@@ -277,7 +309,7 @@ public class TrackNetwork {
                     }
                     if (tracks.get(id).getEnd().equals(t.getStart())) {
                         if (t.getNextStart() != null) {
-                            throw new SemanticsException("");
+                            throw new SemanticsException("a track at the point already exists");
                         }
                         t.setNextStart(tracks.get(id));
                         tracks.get(id).setNextEnd(t);
@@ -335,5 +367,15 @@ public class TrackNetwork {
         for (Point p : st.getPointsBetween()) {
             trackMap.put(p, false);
         }
+    }
+
+    public List<Track> listTracks() {
+        List<Track> ret = new ArrayList<>(tracks.values());
+        Collections.sort(ret);
+        return ret;
+    }
+
+    public Map<Train, List<Point>> getTrainsOnTrack() {
+        return trainsOnTrack;
     }
 }

@@ -29,7 +29,7 @@ public class Train {
      * @param lo The Locomotive to add
      */
     public void add(Locomotive lo) {
-        if (wagons.size() == 0) {
+        if (wagons.isEmpty()) {
             isPC = false;
             wagons.add(lo);
         } else if (isPC) {
@@ -44,7 +44,7 @@ public class Train {
     }
 
     public void add(Coach co) {
-        if (wagons.size() == 0) {
+        if (wagons.isEmpty()) {
             isPC = false;
             wagons.add(co);
         } else if (isPC) {
@@ -58,8 +58,8 @@ public class Train {
         }
     }
 
-    public void add(PoweredCart pc) {
-        if (wagons.size() == 0) {
+    public void add(TrainSet pc) {
+        if (wagons.isEmpty()) {
             isPC = true;
             wagons.add(pc);
         }
@@ -85,11 +85,11 @@ public class Train {
     }
 
     public boolean isValid() {
-        if (wagons.get(wagons.size() - 1).getClass().getSuperclass() == Locomotive.class
-                || wagons.get(0).getClass().getSuperclass() == Locomotive.class) {
+        if (wagons.get(wagons.size() - 1).getType().equals("locomotive")
+                || wagons.get(0).getType().equals("locomotive")) {
             return true;
-        } else if (wagons.get(wagons.size() - 1).getClass().getSuperclass() == PoweredCart.class
-                || wagons.get(0).getClass().getSuperclass() == PoweredCart.class) {
+        } else if (wagons.get(wagons.size() - 1).getType().equals("trainset")
+                || wagons.get(0).getType().equals("trainset")) {
             return true;
         }
         return false;
@@ -126,6 +126,11 @@ public class Train {
     
     public List<RollMaterial> getWagons() {
         return wagons;
+    }
+    
+    @Override
+    public int hashCode() {
+        return id;
     }
 
     @Override

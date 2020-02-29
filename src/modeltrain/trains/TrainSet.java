@@ -1,11 +1,16 @@
 package modeltrain.trains;
 
-public class PoweredCart extends RollMaterial {
+public class TrainSet extends RollMaterial {
 
-    public PoweredCart(String model, String name, boolean front, boolean back, int length) {
+    public TrainSet(String model, String name, boolean front, boolean back, int length) {
         super(model, name, front, back, length);
     }
 
+    @Override
+    public String getType() {
+        return "trainset";
+    }
+    
     @Override
     public String[] show() {
         return new String[] { "         ++         ", "         ||         ", "_________||_________",

@@ -50,6 +50,8 @@ public abstract class RollMaterial {
     
     public abstract String[] show();
     
+    public abstract String getType();
+    
     @Override
     public boolean equals(Object o) {
         if (this == o) 

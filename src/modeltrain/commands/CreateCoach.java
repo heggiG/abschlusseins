@@ -14,12 +14,12 @@ public class CreateCoach extends Command {
     
     public CreateCoach(Model model) {
         super(model, REGEX);
-        this.id = 0;
+        id = 0;
     }
     
     @Override
     public void execute(String command) {
-        Coach coach = null;
+        Coach coach;
         MatchResult mr = super.getMatcher(command);
         int length = Integer.parseInt(mr.group(2));
         boolean front = Boolean.parseBoolean(mr.group(3));
@@ -37,11 +37,11 @@ public class CreateCoach extends Command {
             coach = new SpecialCoach(getNextId(), front, back, length);
             break;
         }
-//        model.addRollMaterial(coach);
+//        model.createCoach(coach);
     }
-    
+
     private int getNextId() {
         return ++id;
     }
-
+    
 }
