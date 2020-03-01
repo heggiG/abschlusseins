@@ -14,6 +14,11 @@ public class SpecialCoach extends Coach {
     }
     
     @Override
+    public String getType() {
+        return "special coach";
+    }
+    
+    @Override
     public String toString() {
         StringBuilder sb = super.getStringBuilder();
         sb.replace(sb.indexOf("#"), sb.indexOf("#") + 1, "s");

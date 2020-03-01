@@ -99,12 +99,13 @@ public class Garage {
         return nextCoachId++;
     }
 
-    public void createPoweredCart(TrainSet pc) {
-        if (pcGarage.containsKey(pc.getId())) {
-            throw new SemanticsException("another locomotive with the id already exists");
-        } else {
-            pcGarage.put(pc.getId(), pc);
+    public String createPoweredCart(String modelType, String name, boolean front, boolean back, int length) {
+        TrainSet toAdd = new TrainSet(modelType, name, front, back, length);
+        if (pcGarage.containsKey(toAdd.getId())) {
+            throw new SemanticsException("engine id already exists");
         }
+        pcGarage.put(toAdd.getId(), toAdd);
+        return toAdd.getId();
     }
 
     public void removeTrain(int id) {
@@ -219,5 +220,4 @@ public class Garage {
             return trainGarage.get(id).show();
         }
     }
-
 }

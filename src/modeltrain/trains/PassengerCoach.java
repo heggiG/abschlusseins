@@ -14,6 +14,11 @@ public class PassengerCoach extends Coach {
     }
 
     @Override
+    public String getType() {
+        return "passenger coach";
+    }
+    
+    @Override
     public String toString() {
         StringBuilder sb = super.getStringBuilder();
         sb.replace(sb.indexOf("#"), sb.indexOf("#") + 1, "p");

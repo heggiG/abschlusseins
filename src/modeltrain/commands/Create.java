@@ -12,8 +12,8 @@ public class Create extends Command {
             + COUPLING + ")";
     private static final String ENG_REGEX = "create engine (" + ENGINE_TYPE + ") (\\S+) (\\S+) ((-|\\+|)\\d+) ("
             + COUPLING + ") (" + COUPLING + ")";
-    private static final String TS_REGEX = "create train-set (\\S+) (\\S+) (\\d+) (" + COUPLING + ") (" + COUPLING
-            + ")";
+    private static final String TS_REGEX = "create train-set (\\S+) (\\S+) ((-|\\+|)\\d+) (" + COUPLING + ") ("
+            + COUPLING + ")";
 
     public Create(Model model) {
         super(model, REGEX);
@@ -45,11 +45,12 @@ public class Create extends Command {
         if (!match.matches()) {
             throw new SyntaxException("wrong syntax for create coach command");
         }
-        String type = match.group(1);
-        int len = Integer.parseInt(match.group(2));
-        boolean couplingFront = Boolean.parseBoolean(match.group(4));
-        boolean couplingBack = Boolean.parseBoolean(match.group(5));
-        model.createCoach(couplingFront, couplingBack, len, type);
+        String modelType = match.group(1);
+        String name = match.group(2);
+        int len = Integer.parseInt(match.group(3));
+        boolean couplingFront = Boolean.parseBoolean(match.group(5));
+        boolean couplingBack = Boolean.parseBoolean(match.group(6));
+        model.createTrainSet(modelType, name, couplingFront, couplingBack, len);
     }
 
     private void createEngine(String command) {
@@ -61,8 +62,8 @@ public class Create extends Command {
         String modelType = match.group(2);
         String name = match.group(3);
         int len = Integer.parseInt(match.group(4));
-        boolean couplingFront = Boolean.parseBoolean(match.group(5));
-        boolean couplingBack = Boolean.parseBoolean(match.group(6));
+        boolean couplingFront = Boolean.parseBoolean(match.group(6));
+        boolean couplingBack = Boolean.parseBoolean(match.group(7));
         model.createEngine(couplingFront, couplingBack, len, modelType, name, type);
     }
 

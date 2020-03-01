@@ -5,9 +5,6 @@ import java.util.Set;
 import modeltrain.commands.Add;
 import modeltrain.commands.Command;
 import modeltrain.commands.Create;
-import modeltrain.commands.CreateCoach;
-import modeltrain.commands.CreateEngine;
-import modeltrain.commands.CreateTrainSet;
 import modeltrain.commands.DeleteRollingStock;
 import modeltrain.commands.DeleteTrack;
 import modeltrain.commands.DeleteTrain;
@@ -27,9 +24,6 @@ public class UserInterface {
     public UserInterface(Model model) {
         commands.add(new Add(model));
         commands.add(new Create(model));
-        commands.add(new CreateCoach(model));
-        commands.add(new CreateEngine(model));
-        commands.add(new CreateTrainSet(model));
         commands.add(new DeleteRollingStock(model));
         commands.add(new DeleteTrack(model));
         commands.add(new DeleteTrain(model));

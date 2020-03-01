@@ -12,11 +12,6 @@ public abstract class Coach extends RollMaterial {
     }
     
     @Override
-    public String getType() {
-        return "coach";
-    }
-
-    @Override
     public String getId() {
         return this.id;
     }

@@ -21,6 +21,14 @@ public class Model {
         tn.deleteTrain(garage.getTrain(id));
 
     }
+    
+    public void createTrainSet(String modelType, String name, boolean front, boolean back, int len) {
+        try {
+            garage.createPoweredCart(modelType, name, front, back, len);
+        } catch (SemanticsException e) {
+            Terminal.printError(e.getMessage());
+        }
+    }
 
     public void createEngine(boolean front, boolean back, int len, String modelType, String name, String type) {
         try {

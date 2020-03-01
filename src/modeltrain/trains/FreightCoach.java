@@ -14,6 +14,11 @@ public class FreightCoach extends Coach {
     }
     
     @Override
+    public String getType() {
+        return "freight coach";
+    }
+    
+    @Override
     public String toString() {
         StringBuilder sb = super.getStringBuilder();
         sb.replace(sb.indexOf("#"), sb.indexOf("#") + 1, "f");
