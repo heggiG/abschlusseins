@@ -4,6 +4,7 @@ import java.util.HashSet;
 import java.util.Set;
 import modeltrain.commands.Add;
 import modeltrain.commands.Command;
+import modeltrain.commands.Create;
 import modeltrain.commands.CreateCoach;
 import modeltrain.commands.CreateEngine;
 import modeltrain.commands.CreateTrainSet;
@@ -25,6 +26,7 @@ public class UserInterface {
 
     public UserInterface(Model model) {
         commands.add(new Add(model));
+        commands.add(new Create(model));
         commands.add(new CreateCoach(model));
         commands.add(new CreateEngine(model));
         commands.add(new CreateTrainSet(model));

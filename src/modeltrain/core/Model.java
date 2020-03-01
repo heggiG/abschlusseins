@@ -9,26 +9,28 @@ public class Model {
 
     private Garage garage;
     private TrackNetwork tn;
+    private int nextTrackId;
 
     public Model() {
         garage = new Garage();
         tn = new TrackNetwork();
+        nextTrackId = 1;
     }
-    
+
     public void deleteTrain(int id) {
         tn.deleteTrain(garage.getTrain(id));
-        
+
     }
-    
+
     public void createEngine(boolean front, boolean back, int len, String type) {
-        
+
     }
-    
+
     public void createCoach(boolean front, boolean back, int len, String type) {
         try {
-            garage.createCoach(front, back, len, type);
+            Terminal.printLine(garage.createCoach(front, back, len, type));
         } catch (SemanticsException e) {
-            
+            Terminal.printError(e.getMessage());
         }
     }
 
@@ -63,19 +65,26 @@ public class Model {
         }
     }
 
-    public void addTrack(Track t) {
-        try {
-            tn.addTrack(t);
-            Terminal.printLine(t.getId());
-        } catch (SemanticsException e) {
-            Terminal.printError(e.getMessage());
+    public void addTrack(Point start, Point end) {
+        if (!checkDiagonal(start, end)) {
+            Terminal.printError("no diagonal tracks");
+        } else {
+            try {
+                Track t = new Track(start, end, nextTrackId);
+                tn.addTrack(t);
+                Terminal.printLine(nextTrackId);
+                nextTrackId++;
+            } catch (SemanticsException e) {
+                Terminal.printError(e.getMessage());
+            }
         }
     }
 
-    public void addTrack(SwitchTrack st) {
+    public void addTrack(Point start, Point end, Point altEnd) {
         try {
-            tn.addTrack(st);
-            Terminal.printLine(st.getId());
+            tn.addTrack(new SwitchTrack(start, end, altEnd, nextTrackId));
+            Terminal.printLine(nextTrackId);
+            nextTrackId++;
         } catch (SemanticsException e) {
             Terminal.printError(e.getMessage());
         }
@@ -180,5 +189,12 @@ public class Model {
                 Terminal.printLine(crash.toString());
             }
         }
+    }
+
+    private boolean checkDiagonal(Point p1, Point p2) {
+        if (p1.getXCord() != p2.getXCord() && p1.getYCord() != p2.getYCord()) {
+            return false;
+        }
+        return true;
     }
 }

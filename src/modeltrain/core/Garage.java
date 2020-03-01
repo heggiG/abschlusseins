@@ -59,8 +59,27 @@ public class Garage {
         }
     }
 
-    public void createCoach(boolean front, boolean back, int len, String type) {
-        
+    public int createCoach(boolean front, boolean back, int len, String type) {
+        Coach toAdd;
+        switch (type) {
+        case "passenger":
+            toAdd = new PassengerCoach(nextCoachId, front, back, len);
+
+            break;
+
+        case "special":
+            toAdd = new SpecialCoach(nextCoachId, front, back, len);
+            break;
+
+        case "freight":
+            toAdd = new FreightCoach(nextCoachId, front, back, len);
+            break;
+
+        default:
+            throw new SemanticsException("illegal coach type");
+        }
+        coachGarage.put(toAdd.getId(), toAdd);
+        return nextCoachId++;
     }
 
     public void createPoweredCart(TrainSet pc) {
@@ -94,7 +113,7 @@ public class Garage {
         }
         Terminal.printLine("OK");
     }
-    
+
     public void deleteTrain(int id) {
         if (trainGarage.containsKey(id)) {
             trainGarage.remove(id);

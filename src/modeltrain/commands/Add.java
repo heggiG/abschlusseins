@@ -53,9 +53,7 @@ public class Add extends Command {
         } else {
             Point p1 = new Point(Integer.parseInt(match.group(1)), Integer.parseInt(match.group(3)));
             Point p2 = new Point(Integer.parseInt(match.group(5)), Integer.parseInt(match.group(7)));
-            Track t = new Track(p1, p2, nextTrackId);
-            model.addTrack(t);
-            nextTrackId++;
+            model.addTrack(p1, p2);
         }
     }
 
@@ -67,9 +65,7 @@ public class Add extends Command {
             Point p1 = new Point(Integer.parseInt(match.group(1)), Integer.parseInt(match.group(3)));
             Point p2 = new Point(Integer.parseInt(match.group(5)), Integer.parseInt(match.group(7)));
             Point p3 = new Point(Integer.parseInt(match.group(9)), Integer.parseInt(match.group(11)));
-            SwitchTrack st = new SwitchTrack(p1, p2, p3, nextTrackId);
-            model.addTrack(st);
-            nextTrackId++;
+            model.addTrack(p1, p2, p3);
         }
     }
 
