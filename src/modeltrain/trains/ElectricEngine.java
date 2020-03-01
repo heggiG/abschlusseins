@@ -14,6 +14,11 @@ public class ElectricEngine extends Engine {
     }
 
     @Override
+    public String getType() {
+        return "electric engine";
+    }
+    
+    @Override
     public String toString() {
         StringBuilder sb = super.getString();
         sb.replace(sb.indexOf("#"), sb.indexOf("#") + 1, "e");

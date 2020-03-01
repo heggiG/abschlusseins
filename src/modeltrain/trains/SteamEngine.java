@@ -13,6 +13,11 @@ public class SteamEngine extends Engine {
     }
 
     @Override
+    public String getType() {
+        return "steam engine";
+    }
+    
+    @Override
     public String toString() {
         StringBuilder sb = super.getString();
         sb.replace(sb.indexOf("#"), sb.indexOf("#") + 1, "s");

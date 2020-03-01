@@ -14,6 +14,11 @@ public class DieselEngine extends Engine {
     }
 
     @Override
+    public String getType() {
+        return "diesel engine";
+    }
+    
+    @Override
     public String toString() {
         StringBuilder sb = super.getString();
         sb.replace(sb.indexOf("#"), sb.indexOf("#") + 1, "d");

@@ -16,10 +16,11 @@ public class Model {
         tn = new TrackNetwork();
         nextTrackId = 1;
     }
-    
+
     public void deleteRS(String id) {
         try {
             garage.deleteRS(id);
+            Terminal.printLine("OK");
         } catch (SemanticsException e) {
             Terminal.printError(e.getMessage());
         }
@@ -27,7 +28,7 @@ public class Model {
 
     public void deleteTrain(int id) {
         try {
-            tn.deleteTrain(garage.getTrain(id));
+            garage.deleteTrain(id);
             Terminal.printLine("OK");
         } catch (SemanticsException e) {
             Terminal.printError(e.getMessage());
@@ -36,7 +37,7 @@ public class Model {
 
     public void createTrainSet(String modelType, String name, boolean front, boolean back, int len) {
         try {
-            garage.createPoweredCart(modelType, name, front, back, len);
+            Terminal.printLine(garage.createPoweredCart(modelType, name, front, back, len));
         } catch (SemanticsException e) {
             Terminal.printError(e.getMessage());
         }
@@ -130,12 +131,12 @@ public class Model {
     }
 
     public void listTrains() {
-        if (garage.listTrains().isEmpty()) {
-            Terminal.printError("no trains added yet");
-        } else {
+        try {
             for (String s : garage.listTrains()) {
                 Terminal.printLine(s);
             }
+        } catch (SemanticsException e) {
+            Terminal.printLine("No train exists");
         }
     }
 

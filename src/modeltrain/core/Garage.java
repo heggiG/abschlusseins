@@ -6,7 +6,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-import edu.kit.informatik.Terminal;
 import modeltrain.trains.*;
 
 public class Garage {
@@ -18,6 +17,7 @@ public class Garage {
     private Map<Integer, Train> trainGarage;
     private int nextTrainId;
     private int nextCoachId;
+    private List<Integer> nextFreeTrainId;
 
     public Garage() {
         engineGarage = new HashMap<>();
@@ -25,6 +25,7 @@ public class Garage {
         pcGarage = new HashMap<>();
         trainGarage = new HashMap<>();
         inTrains = new HashMap<>();
+        nextFreeTrainId = new ArrayList<>();
         nextTrainId = 1;
         nextCoachId = 1;
     }
@@ -130,15 +131,19 @@ public class Garage {
         } else {
             throw new SemanticsException("no rolling stock with such id");
         }
-        Terminal.printLine("OK");
     }
 
     public void deleteTrain(int id) {
         if (trainGarage.containsKey(id)) {
+            for (Map.Entry<String, RollMaterial> s : inTrains.entrySet()) {
+                if (trainGarage.get(id).getWagons().contains(s.getValue())) {
+                    inTrains.remove(s.getKey());
+                }
+            }
             trainGarage.remove(id);
-            Terminal.printLine("OK");
+            nextFreeTrainId.add(id);
         } else {
-            Terminal.printError("no train with such id");
+            throw new SemanticsException("no train with such id");
         }
     }
 
@@ -194,6 +199,13 @@ public class Garage {
         if (!trainGarage.containsKey(id) && id == nextTrainId) {
             trainGarage.put(nextTrainId, new Train(nextTrainId));
             nextTrainId++;
+        } else if (!nextFreeTrainId.isEmpty()) {
+            if (nextFreeTrainId.contains(id)) {
+                trainGarage.put(id, new Train(id));
+                nextFreeTrainId.remove(nextFreeTrainId.indexOf(id));
+            }
+        } else if (trainGarage.containsKey(id)) {
+            // all fine
         } else if (id != nextTrainId) {
             throw new SemanticsException("given id dosen't match the next expected id");
         }
@@ -221,8 +233,10 @@ public class Garage {
             List<String> ret = new ArrayList<>();
             for (int i = 0; i < trainGarage.get(id).show().length; i++) {
                 ret.add(trainGarage.get(id).show()[i]);
-                if (Pattern.matches("(\\s)+", ret.get(ret.size() - 1))) {
-                    ret.remove(ret.size() - 1);
+            }
+            for (int i = 0; i < ret.size(); i++) {
+                if (Pattern.matches("(\\s)+", ret.get(i))) {
+                    ret.remove(ret.indexOf(ret.get(i)));
                 }
             }
             return ret;

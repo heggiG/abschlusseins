@@ -23,9 +23,6 @@ public class TrackNetwork {
     public void deleteTrain(Train t) {
         if (trainsOnTrack.containsKey(t))
             trainsOnTrack.remove(t);
-        else
-            throw new SemanticsException("no such train on any track");
-
     }
 
     public boolean removeTrack(int id) {
