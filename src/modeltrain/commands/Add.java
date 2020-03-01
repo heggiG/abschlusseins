@@ -11,7 +11,7 @@ public class Add extends Command {
     private static final String ADD_REGEX = "add (\\s*\\S*)*";
     private static final String ADD_TRACK = "add track " + COORDINATE + " -> " + COORDINATE;
     private static final String ADD_SWITCH = "add switch " + COORDINATE + " -> " + COORDINATE + "," + COORDINATE;
-    private static final String ADD_TRAIN = "add train ((-|\\+|)d+) (\\S+)";
+    private static final String ADD_TRAIN = "add train ((-|\\+|)\\d+) (\\S+)";
 
     public Add(Model model) {
         super(model, ADD_REGEX);

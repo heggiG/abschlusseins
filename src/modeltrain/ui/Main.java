@@ -7,8 +7,17 @@ import modeltrain.core.Model;
 import modeltrain.core.SemanticsException;
 import modeltrain.core.SyntaxException;
 
+/**
+ * The Trainsimulations main class
+ * 
+ * @author Florian
+ * @version 1.0
+ */
 public class Main {
 
+    /**
+     * Private Main class constructor
+     */
     private Main() {
     };
 
@@ -18,7 +27,7 @@ public class Main {
         do {
             try {
                 userInterface.executeCommand(Terminal.readLine());
-            } catch (SyntaxException | SemanticsException e) {
+            } catch (SyntaxException e) {
                 Terminal.printError(e.getMessage());
             } catch (NoSuchElementException e) {
                 Terminal.printError("unknown command");

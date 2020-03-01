@@ -4,16 +4,9 @@ import modeltrain.core.SemanticsException;
 
 public abstract class Coach extends RollMaterial {
 
-    private final String id;
 
     public Coach(Integer id, boolean front, boolean back, int length) {
-        super("", "", front, back, length);
-        this.id = "W" + id;
-    }
-    
-    @Override
-    public String getId() {
-        return this.id;
+        super("", id.toString(), front, back, length);
     }
 
     @Override

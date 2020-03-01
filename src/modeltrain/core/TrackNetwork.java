@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
 import modeltrain.trains.Train;
 
 public class TrackNetwork {
@@ -34,6 +33,13 @@ public class TrackNetwork {
             return false;
         } else {
             Track toRemove = tracks.get(id);
+            for (List<Point> lp : trainsOnTrack.values()) {
+                for (Point p : lp) {
+                    if (toRemove.getPointsBetween().contains(p)) {
+                        throw new SemanticsException("theres a train on the track");
+                    }
+                }
+            }
             if (toRemove.getNextEnd() == null || toRemove.getNextStart() == null) {
                 if (toRemove.getNextEnd() == null) {
                     trackMap.remove(toRemove.getEnd());
@@ -305,22 +311,6 @@ public class TrackNetwork {
             }
         }
     }
-
-//    /**
-//     * Adds a switch track to the network
-//     * 
-//     * @param toAdd The switchtrack to add
-//     */
-//    public void addTrack(final SwitchTrack toAdd) {
-//        if (trackMap.isEmpty()) {
-//            addPointsFromTrack(toAdd);
-//            tracks.put(toAdd.getId(), toAdd);
-//        } else {
-//            if (!findFitting(toAdd)) {
-//                throw new SemanticsException("none of the points exist already");
-//            }
-//        }
-//    }
 
     private boolean findFitting(Track toAdd) {
         for (Track tr : tracks.values()) {

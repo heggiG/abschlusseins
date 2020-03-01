@@ -1,7 +1,8 @@
 package modeltrain.trains;
 
 /**
- * Class that implements rollmaterial, the parent class to anything that goes on train tracks
+ * Class that implements rollmaterial, the parent class to anything that goes on
+ * train tracks
  * 
  * @author Florian
  * @version 0.2
@@ -21,7 +22,10 @@ public abstract class RollMaterial {
         this.backCoupling = backCoupling;
         this.model = model;
         this.name = name;
-        this.id = model + "-" + name;
+        if (model != "")
+            this.id = model + "-" + name;
+        else
+            this.id = "W" + name;
         this.length = length;
         trainNumber = "none";
     }
@@ -45,11 +49,11 @@ public abstract class RollMaterial {
     public String getId() {
         return id;
     }
-    
+
     public int getLength() {
         return length;
     }
-    
+
     public void setTrainNumber(Integer id) {
         if (id == -1) {
             trainNumber = "none";
@@ -57,18 +61,18 @@ public abstract class RollMaterial {
             trainNumber = id.toString();
         }
     }
-    
+
     public String getTrainNumber() {
         return trainNumber;
     }
-    
+
     public abstract String[] show();
-    
+
     public abstract String getType();
-    
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) 
+        if (this == o)
             return true;
         else if (getClass() != o.getClass())
             return false;

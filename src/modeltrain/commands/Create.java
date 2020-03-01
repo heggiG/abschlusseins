@@ -74,8 +74,8 @@ public class Create extends Command {
         }
         String type = match.group(1);
         int len = Integer.parseInt(match.group(2));
-        boolean couplingFront = Boolean.parseBoolean(match.group(3));
-        boolean couplingBack = Boolean.parseBoolean(match.group(4));
+        boolean couplingFront = Boolean.parseBoolean(match.group(4));
+        boolean couplingBack = Boolean.parseBoolean(match.group(5));
         model.createCoach(couplingFront, couplingBack, len, type);
     }
 }

@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 import edu.kit.informatik.Terminal;
 import modeltrain.trains.*;
 
@@ -207,17 +208,24 @@ public class Garage {
             throw new SemanticsException("no trains have been added yet");
         }
         List<String> ret = new ArrayList<>();
-        for (Integer i : trainGarage.keySet()) {
-            ret.add(trainGarage.get(i).toString());
+        for (Train i : trainGarage.values()) {
+            ret.add(i.toString());
         }
         return ret;
     }
 
-    public String[] showTrain(int id) {
+    public List<String> showTrain(int id) {
         if (!trainGarage.containsKey(id)) {
             throw new SemanticsException("no train with the id " + id);
         } else {
-            return trainGarage.get(id).show();
+            List<String> ret = new ArrayList<>();
+            for (int i = 0; i < trainGarage.get(id).show().length; i++) {
+                ret.add(trainGarage.get(id).show()[i]);
+                if (Pattern.matches("(\\s)+", ret.get(ret.size() - 1))) {
+                    ret.remove(ret.size() - 1);
+                }
+            }
+            return ret;
         }
     }
 }

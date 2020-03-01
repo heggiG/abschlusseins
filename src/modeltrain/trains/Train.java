@@ -106,28 +106,35 @@ public class Train {
     public int getId() {
         return id;
     }
-    
+
     public String[] show() {
         if (wagons.size() == 0) {
             return null;
         } else {
-            String[] ret = new String[wagons.get(0).show().length];
+            StringBuilder[] sb = new StringBuilder[wagons.get(0).show().length];
             for (RollMaterial rm : wagons) {
                 for (int i = 0; i < rm.show().length; i++) {
-                    if (ret[i] != null) {
-                        ret[i].concat(" ");
+                    if (sb[i] == null) {
+                        sb[i] = new StringBuilder();
                     }
-                    ret[i].concat(rm.show()[i]);
+                    if (sb[i].length() != 0) {
+                        sb[i].append(" ");
+                    }
+                    sb[i].append(rm.show()[i]);
                 }
             }
-        return ret;
-        }        
+            String ret[] = new String[sb.length];
+            for (int i = 0; i < ret.length; i++) {
+                ret[i] = sb[i].toString();
+            }
+            return ret;
+        }
     }
-    
+
     public List<RollMaterial> getWagons() {
         return wagons;
     }
-    
+
     @Override
     public int hashCode() {
         return id;
@@ -151,7 +158,7 @@ public class Train {
         sb.append(id);
         for (RollMaterial rm : wagons) {
             sb.append(" ");
-            sb.append(rm);
+            sb.append(rm.getId());
         }
         return sb.toString();
     }

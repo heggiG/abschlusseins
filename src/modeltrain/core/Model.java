@@ -16,12 +16,24 @@ public class Model {
         tn = new TrackNetwork();
         nextTrackId = 1;
     }
+    
+    public void deleteRS(String id) {
+        try {
+            garage.deleteRS(id);
+        } catch (SemanticsException e) {
+            Terminal.printError(e.getMessage());
+        }
+    }
 
     public void deleteTrain(int id) {
-        tn.deleteTrain(garage.getTrain(id));
-
+        try {
+            tn.deleteTrain(garage.getTrain(id));
+            Terminal.printLine("OK");
+        } catch (SemanticsException e) {
+            Terminal.printError(e.getMessage());
+        }
     }
-    
+
     public void createTrainSet(String modelType, String name, boolean front, boolean back, int len) {
         try {
             garage.createPoweredCart(modelType, name, front, back, len);
