@@ -22,8 +22,12 @@ public class Model {
 
     }
 
-    public void createEngine(boolean front, boolean back, int len, String type) {
-
+    public void createEngine(boolean front, boolean back, int len, String modelType, String name, String type) {
+        try {
+            Terminal.printLine(garage.createEngine(front, back, len, modelType, name, type));
+        } catch (SemanticsException e) {
+            Terminal.printError(e.getMessage());
+        }
     }
 
     public void createCoach(boolean front, boolean back, int len, String type) {

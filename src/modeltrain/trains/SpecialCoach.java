@@ -12,5 +12,11 @@ public class SpecialCoach extends Coach {
                 "\\--------------|  |", "  | |          |  |", " _|_|__________|  |", "|_________________|",
                 "   (O)       (O)   " };
     }
-
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = super.getStringBuilder();
+        sb.replace(sb.indexOf("#"), sb.indexOf("#") + 1, "s");
+        return sb.toString();
+    }
 }

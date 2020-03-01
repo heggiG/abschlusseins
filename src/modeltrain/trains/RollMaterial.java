@@ -14,6 +14,7 @@ public abstract class RollMaterial {
     private final String name;
     private final String id;
     private final int length;
+    private String trainNumber;
 
     public RollMaterial(String model, String name, boolean frontCoupling, boolean backCoupling, int length) {
         this.frontCoupling = frontCoupling;
@@ -22,6 +23,7 @@ public abstract class RollMaterial {
         this.name = name;
         this.id = model + "-" + name;
         this.length = length;
+        trainNumber = "none";
     }
 
     public boolean getFrontCoupling() {
@@ -46,6 +48,18 @@ public abstract class RollMaterial {
     
     public int getLength() {
         return length;
+    }
+    
+    public void setTrainNumber(Integer id) {
+        if (id == -1) {
+            trainNumber = "none";
+        } else {
+            trainNumber = id.toString();
+        }
+    }
+    
+    public String getTrainNumber() {
+        return trainNumber;
     }
     
     public abstract String[] show();

@@ -28,7 +28,7 @@ public class Train {
      * 
      * @param lo The Locomotive to add
      */
-    public void add(Locomotive lo) {
+    public void add(Engine lo) {
         if (wagons.isEmpty()) {
             isPC = false;
             wagons.add(lo);

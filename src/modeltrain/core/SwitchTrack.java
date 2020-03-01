@@ -11,7 +11,7 @@ import java.util.Set;
  */
 public class SwitchTrack extends Track {
 
-    private Point altEnd;
+    private final Point altEnd;
     private Point currentSwitch;
     private Track nextAltEnd;
 
@@ -24,12 +24,12 @@ public class SwitchTrack extends Track {
     @Override
     public Set<Point> getPointsBetween() {
         Set<Point> ret = new HashSet<>();
-        ret.addAll(pointsBetweenEnd());
-        ret.addAll(pointsBetweenAltEnd());
+        ret.addAll(getPointsBetweenEnd());
+        ret.addAll(getPointsBetweenAltEnd());
         return ret;
     }
     
-    public Set<Point> pointsBetweenEnd() {
+    public Set<Point> getPointsBetweenEnd() {
         Set<Point> ret = new HashSet<>();
         Point adder = end.sub(start).reduce();
         for (int i = 1; i < start.lengthBetweenPoints(end); i++) {
@@ -38,7 +38,7 @@ public class SwitchTrack extends Track {
         return ret;
     }
     
-    public Set<Point> pointsBetweenAltEnd() {
+    public Set<Point> getPointsBetweenAltEnd() {
         Set<Point> ret = new HashSet<>();
         Point adder = altEnd.sub(start).reduce();
         for (int i = 1; i < start.lengthBetweenPoints(altEnd); i++) {
@@ -47,6 +47,7 @@ public class SwitchTrack extends Track {
         return ret;
     }
 
+    @Override
     public Point getAltEnd() {
         return altEnd;
     }
@@ -63,18 +64,9 @@ public class SwitchTrack extends Track {
         return nextAltEnd;
     }
 
+    @Override
     public void setNextAltEnd(Track nextAltEnd) {
         this.nextAltEnd = nextAltEnd;
-    }
-
-    @Override
-    public Point getOtherPoint(Point po) {
-        if (po.equals(start))
-            return currentSwitch;
-        else if (po.equals(currentSwitch))
-            return start;
-        else
-            throw new IllegalStateException("Point is not part of the track/switch is in wrong position");
     }
 
     @Override
@@ -86,6 +78,10 @@ public class SwitchTrack extends Track {
 
     @Override
     public boolean equals(Object o) {
+        if (o == null) 
+            return false;
+        if (o == this)
+            return true;
         if (o.getClass() != this.getClass())
             return false;
         SwitchTrack st = (SwitchTrack) o;

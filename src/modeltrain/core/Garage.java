@@ -3,17 +3,14 @@ package modeltrain.core;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 import edu.kit.informatik.Terminal;
 import modeltrain.trains.*;
 
 public class Garage {
 
-    private Map<String, Locomotive> locGarage;
+    private Map<String, Engine> engineGarage;
     private Map<String, Coach> coachGarage;
     private Map<String, TrainSet> pcGarage;
     private Map<String, RollMaterial> inTrains;
@@ -22,7 +19,7 @@ public class Garage {
     private int nextCoachId;
 
     public Garage() {
-        locGarage = new HashMap<>();
+        engineGarage = new HashMap<>();
         coachGarage = new HashMap<>();
         pcGarage = new HashMap<>();
         trainGarage = new HashMap<>();
@@ -31,8 +28,8 @@ public class Garage {
         nextCoachId = 1;
     }
 
-    public Locomotive getLoc(String id) {
-        return locGarage.get(id);
+    public Engine getLoc(String id) {
+        return engineGarage.get(id);
     }
 
     public TrainSet getPc(String id) {
@@ -51,12 +48,29 @@ public class Garage {
         }
     }
 
-    public void createEngine(Locomotive lo) {
-        if (locGarage.containsKey(lo.getId())) {
-            throw new SemanticsException("another locomotive with the id already exists");
-        } else {
-            locGarage.put(lo.getId(), lo);
+    public String createEngine(boolean front, boolean back, int len, String modelType, String name, String type) {
+        Engine toAdd;
+        switch (type) {
+        case "diesel":
+            toAdd = new DieselEngine(modelType, name, front, back, len);
+            break;
+
+        case "steam":
+            toAdd = new SteamEngine(modelType, name, front, back, len);
+            break;
+
+        case "electrical":
+            toAdd = new ElectricEngine(modelType, name, front, back, len);
+            break;
+
+        default:
+            throw new SemanticsException("illegal engine type");
         }
+        if (engineGarage.containsKey(toAdd.getId())) {
+            throw new SemanticsException("engine id already exists");
+        }
+        engineGarage.put(toAdd.getId(), toAdd);
+        return toAdd.getId();
     }
 
     public int createCoach(boolean front, boolean back, int len, String type) {
@@ -77,6 +91,9 @@ public class Garage {
 
         default:
             throw new SemanticsException("illegal coach type");
+        }
+        if (coachGarage.containsKey(toAdd.getId())) {
+            throw new SemanticsException("coach id alredy exists");
         }
         coachGarage.put(toAdd.getId(), toAdd);
         return nextCoachId++;
@@ -102,8 +119,8 @@ public class Garage {
         if (inTrains.containsKey(id)) {
             throw new SemanticsException("rolling stock is placed in a train");
         }
-        if (locGarage.containsKey(id)) {
-            locGarage.remove(id);
+        if (engineGarage.containsKey(id)) {
+            engineGarage.remove(id);
         } else if (pcGarage.containsKey(id)) {
             pcGarage.remove(id);
         } else if (coachGarage.containsKey(id)) {
@@ -125,8 +142,8 @@ public class Garage {
 
     public List<String> listEngines() {
         List<String> ret = new ArrayList<>();
-        for (String i : locGarage.keySet()) {
-            ret.add(locGarage.get(i).toString());
+        for (String i : engineGarage.keySet()) {
+            ret.add(engineGarage.get(i).toString());
         }
         Collections.sort(ret);
         return ret;
@@ -154,12 +171,12 @@ public class Garage {
         if (inTrains.containsKey(rmId)) {
             throw new SemanticsException("rollmaterial is already in another train");
         }
-        if (!pcGarage.containsKey(rmId) && !locGarage.containsKey(rmId) && !coachGarage.containsKey(rmId)) {
+        if (!pcGarage.containsKey(rmId) && !engineGarage.containsKey(rmId) && !coachGarage.containsKey(rmId)) {
             throw new SemanticsException("no rollmaterial with such id");
-        } else if (locGarage.containsKey(rmId)) {
+        } else if (engineGarage.containsKey(rmId)) {
             newTrain(id);
-            trainGarage.get(id).add(locGarage.get(rmId));
-            inTrains.put(rmId, locGarage.get(rmId));
+            trainGarage.get(id).add(engineGarage.get(rmId));
+            inTrains.put(rmId, engineGarage.get(rmId));
         } else if (pcGarage.containsKey(rmId)) {
             newTrain(id);
             trainGarage.get(id).add(pcGarage.get(rmId));

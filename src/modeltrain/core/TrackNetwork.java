@@ -222,17 +222,17 @@ public class TrackNetwork {
         if (dest.equals(toSwitch.getStart())) {
             throw new SemanticsException("the given point is not one to switch to");
         } else if (dest.equals(toSwitch.getEnd())) {
-            for (Point p : toSwitch.pointsBetweenEnd()) {
+            for (Point p : toSwitch.getPointsBetweenEnd()) {
                 trackMap.replace(p, true);
             }
-            for (Point p : toSwitch.pointsBetweenAltEnd()) {
+            for (Point p : toSwitch.getPointsBetweenAltEnd()) {
                 trackMap.replace(p, false);
             }
         } else if (dest.equals(toSwitch.getAltEnd())) {
-            for (Point p : toSwitch.pointsBetweenEnd()) {
+            for (Point p : toSwitch.getPointsBetweenEnd()) {
                 trackMap.replace(p, false);
             }
-            for (Point p : toSwitch.pointsBetweenAltEnd()) {
+            for (Point p : toSwitch.getPointsBetweenAltEnd()) {
                 trackMap.replace(p, true);
             }
         }
@@ -288,87 +288,101 @@ public class TrackNetwork {
     /**
      * Adds a track to the network
      * 
-     * @param t The track to add
+     * @param toAdd The track to add
      */
-    public void addTrack(final Track t) {
+    public void addTrack(final Track toAdd) {
         if (trackMap.isEmpty()) {
-            addPointsFromTrack(t);
-            tracks.put(t.getId(), t);
+            addPointsFromTrack(toAdd);
+            tracks.put(toAdd.getId(), toAdd);
         } else {
-            for (Track tr : tracks.values()) {
-                if (tr.getStart().equals(t.getStart()) || tr.getEnd().equals(t.getStart())) {
-                    
-                }
+            if (tracks.containsValue(toAdd)) {
+                throw new SemanticsException("track already exists");
             }
-//            if (trackMap.get(t.getStart()) != null || trackMap.get(t.getEnd()) != null) {
-//                if (tracks.containsValue(t)) {
-//                    throw new SemanticsException("track already exists");
-//                }
-//                addPointsFromTrack(t);
-//                tracks.put(t.getId(), t);
-//                for (Integer id : tracks.keySet()) {
-//                    if (t.getId() == id) {
-//                        continue;
-//                    }
-//                    if (tracks.get(id).getEnd().equals(t.getStart())) {
-//                        if (t.getNextStart() != null) {
-//                            throw new SemanticsException("a track at the point already exists");
-//                        }
-//                        t.setNextStart(tracks.get(id));
-//                        tracks.get(id).setNextEnd(t);
-//                    } else if (tracks.get(id).getStart().equals(t.getStart())) {
-//                        t.setNextStart(tracks.get(id));
-//                        tracks.get(id).setNextStart(t);
-//                    } else if (tracks.get(id).getEnd().equals(t.getEnd())) {
-//                        t.setNextEnd(tracks.get(id));
-//                        tracks.get(id).setNextEnd(t);
-//                    } else if (tracks.get(id).getStart().equals(t.getEnd())) {
-//                        t.setNextEnd(tracks.get(id));
-//                        tracks.get(id).setNextStart(t);
-//                    }
-//                }
-//            } else {
-//                throw new SemanticsException("track contains none of the points from the track");
-//            }
+            if (!findFitting(toAdd)) {
+                throw new SemanticsException("none of the points exist already");
+            } else {
+                tracks.put(toAdd.getId(), toAdd);
+            }
         }
     }
 
-    /**
-     * Adds a switch track to the network
-     * 
-     * @param st The switchtrack to add
-     */
-    public void addTrack(final SwitchTrack st) {
-        if (trackMap.isEmpty()) {
-            addPointsFromTrack(st);
-            tracks.put(st.getId(), st);
-        } else {
-            if ((trackMap.get(st.getStart()) != null || trackMap.get(st.getEnd()) != null
-                    || trackMap.get(st.getAltEnd()) != null)
-                    || (trackMap.get(st.getStart()) == false || trackMap.get(st.getEnd()) == false
-                            || trackMap.get(st.getAltEnd()) == false)) {
-                addPointsFromTrack(st);
-                tracks.put(st.getId(), st);
-            } else {
-                throw new SemanticsException("none of the points are on the track");
+//    /**
+//     * Adds a switch track to the network
+//     * 
+//     * @param toAdd The switchtrack to add
+//     */
+//    public void addTrack(final SwitchTrack toAdd) {
+//        if (trackMap.isEmpty()) {
+//            addPointsFromTrack(toAdd);
+//            tracks.put(toAdd.getId(), toAdd);
+//        } else {
+//            if (!findFitting(toAdd)) {
+//                throw new SemanticsException("none of the points exist already");
+//            }
+//        }
+//    }
+
+    private boolean findFitting(Track toAdd) {
+        for (Track tr : tracks.values()) {
+            if (tr.getStart().equals(toAdd.getStart()) && tr.getNextStart() == null) {
+                addPointsFromTrack(toAdd);
+                tr.setNextStart(toAdd);
+                toAdd.setNextStart(tr);
+                return true;
+            } else if (tr.getEnd().equals(toAdd.getStart()) && tr.getNextEnd() == null) {
+                addPointsFromTrack(toAdd);
+                tr.setNextEnd(toAdd);
+                toAdd.setNextStart(tr);
+                return true;
+            } else if (tr.getStart().equals(toAdd.getEnd()) && tr.getNextStart() == null) {
+                addPointsFromTrack(toAdd);
+                tr.setNextStart(toAdd);
+                toAdd.setNextEnd(tr);
+                return true;
+            } else if (tr.getEnd().equals(toAdd.getEnd()) && tr.getNextEnd() == null) {
+                addPointsFromTrack(toAdd);
+                tr.setNextEnd(toAdd);
+                toAdd.setNextEnd(tr);
+                return true;
+            } else if (tr.getAltEnd() != null && tr.getStart().equals(toAdd.getAltEnd())
+                    && tr.getNextAltEnd() == null) {
+                addPointsFromTrack(toAdd);
+                tr.setNextStart(toAdd);
+                toAdd.setNextAltEnd(tr);
+                return true;
+            } else if (tr.getAltEnd() != null && tr.getEnd().equals(toAdd.getAltEnd()) && tr.getNextAltEnd() == null) {
+                addPointsFromTrack(toAdd);
+                tr.setNextEnd(toAdd);
+                toAdd.setNextAltEnd(tr);
+                return true;
+            } else if (tr.getAltEnd() != null && tr.getAltEnd().equals(toAdd.getStart())) {
+                addPointsFromTrack(toAdd);
+                tr.setNextAltEnd(toAdd);
+                toAdd.setNextStart(tr);
+                return true;
+            } else if (tr.getAltEnd() != null && tr.getAltEnd().equals(toAdd.getEnd())) {
+                addPointsFromTrack(toAdd);
+                ;
+                tr.setNextAltEnd(toAdd);
+                toAdd.setNextEnd(tr);
+                return true;
+            } else if (tr.getAltEnd() != null && tr.getAltEnd().equals(toAdd.getAltEnd())) {
+                addPointsFromTrack(toAdd);
+                tr.setNextAltEnd(toAdd);
+                toAdd.setNextEnd(tr);
+                return true;
             }
         }
+        return false;
     }
 
     private void addPointsFromTrack(Track t) {
         trackMap.put(t.getStart(), true);
         trackMap.put(t.getEnd(), true);
+        if (t.getAltEnd() != null)
+            trackMap.put(t.getAltEnd(), true);
         for (Point p : t.getPointsBetween()) {
             trackMap.put(p, true);
-        }
-    }
-
-    private void addPointsFromTrack(SwitchTrack st) {
-        trackMap.put(st.getStart(), true);
-        trackMap.put(st.getEnd(), true);
-        trackMap.put(st.getAltEnd(), true);
-        for (Point p : st.getPointsBetween()) {
-            trackMap.put(p, false);
         }
     }
 

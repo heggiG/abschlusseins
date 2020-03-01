@@ -1,8 +1,8 @@
 package modeltrain.trains;
 
-public class SteamLocomotive extends Locomotive {
+public class SteamEngine extends Engine {
 
-    public SteamLocomotive(String modelSeries, String name, boolean front, boolean back, int length) {
+    public SteamEngine(String modelSeries, String name, boolean front, boolean back, int length) {
         super(modelSeries, name, front, back, length);
     }
 
@@ -12,4 +12,10 @@ public class SteamLocomotive extends Locomotive {
                 "   /---------|| | | ", "  + ========  +-+ | ", " _|--/~\\------/~\\-+ ", "//// \\_/      \\_/   "};
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = super.getString();
+        sb.replace(sb.indexOf("#"), sb.indexOf("#") + 1, "s");
+        return sb.toString();
+    }
 }

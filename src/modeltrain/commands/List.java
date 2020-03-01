@@ -29,7 +29,7 @@ public class List extends Command {
             model.listCoaches();
             break;
 
-        case "enignes":
+        case "engines":
             model.listEngines();
             break;
 

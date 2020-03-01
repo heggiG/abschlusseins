@@ -10,46 +10,49 @@ import java.util.Set;
  * @version 1.0
  */
 public class Track implements Comparable<Track> {
-    
+
     private Track nextStart;
     private Track nextEnd;
-    protected Point start;
-    protected Point end;
-    protected int id;
-    
+    protected final Point start;
+    protected final Point end;
+    protected final int id;
+
     public Track(Point start, Point end, int id) {
         this.start = start;
         this.end = end;
         this.id = id;
     }
-    
+
     public Point getStart() {
         return start;
     }
-    
+
     public Point getEnd() {
         return end;
     }
-    
-    public Point getOtherPoint(Point po) {
-        if(po.equals(start))
-            return end;
-        else if(po.equals(end))
-            return start;
-        else
-            throw new SemanticsException("point is not part of the track");
+
+    public Point getAltEnd() {
+        return null;
     }
-    
+
+    public Track getNextAltEnd() {
+        return null;
+    }
+
+    public void setNextAltEnd(Track t) {
+        // do nothing
+    }
+
     public int getLength() {
-     int xLength = start.getXCord() - end.getXCord();
-     int yLength = start.getYCord() - end.getYCord();
-     return (int) Math.round(Math.sqrt(xLength * xLength + yLength * yLength));
+        int xLength = start.getXCord() - end.getXCord();
+        int yLength = start.getYCord() - end.getYCord();
+        return (int) Math.round(Math.sqrt(xLength * xLength + yLength * yLength));
     }
-    
+
     public int getId() {
         return id;
     }
-    
+
     public Set<Point> getPointsBetween() {
         Set<Point> ret = new HashSet<>();
         Point adder = end.sub(start).reduce();
@@ -58,23 +61,23 @@ public class Track implements Comparable<Track> {
         }
         return ret;
     }
-    
+
     public Track getNextStart() {
         return nextStart;
     }
-    
+
     public void setNextStart(Track t) {
         nextStart = t;
     }
-    
+
     public Track getNextEnd() {
         return nextEnd;
     }
-    
+
     public void setNextEnd(Track t) {
         nextEnd = t;
     }
-    
+
     public void setFromPoint(Point p, Track t) {
         if (p.equals(start)) {
             nextStart = t;
@@ -89,22 +92,26 @@ public class Track implements Comparable<Track> {
     public int compareTo(Track o) {
         return this.id - o.id;
     }
-    
+
     @Override
     public boolean equals(Object o) {
+        if (o == null)
+            return false;
+        if (o == this)
+            return true;
         if (o.getClass() != this.getClass())
             return false;
         Track t = (Track) o;
         if (t.start.equals(this.start) && t.end.equals(this.end))
             return true;
-        return false;        
+        return false;
     }
-    
+
     @Override
     public int hashCode() {
         return (start.hashCode() + end.hashCode()) / 2;
     }
-    
+
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

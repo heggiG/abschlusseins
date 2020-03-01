@@ -13,4 +13,10 @@ public class PassengerCoach extends Coach {
                 "   (O)        (O)   " };
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = super.getStringBuilder();
+        sb.replace(sb.indexOf("#"), sb.indexOf("#") + 1, "p");
+        return sb.toString();
+    }
 }

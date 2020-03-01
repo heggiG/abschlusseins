@@ -4,9 +4,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import modeltrain.core.Model;
 import modeltrain.core.Point;
-import modeltrain.core.SwitchTrack;
 import modeltrain.core.SyntaxException;
-import modeltrain.core.Track;
 
 public class Add extends Command {
 
@@ -14,11 +12,9 @@ public class Add extends Command {
     private static final String ADD_TRACK = "add track " + COORDINATE + " -> " + COORDINATE;
     private static final String ADD_SWITCH = "add switch " + COORDINATE + " -> " + COORDINATE + "," + COORDINATE;
     private static final String ADD_TRAIN = "add train ((-|\\+|)d+) (\\S+)";
-    private int nextTrackId;
 
     public Add(Model model) {
         super(model, ADD_REGEX);
-        nextTrackId = 1;
     }
 
     @Override

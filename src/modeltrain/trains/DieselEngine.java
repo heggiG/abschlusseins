@@ -1,8 +1,8 @@
 package modeltrain.trains;
 
-public class DieselLocomotive extends Locomotive {
+public class DieselEngine extends Engine {
 
-    public DieselLocomotive(String modelSeries, String name, boolean front, boolean back, int length) {
+    public DieselEngine(String modelSeries, String name, boolean front, boolean back, int length) {
         super(modelSeries, name, front, back, length);
     }
 
@@ -13,4 +13,11 @@ public class DieselLocomotive extends Locomotive {
                 " \\__________________/ ", "  (O)(O)      (O)(O)  " };
     }
 
+    @Override
+    public String toString() {
+        StringBuilder sb = super.getString();
+        sb.replace(sb.indexOf("#"), sb.indexOf("#") + 1, "d");
+        return sb.toString();
+    }
+    
 }

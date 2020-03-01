@@ -10,8 +10,8 @@ public class Create extends Command {
     private static final String REGEX = "create (\\s*\\S*)*";
     private static final String COACH_REGEX = "create coach (" + COACH_TYPE + ") ((-|\\+|)\\d+) (" + COUPLING + ") ("
             + COUPLING + ")";
-    private static final String ENG_REGEX = "create engine (" + ENGINE_TYPE + ") (\\S+) (\\S+) (\\d+) (" + COUPLING
-            + ") (" + COUPLING + ")";
+    private static final String ENG_REGEX = "create engine (" + ENGINE_TYPE + ") (\\S+) (\\S+) ((-|\\+|)\\d+) ("
+            + COUPLING + ") (" + COUPLING + ")";
     private static final String TS_REGEX = "create train-set (\\S+) (\\S+) (\\d+) (" + COUPLING + ") (" + COUPLING
             + ")";
 
@@ -40,8 +40,8 @@ public class Create extends Command {
         }
     }
 
-    private void createCoach(String command) {
-        Matcher match = Pattern.compile(COACH_REGEX).matcher(command);
+    private void createTrainSet(String command) {
+        Matcher match = Pattern.compile(TS_REGEX).matcher(command);
         if (!match.matches()) {
             throw new SyntaxException("wrong syntax for create coach command");
         }
@@ -58,23 +58,23 @@ public class Create extends Command {
             throw new SyntaxException("wrong syntax for create coach command");
         }
         String type = match.group(1);
-        int len = Integer.parseInt(match.group(2));
-        boolean couplingFront = Boolean.parseBoolean(match.group(4));
-        boolean couplingBack = Boolean.parseBoolean(match.group(5));
-        model.createEngine(couplingFront, couplingBack, len, type);
+        String modelType = match.group(2);
+        String name = match.group(3);
+        int len = Integer.parseInt(match.group(4));
+        boolean couplingFront = Boolean.parseBoolean(match.group(5));
+        boolean couplingBack = Boolean.parseBoolean(match.group(6));
+        model.createEngine(couplingFront, couplingBack, len, modelType, name, type);
     }
 
-    private void createTrainSet(String command) {
-        Matcher match = Pattern.compile(TS_REGEX).matcher(command);
+    private void createCoach(String command) {
+        Matcher match = Pattern.compile(COACH_REGEX).matcher(command);
         if (!match.matches()) {
             throw new SyntaxException("wrong syntax for create coach command");
         }
         String type = match.group(1);
         int len = Integer.parseInt(match.group(2));
-        boolean couplingFront = Boolean.parseBoolean(match.group(4));
-        boolean couplingBack = Boolean.parseBoolean(match.group(5));
+        boolean couplingFront = Boolean.parseBoolean(match.group(3));
+        boolean couplingBack = Boolean.parseBoolean(match.group(4));
         model.createCoach(couplingFront, couplingBack, len, type);
-
     }
-
 }
