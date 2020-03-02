@@ -10,14 +10,17 @@ import java.util.Set;
 import modeltrain.trains.Train;
 
 public class TrackNetwork {
+    
     private Map<Integer, Track> tracks;
     private Map<Point, Boolean> trackMap;
     private Map<Train, List<Point>> trainsOnTrack;
+    private List<Integer> setSwitches;
 
     public TrackNetwork() {
         tracks = new HashMap<>();
         trackMap = new HashMap<>();
         trainsOnTrack = new HashMap<>();
+        setSwitches = new ArrayList<>();
     }
 
     public void deleteTrain(Train t) {
@@ -276,7 +279,7 @@ public class TrackNetwork {
      * where the first element is the new Point and the second element is the
      * direction that may have been updated.
      */
-    private Tuple<Point, Point> getNextPoint(Point p, Point dir) {
+    private Tuple<Point, Point> getNextPoint(final Point p, final Point dir) {
         if (trackMap.get(p.add(dir))) {
             return new Tuple<Point, Point>(p.add(dir), dir);
         } else if (trackMap.get(p.add(dir.getLeft()))) {

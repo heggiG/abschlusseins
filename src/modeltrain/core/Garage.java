@@ -235,8 +235,8 @@ public class Garage {
                 ret.add(trainGarage.get(id).show()[i]);
             }
             for (int i = 0; i < ret.size(); i++) {
-                if (Pattern.matches("(\\s)+", ret.get(i))) {
-                    ret.remove(ret.indexOf(ret.get(i)));
+                if (Pattern.matches("(\\s)+", ret.get(0))) {
+                    ret.remove(0);
                 }
             }
             return ret;

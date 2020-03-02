@@ -8,15 +8,16 @@ public class SteamEngine extends Engine {
 
     @Override
     public String[] show() {
-        return new String[] { "                    ", "     ++      +------", "     ||      |+-+ | ",
-                "   /---------|| | | ", "  + ========  +-+ | ", " _|--/~\\------/~\\-+ ", "//// \\_/      \\_/   "};
+        return new String[] { "                    ", "                    ", "     ++      +------",
+                "     ||      |+-+ | ", "   /---------|| | | ", "  + ========  +-+ | ", " _|--/~\\------/~\\-+ ",
+                "//// \\_/      \\_/   " };
     }
 
     @Override
     public String getType() {
         return "steam engine";
     }
-    
+
     @Override
     public String toString() {
         StringBuilder sb = super.getString();

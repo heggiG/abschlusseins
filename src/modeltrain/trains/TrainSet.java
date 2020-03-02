@@ -8,7 +8,7 @@ public class TrainSet extends RollMaterial {
 
     @Override
     public String getType() {
-        return "trainset";
+        return "train-set";
     }
     
     @Override

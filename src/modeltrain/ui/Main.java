@@ -1,10 +1,8 @@
 package modeltrain.ui;
 
 import java.util.NoSuchElementException;
-
 import edu.kit.informatik.Terminal;
 import modeltrain.core.Model;
-import modeltrain.core.SemanticsException;
 import modeltrain.core.SyntaxException;
 
 /**
@@ -21,6 +19,10 @@ public class Main {
     private Main() {
     };
 
+    /**
+     * Main method
+     * @param args command line arguments
+     */
     public static void main(String[] args) {
         Model model = new Model();
         UserInterface userInterface = new UserInterface(model);

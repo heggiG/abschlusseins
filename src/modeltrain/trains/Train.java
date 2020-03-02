@@ -88,8 +88,8 @@ public class Train {
         if (wagons.get(wagons.size() - 1).getType().equals("locomotive")
                 || wagons.get(0).getType().equals("locomotive")) {
             return true;
-        } else if (wagons.get(wagons.size() - 1).getType().equals("trainset")
-                || wagons.get(0).getType().equals("trainset")) {
+        } else if (wagons.get(wagons.size() - 1).getType().equals("train-set")
+                || wagons.get(0).getType().equals("train-set")) {
             return true;
         }
         return false;
