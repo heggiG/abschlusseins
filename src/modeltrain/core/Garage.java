@@ -8,6 +8,13 @@ import java.util.Map;
 import java.util.regex.Pattern;
 import modeltrain.trains.*;
 
+/**
+ * Implements a garage which stores all Rolling stock and trains and can do
+ * operations like adding to trains.
+ * 
+ * @author Florian Heck
+ * @version 1.3
+ */
 public class Garage {
 
     private Map<String, Engine> engineGarage;
@@ -19,6 +26,9 @@ public class Garage {
     private int nextCoachId;
     private List<Integer> nextFreeTrainId;
 
+    /**
+     * Standard constructor which sets up all attributes
+     */
     public Garage() {
         engineGarage = new HashMap<>();
         coachGarage = new HashMap<>();
@@ -30,23 +40,47 @@ public class Garage {
         nextCoachId = 1;
     }
 
-    public Engine getLoc(String id) {
+    /**
+     * Returns the engine with the given id or null if it dosen't exist
+     * 
+     * @param id The engines id
+     * @return The engine with the id
+     */
+    public Engine getEngine(String id) {
         return engineGarage.get(id);
     }
 
+    /**
+     * Returns the train set with given id or null if it dosen't exist
+     * 
+     * @param id the train-sets id
+     * @return The train-set with the given id
+     */
     public TrainSet getPc(String id) {
         return pcGarage.get(id);
     }
 
+    /**
+     * Returns the coach with the given id or null if it dosen't exist
+     * 
+     * @param id The coaches id
+     * @return The coach with the given id
+     */
     public Coach getCoach(String id) {
         return coachGarage.get(id);
     }
 
+    /**
+     * Combines all 3 getters to find the fitting more generic rolling stock
+     * 
+     * @param id The rolling stocks id to find
+     * @return The rolling stock with the given id or null if it dosen't exist
+     */
     public RollMaterial getRollMaterial(String id) {
         if (id.charAt(0) == 'W') {
             return getCoach(id);
         } else {
-            return getPc(id) != null ? getPc(id) : getLoc(id);
+            return getPc(id) != null ? getPc(id) : getEngine(id);
         }
     }
 

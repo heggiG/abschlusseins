@@ -9,25 +9,42 @@ import java.util.Map;
 import java.util.Set;
 import modeltrain.trains.Train;
 
+/**
+ * Implements a Tracknetwork which holds all tracks and handles the moving of trains, deletion of tracks and so on
+ * @author Florian Heck
+ * @version 1.12
+ */
 public class TrackNetwork {
-    
+
     private Map<Integer, Track> tracks;
     private Map<Point, Boolean> trackMap;
     private Map<Train, List<Point>> trainsOnTrack;
-    private List<Integer> setSwitches;
+    private List<Integer> unsetSwitches;
 
+    /**
+     * Standard constructor, instanciates all attributes
+     */
     public TrackNetwork() {
         tracks = new HashMap<>();
         trackMap = new HashMap<>();
         trainsOnTrack = new HashMap<>();
-        setSwitches = new ArrayList<>();
+        unsetSwitches = new ArrayList<>();
     }
 
+    /**
+     * Removes a train from the track
+     * @param t the train to remove
+     */
     public void deleteTrain(Train t) {
         if (trainsOnTrack.containsKey(t))
             trainsOnTrack.remove(t);
     }
 
+    /**
+     * Tries to remove a track from the trackmap. Can only succeed if the deletion won't create two seperate tracks
+     * @param id The tracks id to remove
+     * @return true if success, false if not
+     */
     public boolean removeTrack(int id) {
         if (!tracks.containsKey(id)) {
             return false;
@@ -62,6 +79,7 @@ public class TrackNetwork {
         }
     }
 
+    //recursive algorithm to check if both ends of a track can still be reached after deletion
     private boolean checkTracks(Track toFind, Track current, Track prev, Set<Track> alreadyChecked) {
         if (current == null) {
             return false;
@@ -98,6 +116,7 @@ public class TrackNetwork {
         return false;
     }
 
+    //same as last one but with the switchtrack
     private boolean checkTracks(Track toFind, SwitchTrack current, Track prev, Set<Track> alreadyChecked) {
         if (alreadyChecked == null) {
             alreadyChecked = new HashSet<>();
@@ -136,13 +155,17 @@ public class TrackNetwork {
      *         another train or false if they only derailed
      */
     public Map<Integer, Boolean> step(short n) {
+        if (unsetSwitches.size() != 0) {
+            throw new SemanticsException("not all switches have been set");
+        }
         if (trainsOnTrack.size() == 0) {
             return null;
         }
         Map<Integer, Boolean> crashes = new HashMap<>();
-        if (n > 0) {
-            for (short i = 0; i < n; i++) {
-                for (Train t : trainsOnTrack.keySet()) {
+        for (short i = 0; i < Math.abs(n); i++) {
+            for (Train t : trainsOnTrack.keySet()) {
+                if (n > 0) {
+                    //going forwards
                     List<Point> current = trainsOnTrack.get(t);
                     for (int o = current.size() - 1; o > 0; o--) {
                         current.set(o, current.get(o - 1));
@@ -155,27 +178,8 @@ public class TrackNetwork {
                         current.set(0, next.getFirst());
                         t.setDirection(next.getSecond());
                     }
-                }
-                // needed to avoid concurrent modification exception
-                Set<Train> removals = new HashSet<>();
-                for (Train t : trainsOnTrack.keySet()) {
-                    for (Train k : trainsOnTrack.keySet()) {
-                        if (t != k) {
-                            if (trainsOnTrack.get(k).contains(trainsOnTrack.get(t).get(0))) {
-                                removals.add(t);
-                                removals.add(k);
-                                crashes.put(t.getId(), true);
-                                crashes.put(k.getId(), true);
-                            }
-                        }
-                    }
-                }
-                for (Train t : removals)
-                    trainsOnTrack.remove(t);
-            }
-        } else {
-            for (short i = 0; i < Math.abs(n); i++) {
-                for (Train t : trainsOnTrack.keySet()) {
+                } else {
+                    //going backwards
                     List<Point> current = trainsOnTrack.get(t);
                     for (int o = 0; o < current.size() - 1; o++) {
                         current.set(o, current.get(o + 1));
@@ -190,24 +194,23 @@ public class TrackNetwork {
                         t.setDirection(next.getSecond());
                     }
                 }
-                // needed to avoid concurrent modification exception
-                Set<Train> removals = new HashSet<>();
-                for (Train t : trainsOnTrack.keySet()) {
-                    for (Train k : trainsOnTrack.keySet()) {
-                        if (t != k) {
-                            if (trainsOnTrack.get(k)
-                                    .contains(trainsOnTrack.get(t).get(trainsOnTrack.get(t).size() - 1))) {
-                                removals.add(t);
-                                removals.add(k);
-                                crashes.put(t.getId(), true);
-                                crashes.put(k.getId(), true);
-                            }
+            }
+            // needed to avoid concurrent modification exception
+            Set<Train> removals = new HashSet<>();
+            for (Train t : trainsOnTrack.keySet()) {
+                for (Train k : trainsOnTrack.keySet()) {
+                    if (t != k) {
+                        if (trainsOnTrack.get(k).contains(trainsOnTrack.get(t).get(0))) {
+                            removals.add(t);
+                            removals.add(k);
+                            crashes.put(t.getId(), true);
+                            crashes.put(k.getId(), true);
                         }
                     }
                 }
-                for (Train t : removals)
-                    trainsOnTrack.remove(t);
             }
+            for (Train t : removals)
+                trainsOnTrack.remove(t);
         }
         return crashes;
     }
@@ -312,6 +315,11 @@ public class TrackNetwork {
         }
     }
 
+    /**
+     * Finds the proper tracks from the already added ones to properly update their pointers
+     * @param toAdd the track to add
+     * @return true, if a fitting track has been found, false else
+     */
     private boolean findFitting(Track toAdd) {
         for (Track tr : tracks.values()) {
             if (tr.getStart().equals(toAdd.getStart()) && tr.getNextStart() == null) {
@@ -367,6 +375,10 @@ public class TrackNetwork {
     }
 
     private void addPointsFromTrack(Track t) {
+        if (t.toString().charAt(0) == 's') {
+            SwitchTrack s = (SwitchTrack) t;
+            addPointsFromTrack(s);
+        }
         trackMap.put(t.getStart(), true);
         trackMap.put(t.getEnd(), true);
         if (t.getAltEnd() != null)
@@ -376,12 +388,30 @@ public class TrackNetwork {
         }
     }
 
+    private void addPointsFromTrack(SwitchTrack st) {
+        trackMap.put(st.getStart(), true);
+        trackMap.put(st.getEnd(), true);
+        trackMap.put(st.getAltEnd(), true);
+        for (Point p : st.getPointsBetween()) {
+            trackMap.put(p, false);
+        }
+        unsetSwitches.add(st.getId());
+    }
+
+    /**
+     * Returns a sorted list of all tracks, sorted by id
+     * @return list of all tracks
+     */
     public List<Track> listTracks() {
         List<Track> ret = new ArrayList<>(tracks.values());
         Collections.sort(ret);
         return ret;
     }
 
+    /**
+     * Returns a map of all trains and their Points they stand on
+     * @return Map of trains and their points
+     */
     public Map<Train, List<Point>> getTrainsOnTrack() {
         return trainsOnTrack;
     }

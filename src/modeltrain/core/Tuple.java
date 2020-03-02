@@ -39,6 +39,9 @@ public class Tuple<E, F> {
         return elementTwo;
     }
     
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
