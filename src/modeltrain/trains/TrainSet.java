@@ -12,6 +12,11 @@ public class TrainSet extends RollMaterial {
     }
     
     @Override
+    public String getSuperType() {
+        return getType();
+    }
+    
+    @Override
     public String[] show() {
         return new String[] { "         ++         ", "         ||         ", "_________||_________",
                 "|  ___ ___ ___ ___ |", "|  |_| |_| |_| |_| |", "|__________________|", "|__________________|",

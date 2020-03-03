@@ -7,6 +7,7 @@ import modeltrain.trains.Train;
 
 /**
  * Combines both the garage and the tracknetwork and prints possible outputs
+ * 
  * @author Florian Heck
  * @version 1.5
  */
@@ -27,6 +28,7 @@ public class Model {
 
     /**
      * Tries to delete rolling stock
+     * 
      * @param id The rolling stocks id
      */
     public void deleteRS(String id) {
@@ -40,6 +42,7 @@ public class Model {
 
     /**
      * Tries to delete a train
+     * 
      * @param id The trains id
      */
     public void deleteTrain(int id) {
@@ -53,11 +56,12 @@ public class Model {
 
     /**
      * Tries to create a trainset
+     * 
      * @param modelType The trainsets model
-     * @param name The train sets name 
-     * @param front Whether the trainset has front coupling
-     * @param back Whether the trainset has back coupling
-     * @param len The trainsets length
+     * @param name      The train sets name
+     * @param front     Whether the trainset has front coupling
+     * @param back      Whether the trainset has back coupling
+     * @param len       The trainsets length
      */
     public void createTrainSet(String modelType, String name, boolean front, boolean back, int len) {
         try {
@@ -69,12 +73,13 @@ public class Model {
 
     /**
      * Tries to create a new engine
-     * @param front Whether the engine has front coupling
-     * @param back Whether the engine has back coupling
-     * @param len The engines length
+     * 
+     * @param front     Whether the engine has front coupling
+     * @param back      Whether the engine has back coupling
+     * @param len       The engines length
      * @param modelType The engines model
-     * @param name The engines name
-     * @param type The engines type (electrical, steam or diesel)
+     * @param name      The engines name
+     * @param type      The engines type (electrical, steam or diesel)
      */
     public void createEngine(boolean front, boolean back, int len, String modelType, String name, String type) {
         try {
@@ -86,10 +91,11 @@ public class Model {
 
     /**
      * Tries to create a new Coach
+     * 
      * @param front Whether the coach has front coupling
-     * @param back Whether the coach has back coupling
-     * @param len The coaches length
-     * @param type The coaches type (passenger, freight or special)
+     * @param back  Whether the coach has back coupling
+     * @param len   The coaches length
+     * @param type  The coaches type (passenger, freight or special)
      */
     public void createCoach(boolean front, boolean back, int len, String type) {
         try {
@@ -101,6 +107,7 @@ public class Model {
 
     /**
      * Tries to print a trains string (ASCII art) representation
+     * 
      * @param id The trains id
      */
     public void showTrain(int id) {
@@ -115,8 +122,9 @@ public class Model {
 
     /**
      * Tries to switch a switchtrack to the given Point
+     * 
      * @param id The switchtracks id which to switch
-     * @param p The point to switch to
+     * @param p  The point to switch to
      */
     public void setSwitch(int id, Point p) { // TODO train on switch
         try {
@@ -126,12 +134,13 @@ public class Model {
             Terminal.printError(e.getMessage());
         }
     }
-    
+
     /**
      * Tries to place a train on the trackmap
-     * @param id The id of the train to place
+     * 
+     * @param id    The id of the train to place
      * @param place The point on which to place the train
-     * @param dir The direction in which the point is heading
+     * @param dir   The direction in which the point is heading
      */
     public void putTrain(int id, Point place, Point dir) {
         Train toPlace = garage.getTrain(id);
@@ -139,7 +148,9 @@ public class Model {
             Terminal.printError("no train with such id");
         } else {
             try {
+                toPlace.setDirection(dir);
                 tn.putTrain(toPlace, place, dir);
+                Terminal.printLine("OK");
             } catch (SemanticsException e) {
                 Terminal.printError(e.getMessage());
             }
@@ -147,9 +158,11 @@ public class Model {
     }
 
     /**
-     * Tries to add a track to the trackmap and gives it the next id and checks for diagonal tracks
+     * Tries to add a track to the trackmap and gives it the next id and checks for
+     * diagonal tracks
+     * 
      * @param start The tracks start
-     * @param end The tracks end
+     * @param end   The tracks end
      */
     public void addTrack(Point start, Point end) {
         if (!checkDiagonal(start, end)) {
@@ -168,11 +181,12 @@ public class Model {
 
     /**
      * Tries to add a Switch track to the trackmap
-     * @param start The switchtracks start
-     * @param end The switchtracks end
+     * 
+     * @param start  The switchtracks start
+     * @param end    The switchtracks end
      * @param altEnd The swtitchtracks alternative end
      */
-    public void addTrack(Point start, Point end, Point altEnd) { //TODO diagonal track
+    public void addTrack(Point start, Point end, Point altEnd) { // TODO diagonal track
         try {
             tn.addTrack(new SwitchTrack(start, end, altEnd, nextTrackId));
             Terminal.printLine(nextTrackId);
@@ -183,9 +197,11 @@ public class Model {
     }
 
     /**
-     * Adds rollingstock to a train and creates a new train if no train with the given id exists yet
+     * Adds rollingstock to a train and creates a new train if no train with the
+     * given id exists yet
+     * 
      * @param trainId The train id to add to
-     * @param rsId The rollingstocks id
+     * @param rsId    The rollingstocks id
      */
     public void addToTrain(int trainId, String rsId) {
         try {
@@ -214,7 +230,7 @@ public class Model {
             Terminal.printLine("No train exists");
         }
     }
-    
+
     /**
      * Tries to print a list of all trainsets
      */
@@ -269,6 +285,7 @@ public class Model {
 
     /**
      * Tries to delete a track from the trackmap
+     * 
      * @param id The tracks id
      */
     public void deleteTrack(int id) {
@@ -284,11 +301,19 @@ public class Model {
     }
 
     /**
-     * Moves all trains n steps forward or backward and prints the positions of all trains and all crashes that happend
+     * Moves all trains n steps forward or backward and prints the positions of all
+     * trains and all crashes that happend
+     * 
      * @param n The amount of steps to make
      */
     public void step(short n) {
-        Map<Integer, Boolean> ret = tn.step(n);
+        Map<Integer, Boolean> ret;
+        try {
+            ret = tn.step(n);
+        } catch (SemanticsException e) {
+            Terminal.printError(e.getMessage());
+            return;
+        }
         if (ret == null) {
             Terminal.printLine("OK");
         } else {
@@ -311,7 +336,7 @@ public class Model {
         }
     }
 
-    //checks for diagonal tracks
+    // checks for diagonal tracks
     private boolean checkDiagonal(Point p1, Point p2) {
         if (p1.getXCord() != p2.getXCord() && p1.getYCord() != p2.getYCord()) {
             return false;

@@ -12,7 +12,7 @@ public class DieselEngine extends Engine {
                 " /_| ____________ |_\\ ", "/   |____________|   \\", "\\                    /",
                 " \\__________________/ ", "  (O)(O)      (O)(O)  " };
     }
-
+    
     @Override
     public String getType() {
         return "diesel engine";

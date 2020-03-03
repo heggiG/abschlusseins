@@ -13,7 +13,7 @@ public class Step extends Command {
     }
 
     @Override
-    public void execute(String command) {
+    public void execute(String command) throws SyntaxException {
         MatchResult mr = getMatcher(command);
         short steps = Short.parseShort(mr.group(1));
         if (steps == 0) {

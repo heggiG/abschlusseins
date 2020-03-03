@@ -69,6 +69,8 @@ public abstract class RollMaterial {
     public abstract String[] show();
 
     public abstract String getType();
+    
+    public abstract String getSuperType();
 
     @Override
     public boolean equals(Object o) {

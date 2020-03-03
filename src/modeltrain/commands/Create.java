@@ -20,7 +20,7 @@ public class Create extends Command {
     }
 
     @Override
-    public void execute(String command) {
+    public void execute(String command) throws SyntaxException {
         if (command.split(" ").length < 2) {
             throw new SyntaxException("unknown create command");
         } else {
@@ -40,7 +40,7 @@ public class Create extends Command {
         }
     }
 
-    private void createTrainSet(String command) {
+    private void createTrainSet(String command) throws SyntaxException {
         Matcher match = Pattern.compile(TS_REGEX).matcher(command);
         if (!match.matches()) {
             throw new SyntaxException("wrong syntax for create coach command");
@@ -50,10 +50,13 @@ public class Create extends Command {
         int len = Integer.parseInt(match.group(3));
         boolean couplingFront = Boolean.parseBoolean(match.group(5));
         boolean couplingBack = Boolean.parseBoolean(match.group(6));
+        if (!couplingBack && !couplingFront) {
+            throw new SyntaxException("train-set needs at least one ");
+        }
         model.createTrainSet(modelType, name, couplingFront, couplingBack, len);
     }
 
-    private void createEngine(String command) {
+    private void createEngine(String command) throws SyntaxException {
         Matcher match = Pattern.compile(ENG_REGEX).matcher(command);
         if (!match.matches()) {
             throw new SyntaxException("wrong syntax for create coach command");
@@ -64,10 +67,13 @@ public class Create extends Command {
         int len = Integer.parseInt(match.group(4));
         boolean couplingFront = Boolean.parseBoolean(match.group(6));
         boolean couplingBack = Boolean.parseBoolean(match.group(7));
+        if (!couplingBack && !couplingFront) {
+            throw new SyntaxException("engine needs at least one coupling");
+        }
         model.createEngine(couplingFront, couplingBack, len, modelType, name, type);
     }
 
-    private void createCoach(String command) {
+    private void createCoach(String command) throws SyntaxException {
         Matcher match = Pattern.compile(COACH_REGEX).matcher(command);
         if (!match.matches()) {
             throw new SyntaxException("wrong syntax for create coach command");
@@ -76,6 +82,9 @@ public class Create extends Command {
         int len = Integer.parseInt(match.group(2));
         boolean couplingFront = Boolean.parseBoolean(match.group(4));
         boolean couplingBack = Boolean.parseBoolean(match.group(5));
+        if (!couplingBack && !couplingFront) {
+            throw new SyntaxException("coach needs at least one coupling");
+        }
         model.createCoach(couplingFront, couplingBack, len, type);
     }
 }

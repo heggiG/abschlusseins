@@ -18,7 +18,7 @@ public class Add extends Command {
     }
 
     @Override
-    public void execute(String command) {
+    public void execute(String command) throws SyntaxException {
         if (command.split(" ").length < 2) {
             throw new SyntaxException("wrong syntax for add command");
         }
@@ -42,7 +42,7 @@ public class Add extends Command {
 
     }
 
-    private void addTrack(String command) {
+    private void addTrack(String command) throws SyntaxException {
         Matcher match = Pattern.compile(ADD_TRACK).matcher(command);
         if (!match.matches()) {
             throw new SyntaxException("wrong syntax for add track command");
@@ -53,7 +53,7 @@ public class Add extends Command {
         }
     }
 
-    private void addSwitch(String command) {
+    private void addSwitch(String command) throws SyntaxException {
         Matcher match = Pattern.compile(ADD_SWITCH).matcher(command);
         if (!match.matches()) {
             throw new SyntaxException("wrong syntax for add switch command");
@@ -65,7 +65,7 @@ public class Add extends Command {
         }
     }
 
-    private void addTrain(String command) {
+    private void addTrain(String command) throws SyntaxException {
         Matcher match = Pattern.compile(ADD_TRAIN).matcher(command);
         if (!match.matches()) {
             throw new SyntaxException("wrong syntax for add train command");

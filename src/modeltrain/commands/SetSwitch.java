@@ -14,11 +14,11 @@ public class SetSwitch extends Command {
     }
     
     @Override
-    public void execute(String command) {
+    public void execute(String command) throws SyntaxException {
         Matcher mr = getMatcher(command);
         int id = Integer.parseInt(mr.group(1));
         if (id < 1) {
-            throw new SyntaxException("");
+            throw new SyntaxException("no id's smaller 1");
         }
         Point p = new Point(Integer.parseInt(mr.group(2)), Integer.parseInt(mr.group(4)));
         model.setSwitch(id, p);

@@ -10,6 +10,11 @@ public abstract class Coach extends RollMaterial {
     }
 
     @Override
+    public String getSuperType() {
+        return "coach";
+    }
+    
+    @Override
     public String getName() {
         throw new SemanticsException("coaches have no name");
     }

@@ -19,9 +19,10 @@ public class Track implements Comparable<Track> {
 
     /**
      * Constructs a track and sets start, and id
+     * 
      * @param start Tracks start
-     * @param end Tracks end
-     * @param id Tracks id
+     * @param end   Tracks end
+     * @param id    Tracks id
      */
     public Track(Point start, Point end, int id) {
         this.start = start;
@@ -31,6 +32,7 @@ public class Track implements Comparable<Track> {
 
     /**
      * Returns the Tracks start Point
+     * 
      * @return The tracks start
      */
     public Point getStart() {
@@ -39,6 +41,7 @@ public class Track implements Comparable<Track> {
 
     /**
      * Returns the tracks end Point
+     * 
      * @return The tracks end
      */
     public Point getEnd() {
@@ -46,7 +49,9 @@ public class Track implements Comparable<Track> {
     }
 
     /**
-     * Returns the Tracks alternative end (here null since this is a normal track, not a switch)
+     * Returns the Tracks alternative end (here null since this is a normal track,
+     * not a switch)
+     * 
      * @return Null
      */
     public Point getAltEnd() {
@@ -54,7 +59,9 @@ public class Track implements Comparable<Track> {
     }
 
     /**
-     * Returns the track that follows the alternative end (here null since this is no switchtrack)
+     * Returns the track that follows the alternative end (here null since this is
+     * no switchtrack)
+     * 
      * @return Null
      */
     public Track getNextAltEnd() {
@@ -62,7 +69,9 @@ public class Track implements Comparable<Track> {
     }
 
     /**
-     * Sets the next track following the alternative end (does nothing here since its a normal track)
+     * Sets the next track following the alternative end (does nothing here since
+     * its a normal track)
+     * 
      * @param t The track to set
      */
     public void setNextAltEnd(Track t) {
@@ -71,6 +80,7 @@ public class Track implements Comparable<Track> {
 
     /**
      * Returns the tracks length (see pythagoras) rounded down to the next integer
+     * 
      * @return The tracks length as integer
      */
     public int getLength() {
@@ -81,6 +91,7 @@ public class Track implements Comparable<Track> {
 
     /**
      * Returns the tracks id
+     * 
      * @return the tracks id
      */
     public int getId() {
@@ -89,6 +100,7 @@ public class Track implements Comparable<Track> {
 
     /**
      * Returns a set of Points containing all points between start and end
+     * 
      * @return All points between start and end
      */
     public Set<Point> getPointsBetween() {
@@ -102,6 +114,7 @@ public class Track implements Comparable<Track> {
 
     /**
      * Returns the track which follows the start point
+     * 
      * @return The next track after the start point
      */
     public Track getNextStart() {
@@ -110,6 +123,7 @@ public class Track implements Comparable<Track> {
 
     /**
      * Sets the Track after the start point
+     * 
      * @param t The track to set
      */
     public void setNextStart(Track t) {
@@ -118,6 +132,7 @@ public class Track implements Comparable<Track> {
 
     /**
      * Returns the track after the end Point
+     * 
      * @return The track after the end Point
      */
     public Track getNextEnd() {
@@ -126,6 +141,7 @@ public class Track implements Comparable<Track> {
 
     /**
      * Sets the track after the end point
+     * 
      * @param t The track to set
      */
     public void setNextEnd(Track t) {

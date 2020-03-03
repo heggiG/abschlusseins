@@ -7,23 +7,23 @@ public abstract class Engine extends RollMaterial {
     }
 
     @Override
-    public String getType() {
-        return "locomotive";
+    public String getSuperType() {
+        return "engine";
     }
 
     protected StringBuilder getString() {
         StringBuilder sb = new StringBuilder();
         sb.append(getTrainNumber());
         sb.append(" # ");
-        sb.append(super.getModel());
+        sb.append(getModel());
         sb.append(" ");
-        sb.append(super.getName());
+        sb.append(getName());
         sb.append(" ");
-        sb.append(super.getLength());
+        sb.append(getLength());
         sb.append(" ");
-        sb.append(super.getFrontCoupling());
+        sb.append(getFrontCoupling());
         sb.append(" ");
-        sb.append(super.getBackCoupling());
+        sb.append(getBackCoupling());
         return sb;
     }
 }

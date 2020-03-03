@@ -5,7 +5,7 @@ package modeltrain.core;
  * @author Florian Heck
  * @version 1.0
  */
-public class SyntaxException extends RuntimeException {
+public class SyntaxException extends Exception {
     
     private static final long serialVersionUID = 1L;
 

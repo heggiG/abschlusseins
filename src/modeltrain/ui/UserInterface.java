@@ -13,6 +13,7 @@ import modeltrain.commands.SetSwitch;
 import modeltrain.commands.ShowTrain;
 import modeltrain.commands.Step;
 import modeltrain.core.Model;
+import modeltrain.core.SyntaxException;
 
 public class UserInterface {
 
@@ -31,7 +32,7 @@ public class UserInterface {
         commands.add(new Step(model));
     }
 
-    public void executeCommand(String command) {
+    public void executeCommand(String command) throws SyntaxException {
         getCommand(command).execute(command);
     }
 

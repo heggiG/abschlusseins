@@ -7,6 +7,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
+
 import modeltrain.trains.Train;
 
 /**
@@ -25,9 +27,9 @@ public class TrackNetwork {
      * Standard constructor, instanciates all attributes
      */
     public TrackNetwork() {
-        tracks = new HashMap<>();
-        trackMap = new HashMap<>();
-        trainsOnTrack = new HashMap<>();
+        tracks = new TreeMap<>();
+        trackMap = new TreeMap<>();
+        trainsOnTrack = new TreeMap<>();
         unsetSwitches = new ArrayList<>();
     }
 
@@ -237,6 +239,7 @@ public class TrackNetwork {
             for (Point p : toSwitch.getPointsBetweenAltEnd()) {
                 trackMap.replace(p, false);
             }
+            unsetSwitches.remove((Integer) id);
         } else if (dest.equals(toSwitch.getAltEnd())) {
             for (Point p : toSwitch.getPointsBetweenEnd()) {
                 trackMap.replace(p, false);
@@ -244,6 +247,7 @@ public class TrackNetwork {
             for (Point p : toSwitch.getPointsBetweenAltEnd()) {
                 trackMap.replace(p, true);
             }
+            unsetSwitches.remove((Integer) id);
         }
     }
 
@@ -283,12 +287,15 @@ public class TrackNetwork {
      * direction that may have been updated.
      */
     private Tuple<Point, Point> getNextPoint(final Point p, final Point dir) {
-        if (trackMap.get(p.add(dir))) {
+        if (trackMap.get(p.add(dir)) != null && trackMap.get(p.add(dir))) {
             return new Tuple<Point, Point>(p.add(dir), dir);
-        } else if (trackMap.get(p.add(dir.getLeft()))) {
+            
+        } else if (trackMap.get(p.add(dir.getLeft())) != null && trackMap.get(p.add(dir.getLeft()))) {
             return new Tuple<Point, Point>(p.add(dir.getLeft()), dir.getLeft());
-        } else if (trackMap.get(p.add(dir.getRight()))) {
+            
+        } else if (trackMap.get(p.add(dir.getRight())) != null && trackMap.get(p.add(dir.getRight()))) {
             return new Tuple<Point, Point>(p.add(dir.getRight()), dir.getRight());
+            
         } else {
             return null;
         }
@@ -381,8 +388,6 @@ public class TrackNetwork {
         }
         trackMap.put(t.getStart(), true);
         trackMap.put(t.getEnd(), true);
-        if (t.getAltEnd() != null)
-            trackMap.put(t.getAltEnd(), true);
         for (Point p : t.getPointsBetween()) {
             trackMap.put(p, true);
         }

@@ -146,6 +146,9 @@ public class Garage {
 
     public void removeTrain(int id) {
         if (trainGarage.containsKey(id)) {
+            for (RollMaterial rm : trainGarage.get(id).getWagons()) {
+                rm.setTrainNumber(-1); //train number reset id
+            }
             trainGarage.remove(id);
         } else {
             throw new SemanticsException("no train with such id");
@@ -212,20 +215,12 @@ public class Garage {
         if (inTrains.containsKey(rmId)) {
             throw new SemanticsException("rollmaterial is already in another train");
         }
-        if (!pcGarage.containsKey(rmId) && !engineGarage.containsKey(rmId) && !coachGarage.containsKey(rmId)) {
+        if (getRollMaterial(rmId) == null) {
             throw new SemanticsException("no rollmaterial with such id");
-        } else if (engineGarage.containsKey(rmId)) {
+        } else {
             newTrain(id);
-            trainGarage.get(id).add(engineGarage.get(rmId));
-            inTrains.put(rmId, engineGarage.get(rmId));
-        } else if (pcGarage.containsKey(rmId)) {
-            newTrain(id);
-            trainGarage.get(id).add(pcGarage.get(rmId));
-            inTrains.put(rmId, pcGarage.get(rmId));
-        } else if (coachGarage.containsKey(rmId)) {
-            newTrain(id);
-            trainGarage.get(id).add(coachGarage.get(rmId));
-            inTrains.put(rmId, coachGarage.get(rmId));
+            trainGarage.get(id).add(getRollMaterial(rmId));
+            getRollMaterial(rmId).setTrainNumber(id);
         }
     }
 

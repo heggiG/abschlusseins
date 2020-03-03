@@ -11,7 +11,7 @@ import java.util.Set;
  * @author Florian Heck
  * @version 1.0
  */
-public class Point {
+public class Point implements Comparable<Point> {
 
     private final int xCord;
     private final int yCord;
@@ -144,12 +144,16 @@ public class Point {
         return ret;
     }
 
+    @Override
+    public int compareTo(Point o) {
+        return (this.xCord - o.xCord) - (this.yCord - o.yCord);
+    }
+
     /**
      * I need to override hashcode so i can use the java.util Hashmap. this method
      * would have worked perfectly if point coordinates could only be from the short
      * number space. But since the hashmap maps higher ordered bits to lower ones i
-     * have not encountered an error yet.
-     * It's not perfect, but who is?
+     * have not encountered an error yet. It's not perfect, but who is?
      */
     @Override
     public int hashCode() {

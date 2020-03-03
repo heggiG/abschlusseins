@@ -12,7 +12,7 @@ public class Delete extends Command {
     }
 
     @Override
-    public void execute(String command) {
+    public void execute(String command) throws SyntaxException {
         switch (getMatcher(command).group(1)) {
         case "train":
             deleteTrain(command);
@@ -31,7 +31,7 @@ public class Delete extends Command {
         }
     }
 
-    private void deleteTrain(String command) {
+    private void deleteTrain(String command) throws SyntaxException {
         int id;
         try {
             id = Integer.parseInt(getMatcher(command).group(2));
@@ -46,7 +46,7 @@ public class Delete extends Command {
         model.deleteRS(id);
     }
 
-    private void deleteTrack(String command) {
+    private void deleteTrack(String command) throws SyntaxException {
         int id;
         try {
             id = Integer.parseInt(getMatcher(command).group(2));

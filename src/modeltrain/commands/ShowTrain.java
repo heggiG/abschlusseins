@@ -14,7 +14,7 @@ public class ShowTrain extends Command {
     }
     
     @Override
-    public void execute(String command) {
+    public void execute(String command) throws SyntaxException {
         Matcher match = getMatcher(command);
         int id = Integer.parseInt(match.group(1));
         if (id < 1) {

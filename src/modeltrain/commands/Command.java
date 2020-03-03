@@ -2,8 +2,8 @@ package modeltrain.commands;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
 import modeltrain.core.Model;
+import modeltrain.core.SyntaxException;
 
 public abstract class Command {
     
@@ -20,7 +20,7 @@ public abstract class Command {
         commandPattern = Pattern.compile(regex);
     }
 
-    public abstract void execute(String command);
+    public abstract void execute(String command) throws SyntaxException;
 
     public boolean matches(String command) {
         return getMatcher(command).matches();
