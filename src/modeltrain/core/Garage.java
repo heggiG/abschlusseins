@@ -96,7 +96,7 @@ public class Garage {
             break;
 
         case "electrical":
-            toAdd = new ElectricEngine(modelType, name, front, back, len);
+            toAdd = new ElectricalEngine(modelType, name, front, back, len);
             break;
 
         default:

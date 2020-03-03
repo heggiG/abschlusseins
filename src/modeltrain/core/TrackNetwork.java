@@ -12,7 +12,9 @@ import java.util.TreeMap;
 import modeltrain.trains.Train;
 
 /**
- * Implements a Tracknetwork which holds all tracks and handles the moving of trains, deletion of tracks and so on
+ * Implements a Tracknetwork which holds all tracks and handles the moving of
+ * trains, deletion of tracks and so on
+ * 
  * @author Florian Heck
  * @version 1.12
  */
@@ -28,13 +30,14 @@ public class TrackNetwork {
      */
     public TrackNetwork() {
         tracks = new TreeMap<>();
-        trackMap = new TreeMap<>();
+        trackMap = new HashMap<>();
         trainsOnTrack = new TreeMap<>();
         unsetSwitches = new ArrayList<>();
     }
 
     /**
      * Removes a train from the track
+     * 
      * @param t the train to remove
      */
     public void deleteTrain(Train t) {
@@ -43,7 +46,9 @@ public class TrackNetwork {
     }
 
     /**
-     * Tries to remove a track from the trackmap. Can only succeed if the deletion won't create two seperate tracks
+     * Tries to remove a track from the trackmap. Can only succeed if the deletion
+     * won't create two seperate tracks
+     * 
      * @param id The tracks id to remove
      * @return true if success, false if not
      */
@@ -81,7 +86,8 @@ public class TrackNetwork {
         }
     }
 
-    //recursive algorithm to check if both ends of a track can still be reached after deletion
+    // recursive algorithm to check if both ends of a track can still be reached
+    // after deletion
     private boolean checkTracks(Track toFind, Track current, Track prev, Set<Track> alreadyChecked) {
         if (current == null) {
             return false;
@@ -118,7 +124,7 @@ public class TrackNetwork {
         return false;
     }
 
-    //same as last one but with the switchtrack
+    // same as last one but with the switchtrack
     private boolean checkTracks(Track toFind, SwitchTrack current, Track prev, Set<Track> alreadyChecked) {
         if (alreadyChecked == null) {
             alreadyChecked = new HashSet<>();
@@ -156,24 +162,24 @@ public class TrackNetwork {
      * @return a map of crashed trains ids mapped to true if they crashed into
      *         another train or false if they only derailed
      */
-    public Map<Integer, Boolean> step(short n) {
+    public Set<Integer> step(short n) {
         if (unsetSwitches.size() != 0) {
             throw new SemanticsException("not all switches have been set");
         }
         if (trainsOnTrack.size() == 0) {
             return null;
         }
-        Map<Integer, Boolean> crashes = new HashMap<>();
+        Set<Integer> crashes = new HashSet<>();
         for (short i = 0; i < Math.abs(n); i++) {
             for (Train t : trainsOnTrack.keySet()) {
                 if (n > 0) {
-                    //going forwards
+                    // going forwards
                     List<Point> current = trainsOnTrack.get(t);
                     for (int o = current.size() - 1; o > 0; o--) {
                         current.set(o, current.get(o - 1));
                     }
                     if (getNextPoint(current.get(0), t.getDirection()) == null) {
-                        crashes.put(t.getId(), false);
+                        crashes.add(t.getId());
                         trainsOnTrack.remove(t);
                     } else {
                         Tuple<Point, Point> next = getNextPoint(current.get(0), t.getDirection());
@@ -181,19 +187,21 @@ public class TrackNetwork {
                         t.setDirection(next.getSecond());
                     }
                 } else {
-                    //going backwards
+                    // going backwards
                     List<Point> current = trainsOnTrack.get(t);
                     for (int o = 0; o < current.size() - 1; o++) {
                         current.set(o, current.get(o + 1));
                     }
                     if (getNextPoint(current.get(current.size() - 1), t.getDirection().negate()) == null) {
-                        crashes.put(t.getId(), false);
+                        crashes.add(t.getId());
                         trainsOnTrack.remove(t);
                     } else {
                         Tuple<Point, Point> next = getNextPoint(current.get(current.size() - 1),
                                 t.getDirection().negate());
-                        current.set(0, next.getFirst());
-                        t.setDirection(next.getSecond());
+                        current.set(current.size() - 1, next.getFirst());
+                        if (!(trackMap.containsKey(current.get(0).add(t.getDirection())))) {
+                            t.setDirection(getNextPoint(current.get(0), t.getDirection()).getSecond());
+                        }
                     }
                 }
             }
@@ -205,8 +213,8 @@ public class TrackNetwork {
                         if (trainsOnTrack.get(k).contains(trainsOnTrack.get(t).get(0))) {
                             removals.add(t);
                             removals.add(k);
-                            crashes.put(t.getId(), true);
-                            crashes.put(k.getId(), true);
+                            crashes.add(t.getId());
+                            crashes.add(k.getId());
                         }
                     }
                 }
@@ -289,13 +297,13 @@ public class TrackNetwork {
     private Tuple<Point, Point> getNextPoint(final Point p, final Point dir) {
         if (trackMap.get(p.add(dir)) != null && trackMap.get(p.add(dir))) {
             return new Tuple<Point, Point>(p.add(dir), dir);
-            
+
         } else if (trackMap.get(p.add(dir.getLeft())) != null && trackMap.get(p.add(dir.getLeft()))) {
             return new Tuple<Point, Point>(p.add(dir.getLeft()), dir.getLeft());
-            
+
         } else if (trackMap.get(p.add(dir.getRight())) != null && trackMap.get(p.add(dir.getRight()))) {
             return new Tuple<Point, Point>(p.add(dir.getRight()), dir.getRight());
-            
+
         } else {
             return null;
         }
@@ -323,7 +331,9 @@ public class TrackNetwork {
     }
 
     /**
-     * Finds the proper tracks from the already added ones to properly update their pointers
+     * Finds the proper tracks from the already added ones to properly update their
+     * pointers
+     * 
      * @param toAdd the track to add
      * @return true, if a fitting track has been found, false else
      */
@@ -405,6 +415,7 @@ public class TrackNetwork {
 
     /**
      * Returns a sorted list of all tracks, sorted by id
+     * 
      * @return list of all tracks
      */
     public List<Track> listTracks() {
@@ -415,6 +426,7 @@ public class TrackNetwork {
 
     /**
      * Returns a map of all trains and their Points they stand on
+     * 
      * @return Map of trains and their points
      */
     public Map<Train, List<Point>> getTrainsOnTrack() {

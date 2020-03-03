@@ -1,8 +1,8 @@
 package modeltrain.trains;
 
-public class ElectricEngine extends Engine {
+public class ElectricalEngine extends Engine {
 
-    public ElectricEngine(String modelSeries, String name, boolean front, boolean back, int length) {
+    public ElectricalEngine(String modelSeries, String name, boolean front, boolean back, int length) {
         super(modelSeries, name, front, back, length);
     }
 
@@ -15,7 +15,7 @@ public class ElectricEngine extends Engine {
 
     @Override
     public String getType() {
-        return "electric engine";
+        return "electrical engine";
     }
     
     @Override

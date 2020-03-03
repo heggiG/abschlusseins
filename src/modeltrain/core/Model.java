@@ -2,6 +2,8 @@ package modeltrain.core;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+
 import edu.kit.informatik.Terminal;
 import modeltrain.trains.Train;
 
@@ -236,7 +238,7 @@ public class Model {
      */
     public void listTrainSets() {
         if (garage.listPC().isEmpty()) {
-            Terminal.printError("no train-sets added yet");
+            Terminal.printError("No train-set exists");
         } else {
             for (String s : garage.listPC()) {
                 Terminal.printLine(s);
@@ -249,7 +251,7 @@ public class Model {
      */
     public void listCoaches() {
         if (garage.listCoaches().isEmpty()) {
-            Terminal.printError("no coaches added yet");
+            Terminal.printError("No coach exists");
         } else {
             for (String s : garage.listCoaches()) {
                 Terminal.printLine(s);
@@ -262,7 +264,7 @@ public class Model {
      */
     public void listEngines() {
         if (garage.listEngines().isEmpty()) {
-            Terminal.printError("no engines added yet");
+            Terminal.printError("No engine exists");
         } else {
             for (String s : garage.listEngines()) {
                 Terminal.printLine(s);
@@ -275,7 +277,7 @@ public class Model {
      */
     public void listTracks() {
         if (tn.listTracks().isEmpty()) {
-            Terminal.printError("no tracks yet");
+            Terminal.printError("No track exists");
         } else {
             for (Track t : tn.listTracks()) {
                 Terminal.printLine(t.toString());
@@ -307,7 +309,7 @@ public class Model {
      * @param n The amount of steps to make
      */
     public void step(short n) {
-        Map<Integer, Boolean> ret;
+        Set<Integer> ret;
         try {
             ret = tn.step(n);
         } catch (SemanticsException e) {
@@ -322,12 +324,9 @@ public class Model {
             }
             if (!ret.isEmpty()) {
                 StringBuilder crash = new StringBuilder();
-                crash.append("Crash of trains ");
-                for (Map.Entry<Integer, Boolean> id : ret.entrySet()) {
-                    if (id.getValue()) {
-                        garage.removeTrain(id.getKey());
-                    }
-                    crash.append(id.getKey());
+                crash.append("Crash of train ");
+                for (Integer id : ret) {
+                    crash.append(id);
                     crash.append(",");
                 }
                 crash.deleteCharAt(crash.lastIndexOf(","));

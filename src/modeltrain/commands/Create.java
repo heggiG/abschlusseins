@@ -36,6 +36,9 @@ public class Create extends Command {
             case "train-set":
                 createTrainSet(command);
                 break;
+                
+                default:
+                    throw new SyntaxException("unknown create command");
             }
         }
     }
