@@ -190,9 +190,13 @@ public class Model {
      */
     public void addTrack(Point start, Point end, Point altEnd) { // TODO diagonal track
         try {
-            tn.addTrack(new SwitchTrack(start, end, altEnd, nextTrackId));
-            Terminal.printLine(nextTrackId);
-            nextTrackId++;
+            if (!checkDiagonal(start, end) && !checkDiagonal(start, altEnd)) {
+                tn.addTrack(new SwitchTrack(start, end, altEnd, nextTrackId));
+                Terminal.printLine(nextTrackId);
+                nextTrackId++;
+            } else {
+                Terminal.printError("at least on of the points would create an diagonal track");
+            }
         } catch (SemanticsException e) {
             Terminal.printError(e.getMessage());
         }
@@ -238,7 +242,7 @@ public class Model {
      */
     public void listTrainSets() {
         if (garage.listPC().isEmpty()) {
-            Terminal.printError("No train-set exists");
+            Terminal.printLine("No train-set exists");
         } else {
             for (String s : garage.listPC()) {
                 Terminal.printLine(s);
@@ -251,7 +255,7 @@ public class Model {
      */
     public void listCoaches() {
         if (garage.listCoaches().isEmpty()) {
-            Terminal.printError("No coach exists");
+            Terminal.printLine("No coach exists");
         } else {
             for (String s : garage.listCoaches()) {
                 Terminal.printLine(s);

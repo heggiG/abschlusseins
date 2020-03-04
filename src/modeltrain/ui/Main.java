@@ -17,7 +17,7 @@ public class Main {
      * Private Main class constructor
      */
     private Main() {
-    };
+    }
 
     /**
      * Main method
@@ -29,9 +29,9 @@ public class Main {
         do {
             try {
                 userInterface.executeCommand(Terminal.readLine());
-            } catch (SyntaxException e) {
+            } catch (SyntaxException e) { //if the input has wrong syntax
                 Terminal.printError(e.getMessage());
-            } catch (NoSuchElementException e) {
+            } catch (NoSuchElementException e) { //if no command has been found
                 Terminal.printError("unknown command");
             }
         } while (!userInterface.isExit());
