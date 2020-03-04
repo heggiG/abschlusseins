@@ -20,7 +20,7 @@ public class Garage {
     private Map<String, Engine> engineGarage;
     private Map<String, Coach> coachGarage;
     private Map<String, TrainSet> pcGarage;
-    private Map<String, RollMaterial> inTrains;
+    private Map<String, RollingStock> inTrains;
     private Map<Integer, Train> trainGarage;
     private int nextTrainId;
     private int nextCoachId;
@@ -76,7 +76,7 @@ public class Garage {
      * @param id The rolling stocks id to find
      * @return The rolling stock with the given id or null if it dosen't exist
      */
-    public RollMaterial getRollMaterial(String id) {
+    public RollingStock getRollMaterial(String id) {
         if (id.charAt(0) == 'W') {
             return getCoach(id);
         } else {
@@ -146,7 +146,7 @@ public class Garage {
 
     public void removeTrain(int id) {
         if (trainGarage.containsKey(id)) {
-            for (RollMaterial rm : trainGarage.get(id).getWagons()) {
+            for (RollingStock rm : trainGarage.get(id).getWagons()) {
                 rm.setTrainNumber(-1); //train number reset id
             }
             trainGarage.remove(id);
@@ -172,7 +172,7 @@ public class Garage {
 
     public void deleteTrain(int id) {
         if (trainGarage.containsKey(id)) {
-            for (Map.Entry<String, RollMaterial> s : inTrains.entrySet()) {
+            for (Map.Entry<String, RollingStock> s : inTrains.entrySet()) {
                 if (trainGarage.get(id).getWagons().contains(s.getValue())) {
                     inTrains.remove(s.getKey());
                 }

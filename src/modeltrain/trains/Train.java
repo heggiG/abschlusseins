@@ -14,7 +14,7 @@ import java.util.ArrayList;
 public class Train implements Comparable<Train> {
 
     private final int id;
-    private List<RollMaterial> wagons;
+    private List<RollingStock> wagons;
     private boolean isTrainSet;
     private Point direction;
 
@@ -23,7 +23,7 @@ public class Train implements Comparable<Train> {
         wagons = new ArrayList<>();
     }
 
-    public void add(RollMaterial rm) {
+    public void add(RollingStock rm) {
         if (rm.getSuperType().equals("engine")) {
             add((Engine) rm);
         } else if (rm.getSuperType().equals("coach")) {
@@ -32,7 +32,7 @@ public class Train implements Comparable<Train> {
             add((TrainSet) rm);
         }
     }
-    
+
     /**
      * Adds a Locomotive to the train
      * 
@@ -79,14 +79,14 @@ public class Train implements Comparable<Train> {
             throw new SemanticsException("rollmaterial needs coupling in front");
         } else if (!wagons.get(wagons.size() - 1).getBackCoupling()) {
             throw new SemanticsException("last rollmaterial needs backcoupling");
-        } else if (!wagons.get(wagons.size() - 1).getModel().equals(trainSet.getModel())) {
+        } else if (!wagons.get(wagons.size() - 1).getModelSeries().equals(trainSet.getModelSeries())) {
             throw new SemanticsException("model types of the powered carts don't match");
         } else {
             wagons.add(trainSet);
         }
     }
 
-    public void addRS(RollMaterial rm) {
+    public void addRS(RollingStock rm) {
         if (rm.getSuperType().equals("engine")) {
             add((Engine) rm);
         } else if (rm.getSuperType().equals("coach")) {
@@ -116,7 +116,7 @@ public class Train implements Comparable<Train> {
 
     public int getLength() {
         int length = 0;
-        for (RollMaterial rm : wagons) {
+        for (RollingStock rm : wagons) {
             length += rm.getLength();
         }
         return length;
@@ -131,7 +131,7 @@ public class Train implements Comparable<Train> {
             return null;
         } else {
             StringBuilder[] sb = new StringBuilder[wagons.get(0).show().length];
-            for (RollMaterial rm : wagons) {
+            for (RollingStock rm : wagons) {
                 for (int i = 0; i < rm.show().length; i++) {
                     if (sb[i] == null) {
                         sb[i] = new StringBuilder();
@@ -150,7 +150,7 @@ public class Train implements Comparable<Train> {
         }
     }
 
-    public List<RollMaterial> getWagons() {
+    public List<RollingStock> getWagons() {
         return wagons;
     }
 
@@ -180,7 +180,7 @@ public class Train implements Comparable<Train> {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append(id);
-        for (RollMaterial rm : wagons) {
+        for (RollingStock rm : wagons) {
             sb.append(" ");
             sb.append(rm.getId());
         }

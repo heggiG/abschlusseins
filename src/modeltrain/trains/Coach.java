@@ -2,7 +2,7 @@ package modeltrain.trains;
 
 import modeltrain.core.SemanticsException;
 
-public abstract class Coach extends RollMaterial {
+public abstract class Coach extends RollingStock {
 
 
     public Coach(Integer id, boolean front, boolean back, int length) {
@@ -20,7 +20,7 @@ public abstract class Coach extends RollMaterial {
     }
 
     @Override
-    public String getModel() {
+    public String getModelSeries() {
         throw new SemanticsException("coaches have no model type");
     }
     
