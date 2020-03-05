@@ -5,14 +5,28 @@ import modeltrain.core.Model;
 import modeltrain.core.Point;
 import modeltrain.core.SyntaxException;
 
+/**
+ * Class that implements the set switch command
+ * 
+ * @author Florian Heck
+ * @version 1.1
+ */
 public class SetSwitch extends Command {
 
-    public static final String REGEX = "set switch (\\d+) position " + COORDINATE;
-    
+    private static final String REGEX = "set switch (\\d+) position " + COORDINATE;
+
+    /**
+     * Constructor that calls the super constructor
+     * 
+     * @param model The model to operate on
+     */
     public SetSwitch(Model model) {
         super(model, REGEX);
     }
-    
+
+    /**
+     * {@inheritDoc}}
+     */
     @Override
     public void execute(String command) throws SyntaxException {
         Matcher mr = getMatcher(command);

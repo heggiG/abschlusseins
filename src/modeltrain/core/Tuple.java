@@ -5,7 +5,8 @@ package modeltrain.core;
  * 
  * @author Florian
  * @version 1.0
- * @param <E> the generic type
+ * @param <E> the first elements generic type
+ * @param <F> the second elements generic type
  */
 public class Tuple<E, F> {
     

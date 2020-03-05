@@ -67,7 +67,7 @@ public class Model {
      */
     public void createTrainSet(String modelType, String name, boolean front, boolean back, int len) {
         try {
-            Terminal.printLine(garage.createPoweredCart(modelType, name, front, back, len));
+            Terminal.printLine(garage.createTrainSet(modelType, name, front, back, len));
         } catch (SemanticsException e) {
             Terminal.printError(e.getMessage());
         }
@@ -241,10 +241,10 @@ public class Model {
      * Tries to print a list of all trainsets
      */
     public void listTrainSets() {
-        if (garage.listPC().isEmpty()) {
+        if (garage.listTrainSets().isEmpty()) {
             Terminal.printLine("No train-set exists");
         } else {
-            for (String s : garage.listPC()) {
+            for (String s : garage.listTrainSets()) {
                 Terminal.printLine(s);
             }
         }

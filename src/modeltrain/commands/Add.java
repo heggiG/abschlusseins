@@ -6,6 +6,12 @@ import modeltrain.core.Model;
 import modeltrain.core.Point;
 import modeltrain.core.SyntaxException;
 
+/**
+ * Implements the add Command
+ * 
+ * @author Florian Heck
+ * @version 1.3
+ */
 public class Add extends Command {
 
     private static final String ADD_REGEX = "add (\\s*\\S*)*";
@@ -13,31 +19,38 @@ public class Add extends Command {
     private static final String ADD_SWITCH = "add switch " + COORDINATE + " -> " + COORDINATE + "," + COORDINATE;
     private static final String ADD_TRAIN = "add train ((-|\\+|)\\d+) (\\S+)";
 
+    /**
+     * Constructor that calls the super constructor
+     * 
+     * @param model The model to operate on
+     */
     public Add(Model model) {
         super(model, ADD_REGEX);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void execute(String command) throws SyntaxException {
         if (command.split(" ").length < 2) {
             throw new SyntaxException("wrong syntax for add command");
         }
         switch (command.split(" ")[1]) {
-
-        case "track":
-            addTrack(command);
-            break;
-
-        case "train":
-            addTrain(command);
-            break;
-
-        case "switch":
-            addSwitch(command);
-            break;
-
-        default:
-            throw new SyntaxException("unknown add command");
+            case "track":
+                addTrack(command);
+                break;
+    
+            case "train":
+                addTrain(command);
+                break;
+    
+            case "switch":
+                addSwitch(command);
+                break;
+    
+            default:
+                throw new SyntaxException("unknown add command");
         }
 
     }

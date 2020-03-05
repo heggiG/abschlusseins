@@ -18,27 +18,30 @@ public class Train implements Comparable<Train> {
     private boolean isTrainSet;
     private Point direction;
 
+    /**
+     * Constructs the train
+     * @param id The trains id
+     */
     public Train(int id) {
         this.id = id;
         wagons = new ArrayList<>();
     }
 
-    public void add(RollingStock rm) {
-        if (rm.getSuperType().equals("engine")) {
-            add((Engine) rm);
-        } else if (rm.getSuperType().equals("coach")) {
-            add((Coach) rm);
-        } else if (rm.getSuperType().equals("train-set")) {
-            add((TrainSet) rm);
+    /**
+     * Adds rolling stock to the train
+     * @param rs The rolling stock to add
+     */
+    public void add(RollingStock rs) {
+        if (rs.getSuperType().equals("engine")) {
+            add((Engine) rs);
+        } else if (rs.getSuperType().equals("coach")) {
+            add((Coach) rs);
+        } else if (rs.getSuperType().equals("train-set")) {
+            add((TrainSet) rs);
         }
     }
 
-    /**
-     * Adds a Locomotive to the train
-     * 
-     * @param engine The Locomotive to add
-     */
-    public void add(Engine engine) {
+    private void add(Engine engine) {
         if (wagons.isEmpty()) {
             isTrainSet = false;
             wagons.add(engine);
@@ -53,7 +56,7 @@ public class Train implements Comparable<Train> {
         }
     }
 
-    public void add(Coach co) {
+    private void add(Coach co) {
         if (wagons.isEmpty()) {
             isTrainSet = false;
             wagons.add(co);
@@ -68,7 +71,7 @@ public class Train implements Comparable<Train> {
         }
     }
 
-    public void add(TrainSet trainSet) {
+    private void add(TrainSet trainSet) {
         if (wagons.isEmpty()) {
             isTrainSet = true;
             wagons.add(trainSet);
@@ -86,24 +89,26 @@ public class Train implements Comparable<Train> {
         }
     }
 
-    public void addRS(RollingStock rm) {
-        if (rm.getSuperType().equals("engine")) {
-            add((Engine) rm);
-        } else if (rm.getSuperType().equals("coach")) {
-            add((Coach) rm);
-        } else {
-            add((TrainSet) rm);
-        }
-    }
-
+    /**
+     * Sets the direction and reduces it to length 1
+     * @param direction The trains direction
+     */
     public void setDirection(Point direction) {
-        this.direction = direction;
+        this.direction = direction.reduce();
     }
 
+    /**
+     * 
+     * @return the trains direction
+     */
     public Point getDirection() {
         return direction;
     }
 
+    /**
+     * 
+     * @return Whether the train is valid
+     */
     public boolean isValid() {
         if (wagons.get(wagons.size() - 1).getSuperType().equals("engine")
                 || wagons.get(0).getSuperType().equals("engine")) {
@@ -114,6 +119,10 @@ public class Train implements Comparable<Train> {
         return false;
     }
 
+    /**
+     * 
+     * @return The trains length as a sum of its rolling stock
+     */
     public int getLength() {
         int length = 0;
         for (RollingStock rm : wagons) {
@@ -122,10 +131,18 @@ public class Train implements Comparable<Train> {
         return length;
     }
 
+    /**
+     * 
+     * @return The trains id
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Constructs the trains ascii art representation
+     * @return a string array containing the ascii art representation
+     */
     public String[] show() {
         if (wagons.size() == 0) {
             return null;
@@ -150,20 +167,33 @@ public class Train implements Comparable<Train> {
         }
     }
 
-    public List<RollingStock> getWagons() {
+    /**
+     * 
+     * @return the trains rolling stock
+     */
+    public List<RollingStock> getRollingStock() {
         return wagons;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int compareTo(Train o) {
         return this.id - o.id;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public int hashCode() {
         return id;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public boolean equals(Object o) {
         if (o.getClass() != this.getClass())
@@ -176,6 +206,9 @@ public class Train implements Comparable<Train> {
         return false;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();

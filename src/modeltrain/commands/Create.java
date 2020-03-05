@@ -5,6 +5,12 @@ import java.util.regex.Pattern;
 import modeltrain.core.Model;
 import modeltrain.core.SyntaxException;
 
+/**
+ * Implements the create command
+ * 
+ * @author Florian Heck
+ * @version 1.1
+ */
 public class Create extends Command {
 
     private static final String REGEX = "create (\\s*\\S*)*";
@@ -15,28 +21,36 @@ public class Create extends Command {
     private static final String TS_REGEX = "create train-set (\\S+) (\\S+) ((-|\\+|)\\d+) (" + COUPLING + ") ("
             + COUPLING + ")";
 
+    /**
+     * Constructor that calls super constructor
+     * 
+     * @param model The model to operate on
+     */
     public Create(Model model) {
         super(model, REGEX);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void execute(String command) throws SyntaxException {
         if (command.split(" ").length < 2) {
             throw new SyntaxException("unknown create command");
         } else {
             switch (command.split(" ")[1]) {
-            case "coach":
-                createCoach(command);
-                break;
-
-            case "engine":
-                createEngine(command);
-                break;
-
-            case "train-set":
-                createTrainSet(command);
-                break;
-                
+                case "coach":
+                    createCoach(command);
+                    break;
+    
+                case "engine":
+                    createEngine(command);
+                    break;
+    
+                case "train-set":
+                    createTrainSet(command);
+                    break;
+    
                 default:
                     throw new SyntaxException("unknown create command");
             }

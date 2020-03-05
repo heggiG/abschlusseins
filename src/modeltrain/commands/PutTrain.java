@@ -5,15 +5,29 @@ import java.util.regex.MatchResult;
 import modeltrain.core.Model;
 import modeltrain.core.Point;
 
+/**
+ * Class that implements the put train command
+ * 
+ * @author Florian Heck
+ * @version 1.0
+ */
 public class PutTrain extends Command {
 
     private static final String REGEX = "put train (\\d+) at " + COORDINATE
             + " in direction ((-|\\+|)\\d+),((-|\\+|)\\d+)";
 
+    /**
+     * Constructor that calls the super constructor
+     * 
+     * @param model The model to operate on
+     */
     public PutTrain(Model model) {
         super(model, REGEX);
     }
 
+    /**
+     * {@inheritDoc}
+     */
     @Override
     public void execute(String command) {
         MatchResult mr = getMatcher(command);

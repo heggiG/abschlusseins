@@ -59,7 +59,7 @@ public class Point implements Comparable<Point> {
      * Returns the difference of this Point to another (see vector subtraction)
      * 
      * @param p The point to subtract
-     * @return
+     * @return This point - p
      */
     public Point sub(Point p) {
         return new Point(this.xCord - p.xCord, this.yCord - p.yCord);
@@ -68,8 +68,8 @@ public class Point implements Comparable<Point> {
     /**
      * Scales the point by an integer n (see vector scaling)
      * 
-     * @param n
-     * @return
+     * @param n The integer to scale by
+     * @return This point scaled by n
      */
     public Point scale(int n) {
         return new Point(this.xCord * n, this.yCord * n);

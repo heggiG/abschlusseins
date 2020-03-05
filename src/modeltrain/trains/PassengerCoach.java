@@ -11,10 +11,10 @@ public class PassengerCoach extends Coach {
     /**
      * Uses the coaches constructor {@link Coach}
      * 
-     * @param id
-     * @param front
-     * @param back
-     * @param length
+     * @param id     The coaches id
+     * @param front  Whether this freight coach has front coupling
+     * @param back   Whether this coach has back coupling
+     * @param length The coaches length
      */
     public PassengerCoach(int id, boolean front, boolean back, int length) {
         super(id, front, back, length);
@@ -25,9 +25,9 @@ public class PassengerCoach extends Coach {
      */
     @Override
     public String[] show() {
-        return new String[] { "                    ", "                    ", "____________________",
-                "|  ___ ___ ___ ___ |", "|  |_| |_| |_| |_| |", "|__________________|", "|__________________|",
-                "   (O)        (O)   " };
+        return new String[] {"                    ", "                    ", "____________________",
+            "|  ___ ___ ___ ___ |", "|  |_| |_| |_| |_| |", "|__________________|", "|__________________|",
+            "   (O)        (O)   " };
     }
 
     /**

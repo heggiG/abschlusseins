@@ -77,7 +77,7 @@ public class TrackNetwork {
                 }
                 return true;
             } else {
-                Set<Track> toCheck = checkTrackVII(tracks.get(id), null, new NullSet<Track>());
+                Set<Track> toCheck = checkTrackVII(tracks.get(id), null, new HashSet<Track>());
                 Collection<Track> other = tracks.values();
                 other.remove(tracks.get(id));
                 if (toCheck.containsAll(other)) {
@@ -93,9 +93,12 @@ public class TrackNetwork {
         }
     }
 
-    private Set<Track> checkTrackVII(Track current, Track prev, NullSet<Track> ret) {
+    private Set<Track> checkTrackVII(Track current, Track prev, Set<Track> ret) {
         if (current == null) {
-            return null;
+            return ret;
+        }
+        if (ret.contains(current)) {
+            return ret;
         }
         if (prev.equals(current.getNextStart())) {
             ret.add(current.getNextEnd());
@@ -114,75 +117,6 @@ public class TrackNetwork {
             ret.addAll(checkTrackVII(current.getNextStart(), current, ret));
         }
         return ret;
-    }
-
-    // recursive algorithm to check if both ends of a track can still be reached
-    // after deletion
-    private boolean checkTracks(Track toFind, Track current, Track prev, Set<Track> alreadyChecked) {
-        if (current == null) {
-            return false;
-        }
-        if (current.toString().charAt(0) == 's') {
-            SwitchTrack st = (SwitchTrack) current;
-            return checkTracks(toFind, st, prev, alreadyChecked);
-        }
-        if (alreadyChecked == null) {
-            alreadyChecked = new HashSet<>();
-        }
-        if (current.equals(toFind)) {
-            return true;
-        } else if (prev == current.getNextStart() && current.getNextEnd() == null) {
-            return false;
-        } else if (prev == current.getNextEnd() && current.getNextStart() == null) {
-            return false;
-        } else if (current.getNextEnd().equals(toFind) || current.getNextStart().equals(toFind)) {
-            return true;
-        } else {
-            alreadyChecked.add(current);
-            if (prev.equals(current.getNextEnd())) {
-                if (alreadyChecked.contains(current.getNextStart())) {
-                    return false;
-                }
-                return checkTracks(toFind, current.getNextStart(), current, alreadyChecked);
-            } else if (prev.equals(current.getNextStart())) {
-                if (alreadyChecked.contains(current.getNextEnd())) {
-                    return false;
-                }
-                return checkTracks(toFind, current.getNextEnd(), current, alreadyChecked);
-            }
-        }
-        return false;
-    }
-
-    // same as last one but with the switchtrack
-    private boolean checkTracks(Track toFind, SwitchTrack current, Track prev, Set<Track> alreadyChecked) {
-        if (alreadyChecked == null) {
-            alreadyChecked = new HashSet<>();
-        }
-        if (current == null) {
-            return false;
-        }
-        if (current.equals(toFind)) {
-            return true;
-        } else if (current.getNextEnd().equals(toFind) || current.getNextStart().equals(toFind)
-                || current.getNextAltEnd().equals(toFind)) {
-            return true;
-        } else if (alreadyChecked.contains(current)) {
-            return false;
-        } else {
-            alreadyChecked.add(current);
-            if (prev.equals(current.getNextStart())) {
-                return checkTracks(toFind, current.getNextEnd(), current, alreadyChecked)
-                        || checkTracks(toFind, current.getNextAltEnd(), current, alreadyChecked);
-            } else if (prev.equals(current.getNextEnd())) {
-                return checkTracks(toFind, current.getNextAltEnd(), current, alreadyChecked)
-                        || checkTracks(toFind, current.getNextStart(), current, alreadyChecked);
-            } else if (prev.equals(current.getNextAltEnd())) {
-                return checkTracks(toFind, current.getNextStart(), current, alreadyChecked)
-                        || checkTracks(toFind, current.getNextEnd(), current, alreadyChecked);
-            }
-        }
-        return false;
     }
 
     /**
@@ -407,7 +341,6 @@ public class TrackNetwork {
                 return true;
             } else if (tr.getAltEnd() != null && tr.getAltEnd().equals(toAdd.getEnd())) {
                 addPointsFromTrack(toAdd);
-                ;
                 tr.setNextAltEnd(toAdd);
                 toAdd.setNextEnd(tr);
                 return true;

@@ -45,9 +45,9 @@ public class SwitchTrack extends Track {
      */
     public Set<Point> getPointsBetweenEnd() {
         Set<Point> ret = new HashSet<>();
-        Point adder = end.sub(start).reduce();
-        for (int i = 1; i < start.lengthBetweenPoints(end); i++) {
-            ret.add(start.add(adder.scale(i)));
+        Point adder = getEnd().sub(getStart()).reduce();
+        for (int i = 1; i < getStart().lengthBetweenPoints(getEnd()); i++) {
+            ret.add(getStart().add(adder.scale(i)));
         }
         return ret;
     }
@@ -58,9 +58,9 @@ public class SwitchTrack extends Track {
      */
     public Set<Point> getPointsBetweenAltEnd() {
         Set<Point> ret = new HashSet<>();
-        Point adder = altEnd.sub(start).reduce();
-        for (int i = 1; i < start.lengthBetweenPoints(altEnd); i++) {
-            ret.add(start.add(adder.scale(i)));
+        Point adder = altEnd.sub(getStart()).reduce();
+        for (int i = 1; i < getStart().lengthBetweenPoints(altEnd); i++) {
+            ret.add(getStart().add(adder.scale(i)));
         }
         return ret;
     }
@@ -79,10 +79,10 @@ public class SwitchTrack extends Track {
      * @return The now selected end point
      */
     public Point toggle() {
-        if (currentSwitch.equals(end))
+        if (currentSwitch.equals(getEnd()))
             currentSwitch = altEnd;
         else
-            currentSwitch = end;
+            currentSwitch = getEnd();
         return currentSwitch;
     }
 
@@ -108,8 +108,8 @@ public class SwitchTrack extends Track {
      */
     @Override
     public int getLength() {
-        int xLength = start.getXCord() - currentSwitch.getXCord();
-        int yLength = start.getYCord() - currentSwitch.getYCord();
+        int xLength = getStart().getXCord() - currentSwitch.getXCord();
+        int yLength = getStart().getYCord() - currentSwitch.getYCord();
         return (int) Math.sqrt(Math.pow(xLength, 2) + Math.pow(yLength, 2));
     }
 
@@ -125,9 +125,9 @@ public class SwitchTrack extends Track {
         if (o.getClass() != this.getClass())
             return false;
         SwitchTrack st = (SwitchTrack) o;
-        if (st.start.equals(this.start) && st.altEnd.equals(this.altEnd) && st.end.equals(this.end))
+        if (st.getStart().equals(this.getStart()) && st.altEnd.equals(this.altEnd) && st.getEnd().equals(this.getEnd()))
             return true;
-        else if (st.id == this.id)
+        else if (st.getId() == this.getId())
             return true;
         return false;
     }
@@ -139,11 +139,11 @@ public class SwitchTrack extends Track {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("s ");
-        sb.append(id);
+        sb.append(getId());
         sb.append(" ");
-        sb.append(start);
+        sb.append(getStart());
         sb.append(" -> ");
-        sb.append(end);
+        sb.append(getEnd());
         sb.append(",");
         sb.append(altEnd);
         sb.append(" ");

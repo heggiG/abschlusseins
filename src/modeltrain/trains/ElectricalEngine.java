@@ -11,11 +11,11 @@ public class ElectricalEngine extends Engine {
     /**
      * Sets all parameters by using the super constructor, see {@link Engine}
      * 
-     * @param modelSeries
-     * @param name
-     * @param front
-     * @param back
-     * @param length
+     * @param modelSeries The engines model series
+     * @param name        The enignes name
+     * @param front       Whether the engine has front coupling
+     * @param back        Whether the engine has back coupling
+     * @param length      The engines length
      */
     public ElectricalEngine(String modelSeries, String name, boolean front, boolean back, int length) {
         super(modelSeries, name, front, back, length);
@@ -26,9 +26,9 @@ public class ElectricalEngine extends Engine {
      */
     @Override
     public String[] show() {
-        return new String[] { "               ___    ", "                 \\    ", "  _______________/__  ",
-                " /_| ____________ |_\\ ", "/   |____________|   \\", "\\                    /",
-                " \\__________________/ ", "  (O)(O)      (O)(O)  " };
+        return new String[] {"               ___    ", "                 \\    ", "  _______________/__  ",
+            " /_| ____________ |_\\ ", "/   |____________|   \\", "\\                    /",
+            " \\__________________/ ", "  (O)(O)      (O)(O)  " };
     }
 
     /**

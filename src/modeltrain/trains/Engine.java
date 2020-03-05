@@ -2,18 +2,21 @@ package modeltrain.trains;
 
 /**
  * Implements the engine as a subclass of the rolling stock
+ * 
  * @author Florian Heck
  * @version 1.1
  */
 public abstract class Engine extends RollingStock {
 
     /**
-     * Constructor that sets all needed attributes by passing them into the super constructor, see {@link RollingStock}
-     * @param modelSeries
-     * @param name
-     * @param front
-     * @param back
-     * @param length
+     * Constructor that sets all needed attributes by passing them into the super
+     * constructor, see {@link RollingStock}
+     * 
+     * @param modelSeries The engines modelseries
+     * @param name        The engines name
+     * @param front       Whether the engine has front coupling
+     * @param back        Whether the engine has back coupling
+     * @param length      The engines length
      */
     public Engine(String modelSeries, String name, boolean front, boolean back, int length) {
         super(modelSeries, name, front, back, length);

@@ -26,9 +26,9 @@ public class FreightCoach extends Coach {
      */
     @Override
     public String[] show() {
-        return new String[] { "                    ", "                    ", "                    ",
-                "|                  |", "|                  |", "|                  |", "|__________________|",
-                "   (O)        (O)   " };
+        return new String[] {"                    ", "                    ", "                    ",
+            "|                  |", "|                  |", "|                  |", "|__________________|",
+            "   (O)        (O)   " };
     }
 
     /**

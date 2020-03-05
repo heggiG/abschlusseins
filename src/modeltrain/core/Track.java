@@ -11,11 +11,11 @@ import java.util.Set;
  */
 public class Track implements Comparable<Track> {
 
+    private final Point start;
+    private final Point end;
+    private final int id;
     private Track nextStart;
     private Track nextEnd;
-    protected final Point start;
-    protected final Point end;
-    protected final int id;
 
     /**
      * Constructs a track and sets start, and id

@@ -11,11 +11,11 @@ public class SteamEngine extends Engine {
     /**
      * Sets all Parameters by using the super constructor, see {@link Engine}
      * 
-     * @param modelSeries
-     * @param name
-     * @param front
-     * @param back
-     * @param length
+     * @param modelSeries The engines model series
+     * @param name        The enignes name
+     * @param front       Whether the engine has front coupling
+     * @param back        Whether the engine has back coupling
+     * @param length      The engines length
      */
     public SteamEngine(String modelSeries, String name, boolean front, boolean back, int length) {
         super(modelSeries, name, front, back, length);
@@ -26,9 +26,9 @@ public class SteamEngine extends Engine {
      */
     @Override
     public String[] show() {
-        return new String[] { "                    ", "                    ", "     ++      +------",
-                "     ||      |+-+ | ", "   /---------|| | | ", "  + ========  +-+ | ", " _|--/~\\------/~\\-+ ",
-                "//// \\_/      \\_/   " };
+        return new String[] {"                    ", "                    ", "     ++      +------",
+            "     ||      |+-+ | ", "   /---------|| | | ", "  + ========  +-+ | ", " _|--/~\\------/~\\-+ ",
+            "//// \\_/      \\_/   " };
     }
 
     /**
