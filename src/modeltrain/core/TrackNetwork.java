@@ -1,6 +1,7 @@
 package modeltrain.core;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -75,15 +76,44 @@ public class TrackNetwork {
                     trackMap.remove(p);
                 }
                 return true;
-            } else if (checkTracks(toRemove.getNextEnd(), toRemove.getNextStart(), toRemove, null)) {
-                for (Point p : toRemove.getPointsBetween()) {
-                    trackMap.remove(p);
-                }
-                return true;
             } else {
-                throw new SemanticsException("removing track would create two seperate tracks");
+                Set<Track> toCheck = checkTrackVII(tracks.get(id), null, new NullSet<Track>());
+                Collection<Track> other = tracks.values();
+                other.remove(tracks.get(id));
+                if (toCheck.containsAll(other)) {
+                    for (Point p : tracks.get(id).getPointsBetween()) {
+                        trackMap.remove(p);
+                    }
+                    tracks.remove(id);
+                    return true;
+                } else {
+                    return false;
+                }
             }
         }
+    }
+
+    private Set<Track> checkTrackVII(Track current, Track prev, NullSet<Track> ret) {
+        if (current == null) {
+            return null;
+        }
+        if (prev.equals(current.getNextStart())) {
+            ret.add(current.getNextEnd());
+            ret.add(current.getNextAltEnd());
+            ret.addAll(checkTrackVII(current.getNextEnd(), current, ret));
+            ret.addAll(checkTrackVII(current.getNextAltEnd(), current, ret));
+        } else if (prev.equals(current.getNextEnd())) {
+            ret.add(current.getNextStart());
+            ret.add(current.getNextAltEnd());
+            ret.addAll(checkTrackVII(current.getNextStart(), current, ret));
+            ret.addAll(checkTrackVII(current.getNextAltEnd(), current, ret));
+        } else if (prev.equals(current.getNextAltEnd())) {
+            ret.add(current.getNextStart());
+            ret.add(current.getNextEnd());
+            ret.addAll(checkTrackVII(current.getNextEnd(), current, ret));
+            ret.addAll(checkTrackVII(current.getNextStart(), current, ret));
+        }
+        return ret;
     }
 
     // recursive algorithm to check if both ends of a track can still be reached

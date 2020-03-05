@@ -11,7 +11,7 @@ import modeltrain.core.SyntaxException;
  * @author Florian
  * @version 1.0
  */
-public class Main {
+public final class Main {
 
     /**
      * Private Main class constructor

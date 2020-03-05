@@ -190,7 +190,7 @@ public class Model {
      */
     public void addTrack(Point start, Point end, Point altEnd) { // TODO diagonal track
         try {
-            if (!checkDiagonal(start, end) && !checkDiagonal(start, altEnd)) {
+            if (checkDiagonal(start, end) && checkDiagonal(start, altEnd)) {
                 tn.addTrack(new SwitchTrack(start, end, altEnd, nextTrackId));
                 Terminal.printLine(nextTrackId);
                 nextTrackId++;
