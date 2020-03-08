@@ -8,7 +8,7 @@ package modeltrain.core;
  * @author Florian Heck
  * @version 1
  */
-public class SemanticsException extends RuntimeException {
+public class SemanticsException extends Exception {
 
     private static final long serialVersionUID = 1L;
 

@@ -52,10 +52,12 @@ public class TrackNetwork {
      * 
      * @param id The tracks id to remove
      * @return true if success, false if not
+     * @throws SemanticsException if theres no such track, or if theres a train on
+     *                            the track
      */
-    public boolean removeTrack(int id) {
+    public boolean removeTrack(int id) throws SemanticsException {
         if (!tracks.containsKey(id)) {
-            return false;
+            throw new SemanticsException("no such track");
         } else {
             Track toRemove = tracks.get(id);
             for (List<Point> lp : trainsOnTrack.values()) {
@@ -77,8 +79,8 @@ public class TrackNetwork {
                 }
                 return true;
             } else {
-                Set<Track> toCheck = checkTrackVII(tracks.get(id), null, new HashSet<Track>());
-                Collection<Track> other = tracks.values();
+                Set<Track> toCheck = checkTrackVII(tracks.get(id), tracks.get(id).getNextStart(), new HashSet<Track>());
+                Collection<Track> other = new HashSet<>(tracks.values());
                 other.remove(tracks.get(id));
                 if (toCheck.containsAll(other)) {
                     for (Point p : tracks.get(id).getPointsBetween()) {
@@ -125,8 +127,9 @@ public class TrackNetwork {
      * @param n The amount of steps to make
      * @return a map of crashed trains ids mapped to true if they crashed into
      *         another train or false if they only derailed
+     * @throws SemanticsException If not all switches have been set yet
      */
-    public Set<Integer> step(short n) {
+    public Set<Integer> step(short n) throws SemanticsException {
         if (unsetSwitches.size() != 0) {
             throw new SemanticsException("not all switches have been set");
         }
@@ -194,8 +197,11 @@ public class TrackNetwork {
      * 
      * @param id   The track's id to switch
      * @param dest The Point to switch to
+     * @throws SemanticsException if theres no such track, the given point is not
+     *                            one to switch to or if the track is not a switch
+     *                            track
      */
-    public void toggleSwitch(int id, Point dest) {
+    public void toggleSwitch(int id, Point dest) throws SemanticsException {
         if (!tracks.containsKey(id)) {
             throw new SemanticsException("no such track id");
         } else if (tracks.get(id).toString().charAt(0) != 's') {
@@ -229,8 +235,10 @@ public class TrackNetwork {
      * @param t     The train to place
      * @param place The point to put the train on
      * @param dir   The dierction the train is heading
+     * @throws SemanticsException If the train is not valid or if theres no such
+     *                            point on the track
      */
-    public void putTrain(Train t, Point place, Point dir) {
+    public void putTrain(Train t, Point place, Point dir) throws SemanticsException {
         if (!t.isValid()) {
             throw new SemanticsException("train is not valid");
         }
@@ -277,8 +285,10 @@ public class TrackNetwork {
      * Adds a track to the network
      * 
      * @param toAdd The track to add
+     * @throws SemanticsException if the track already exists or if none of the
+     *                            point already exist
      */
-    public void addTrack(final Track toAdd) {
+    public void addTrack(final Track toAdd) throws SemanticsException {
         if (trackMap.isEmpty()) {
             addPointsFromTrack(toAdd);
             tracks.put(toAdd.getId(), toAdd);

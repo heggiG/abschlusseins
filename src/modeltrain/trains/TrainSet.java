@@ -44,5 +44,22 @@ public class TrainSet extends RollingStock {
             "|  ___ ___ ___ ___ |", "|  |_| |_| |_| |_| |", "|__________________|", "|__________________|",
             "   (O)        (O)   "};
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append(getTrainNumber());
+        sb.append(" ");
+        sb.append(getModelSeries());
+        sb.append(" ");
+        sb.append(getName());
+        sb.append(" ");
+        sb.append(getLength());
+        sb.append(" ");
+        sb.append(getFrontCoupling());
+        sb.append(" ");
+        sb.append(getBackCoupling());
+        return sb.toString();                
+    }
 
 }

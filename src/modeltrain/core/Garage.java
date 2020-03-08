@@ -94,8 +94,10 @@ public class Garage {
      * @param name        The engines name
      * @param type        The engines type (steam, electrical or diesel)
      * @return The created engines id
+     * @throws SemanticsException If illegal engine type or if the id already exists
      */
-    public String createEngine(boolean front, boolean back, int len, String modelSeries, String name, String type) {
+    public String createEngine(boolean front, boolean back, int len, String modelSeries, String name, String type) 
+            throws SemanticsException {
         Engine toAdd;
         switch (type) {
             case "diesel":
@@ -128,8 +130,9 @@ public class Garage {
      * @param len   The coachs length
      * @param type  The coachs type (passenger, freight or special)
      * @return The created coachs id
+     * @throws SemanticsException If illegal coach type or id already exists
      */
-    public int createCoach(boolean front, boolean back, int len, String type) {
+    public int createCoach(boolean front, boolean back, int len, String type) throws SemanticsException {
         Coach toAdd;
         switch (type) {
             case "passenger":
@@ -163,11 +166,13 @@ public class Garage {
      * @param modelSeries The trainsets model series
      * @param name        The trainsets name
      * @return The created trainsets id
+     * @throws SemanticsException if the id already exists
      */
-    public String createTrainSet(String modelSeries, String name, boolean front, boolean back, int length) {
+    public String createTrainSet(String modelSeries, String name, boolean front, boolean back, int length) 
+            throws SemanticsException {
         TrainSet toAdd = new TrainSet(modelSeries, name, front, back, length);
         if (pcGarage.containsKey(toAdd.getId())) {
-            throw new SemanticsException("engine id already exists");
+            throw new SemanticsException("train-set id already exists");
         }
         pcGarage.put(toAdd.getId(), toAdd);
         return toAdd.getId();
@@ -177,8 +182,9 @@ public class Garage {
      * Removes a train from the garage
      * 
      * @param id The trains id
+     * @throws SemanticsException if there's no train with such id
      */
-    public void removeTrain(int id) {
+    public void removeTrain(int id) throws SemanticsException {
         if (trainGarage.containsKey(id)) {
             for (RollingStock rm : trainGarage.get(id).getRollingStock()) {
                 rm.setTrainNumber(-1); // train number reset parameter
@@ -193,8 +199,9 @@ public class Garage {
      * Delets rolling if its not placed in a train
      * 
      * @param id The rollingstocks id
+     * @throws SemanticsException if there's no rolling stock with the given id
      */
-    public void deleteRS(String id) {
+    public void deleteRS(String id) throws SemanticsException {
         if (inTrains.containsKey(id)) {
             throw new SemanticsException("rolling stock is placed in a train");
         }
@@ -213,8 +220,9 @@ public class Garage {
      * Deletes a train from the garage
      * 
      * @param id The trains id
+     * @throws SemanticsException if theres no train with such id
      */
-    public void deleteTrain(int id) {
+    public void deleteTrain(int id) throws SemanticsException {
         if (trainGarage.containsKey(id)) {
             for (Map.Entry<String, RollingStock> s : inTrains.entrySet()) {
                 if (trainGarage.get(id).getRollingStock().contains(s.getValue())) {
@@ -272,8 +280,9 @@ public class Garage {
      * 
      * @param id   The trains id
      * @param rmId The rollingstocks id
+     * @throws SemanticsException if the rollingstock is in another train or if theres no such rollingstock
      */
-    public void addToTrain(int id, String rmId) {
+    public void addToTrain(int id, String rmId) throws SemanticsException {
         if (inTrains.containsKey(rmId)) {
             throw new SemanticsException("rollmaterial is already in another train");
         }
@@ -287,7 +296,7 @@ public class Garage {
     }
 
     // creates a new train if none with the given id exist yet
-    private void newTrain(int id) {
+    private void newTrain(int id) throws SemanticsException {
         if (!trainGarage.containsKey(id) && id == nextTrainId) {
             trainGarage.put(nextTrainId, new Train(nextTrainId));
             nextTrainId++;
@@ -315,8 +324,9 @@ public class Garage {
     /**
      * 
      * @return a sorted list of all trains
+     * @throws SemanticsException if no trains have been added yet
      */
-    public List<String> listTrains() {
+    public List<String> listTrains() throws SemanticsException {
         if (trainGarage.size() == 0) {
             throw new SemanticsException("no trains have been added yet");
         }
@@ -332,10 +342,11 @@ public class Garage {
      * 
      * @param id The trains id
      * @return Ascii art in a list
+     * @throws SemanticsException
      */
     public List<String> showTrain(int id) {
         if (!trainGarage.containsKey(id)) {
-            throw new SemanticsException("no train with the id " + id);
+            return null;
         } else {
             List<String> ret = new ArrayList<>();
             for (int i = 0; i < trainGarage.get(id).show().length; i++) {

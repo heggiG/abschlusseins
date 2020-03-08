@@ -113,12 +113,12 @@ public class Model {
      * @param id The trains id
      */
     public void showTrain(int id) {
-        try {
+        if (garage.showTrain(id) == null) {
+            Terminal.printError("no train with such id");
+        } else {
             for (String s : garage.showTrain(id)) {
                 Terminal.printLine(s);
             }
-        } catch (SemanticsException e) {
-            Terminal.printError(e.getMessage());
         }
     }
 
@@ -128,7 +128,7 @@ public class Model {
      * @param id The switchtracks id which to switch
      * @param p  The point to switch to
      */
-    public void setSwitch(int id, Point p) { // TODO train on switch
+    public void setSwitch(int id, Point p) {
         try {
             tn.toggleSwitch(id, p);
             Terminal.printLine("OK");
@@ -268,7 +268,7 @@ public class Model {
      */
     public void listEngines() {
         if (garage.listEngines().isEmpty()) {
-            Terminal.printError("No engine exists");
+            Terminal.printLine("No engine exists");
         } else {
             for (String s : garage.listEngines()) {
                 Terminal.printLine(s);
@@ -281,7 +281,7 @@ public class Model {
      */
     public void listTracks() {
         if (tn.listTracks().isEmpty()) {
-            Terminal.printError("No track exists");
+            Terminal.printLine("No track exists");
         } else {
             for (Track t : tn.listTracks()) {
                 Terminal.printLine(t.toString());
@@ -299,7 +299,7 @@ public class Model {
             if (tn.removeTrack(id)) {
                 Terminal.printLine("OK");
             } else {
-                Terminal.printError("no such track id");
+                Terminal.printError("can't remove track, would cause two different track networks");
             }
         } catch (SemanticsException e) {
             Terminal.printError(e.getMessage());

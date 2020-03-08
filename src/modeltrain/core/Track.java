@@ -153,7 +153,7 @@ public class Track implements Comparable<Track> {
      */
     @Override
     public int compareTo(Track o) {
-        return o.id - this.id;
+        return this.id - o.id;
     }
 
     /**

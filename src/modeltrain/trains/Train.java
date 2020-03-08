@@ -30,8 +30,9 @@ public class Train implements Comparable<Train> {
     /**
      * Adds rolling stock to the train
      * @param rs The rolling stock to add
+     * @throws SemanticsException if the adding cannot succeed.
      */
-    public void add(RollingStock rs) {
+    public void add(RollingStock rs) throws SemanticsException {
         if (rs.getSuperType().equals("engine")) {
             add((Engine) rs);
         } else if (rs.getSuperType().equals("coach")) {
@@ -41,7 +42,7 @@ public class Train implements Comparable<Train> {
         }
     }
 
-    private void add(Engine engine) {
+    private void add(Engine engine) throws SemanticsException {
         if (wagons.isEmpty()) {
             isTrainSet = false;
             wagons.add(engine);
@@ -56,7 +57,7 @@ public class Train implements Comparable<Train> {
         }
     }
 
-    private void add(Coach co) {
+    private void add(Coach co) throws SemanticsException {
         if (wagons.isEmpty()) {
             isTrainSet = false;
             wagons.add(co);
@@ -71,7 +72,7 @@ public class Train implements Comparable<Train> {
         }
     }
 
-    private void add(TrainSet trainSet) {
+    private void add(TrainSet trainSet) throws SemanticsException {
         if (wagons.isEmpty()) {
             isTrainSet = true;
             wagons.add(trainSet);
