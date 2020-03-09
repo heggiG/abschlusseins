@@ -213,7 +213,7 @@ public class Model {
         try {
             garage.addToTrain(trainId, rsId);
             StringBuilder sb = new StringBuilder();
-            sb.append(garage.getRollMaterial(rsId).getType());
+            sb.append(garage.getRollingStock(rsId).getType());
             sb.append(" ");
             sb.append(rsId);
             sb.append(" added to train ");

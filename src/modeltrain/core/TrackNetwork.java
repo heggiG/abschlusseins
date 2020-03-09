@@ -22,7 +22,9 @@ import modeltrain.trains.Train;
 public class TrackNetwork {
 
     private Map<Integer, Track> tracks;
+    // maps points to boolean whether they can be driven on or not
     private Map<Point, Boolean> trackMap;
+    // maps each train to a list of points it stands on
     private Map<Train, List<Point>> trainsOnTrack;
     private List<Integer> unsetSwitches;
 
@@ -31,6 +33,7 @@ public class TrackNetwork {
      */
     public TrackNetwork() {
         tracks = new TreeMap<>();
+        // didn't work with treemap so hashmap it is
         trackMap = new HashMap<>();
         trainsOnTrack = new TreeMap<>();
         unsetSwitches = new ArrayList<>();
@@ -41,7 +44,7 @@ public class TrackNetwork {
      * 
      * @param t the train to remove
      */
-    public void deleteTrain(Train t) {
+    public void removeTrain(Train t) {
         if (trainsOnTrack.containsKey(t))
             trainsOnTrack.remove(t);
     }
@@ -79,7 +82,7 @@ public class TrackNetwork {
                 }
                 return true;
             } else {
-                Set<Track> toCheck = checkTrackVII(tracks.get(id), tracks.get(id).getNextStart(), new HashSet<Track>());
+                Set<Track> toCheck = checkTrack(tracks.get(id), tracks.get(id).getNextStart(), new HashSet<Track>());
                 Collection<Track> other = new HashSet<>(tracks.values());
                 other.remove(tracks.get(id));
                 if (toCheck.containsAll(other)) {
@@ -95,7 +98,7 @@ public class TrackNetwork {
         }
     }
 
-    private Set<Track> checkTrackVII(Track current, Track prev, Set<Track> ret) {
+    private Set<Track> checkTrack(Track current, Track prev, Set<Track> ret) {
         if (current == null) {
             return ret;
         }
@@ -105,18 +108,18 @@ public class TrackNetwork {
         if (prev.equals(current.getNextStart())) {
             ret.add(current.getNextEnd());
             ret.add(current.getNextAltEnd());
-            ret.addAll(checkTrackVII(current.getNextEnd(), current, ret));
-            ret.addAll(checkTrackVII(current.getNextAltEnd(), current, ret));
+            ret.addAll(checkTrack(current.getNextEnd(), current, ret));
+            ret.addAll(checkTrack(current.getNextAltEnd(), current, ret));
         } else if (prev.equals(current.getNextEnd())) {
             ret.add(current.getNextStart());
             ret.add(current.getNextAltEnd());
-            ret.addAll(checkTrackVII(current.getNextStart(), current, ret));
-            ret.addAll(checkTrackVII(current.getNextAltEnd(), current, ret));
+            ret.addAll(checkTrack(current.getNextStart(), current, ret));
+            ret.addAll(checkTrack(current.getNextAltEnd(), current, ret));
         } else if (prev.equals(current.getNextAltEnd())) {
             ret.add(current.getNextStart());
             ret.add(current.getNextEnd());
-            ret.addAll(checkTrackVII(current.getNextEnd(), current, ret));
-            ret.addAll(checkTrackVII(current.getNextStart(), current, ret));
+            ret.addAll(checkTrack(current.getNextEnd(), current, ret));
+            ret.addAll(checkTrack(current.getNextStart(), current, ret));
         }
         return ret;
     }
@@ -145,6 +148,7 @@ public class TrackNetwork {
                     for (int o = current.size() - 1; o > 0; o--) {
                         current.set(o, current.get(o - 1));
                     }
+                    // no more track to drive on
                     if (getNextPoint(current.get(0), t.getDirection()) == null) {
                         crashes.add(t.getId());
                         trainsOnTrack.remove(t);
@@ -204,13 +208,14 @@ public class TrackNetwork {
     public void toggleSwitch(int id, Point dest) throws SemanticsException {
         if (!tracks.containsKey(id)) {
             throw new SemanticsException("no such track id");
-        } else if (tracks.get(id).toString().charAt(0) != 's') {
+        } else if (tracks.get(id).getAltEnd() == null) {
             throw new SemanticsException("track with the id " + id + " is not a switch track");
         }
         SwitchTrack toSwitch = (SwitchTrack) tracks.get(id);
         if (dest.equals(toSwitch.getStart())) {
             throw new SemanticsException("the given point is not one to switch to");
         } else if (dest.equals(toSwitch.getEnd())) {
+            // replaces the boolean values the points are mapped to
             for (Point p : toSwitch.getPointsBetweenEnd()) {
                 trackMap.replace(p, true);
             }
@@ -238,7 +243,7 @@ public class TrackNetwork {
      * @throws SemanticsException If the train is not valid or if theres no such
      *                            point on the track
      */
-    public void putTrain(Train t, Point place, Point dir) throws SemanticsException {
+    public void putTrain(final Train t, final Point place, final Point dir) throws SemanticsException {
         if (!t.isValid()) {
             throw new SemanticsException("train is not valid");
         }
@@ -246,9 +251,11 @@ public class TrackNetwork {
             throw new SemanticsException("no such point on the track");
         }
         Point newDir = dir.negate();
+        // the list on which points the train is located
         List<Point> points = new ArrayList<>();
         points.add(place);
         for (int i = 1; i < t.getLength(); i++) {
+            // uses the negative trains direction to get the points the train is placed on
             Tuple<Point, Point> ret = getNextPoint(points.get(points.size() - 1), newDir);
             if (ret != null) {
                 points.add(ret.getFirst());
@@ -267,6 +274,39 @@ public class TrackNetwork {
      * direction that may have been updated.
      */
     private Tuple<Point, Point> getNextPoint(final Point p, final Point dir) {
+        for (Track toFind : tracks.values()) {
+            if (toFind.getAllPointsFromTrack().contains(p)) {
+                if (toFind.getAllPointsFromTrack().contains(p.add(dir)) && trackMap.get(p.add(dir))) {
+                    if (trackMap.get(p.add(dir))) {
+                        return new Tuple<Point, Point>(p.add(dir), dir);
+                    } else if (trackMap.containsKey(p.add(dir.getLeft())) && trackMap.get(p.add(dir.getLeft()))) {
+                        return new Tuple<Point, Point>(p.add(dir.getLeft()), dir.getLeft());
+                    } else if (trackMap.containsKey(p.add(dir.getRight())) && trackMap.get(p.add(dir.getRight()))) {
+                        return new Tuple<Point, Point>(p.add(dir.getRight()), dir.getRight());
+                    }
+                } else {
+                    if (p.equals(toFind.getStart())) {
+                        Track temp = toFind.getNextStart();
+                        Point newDir = temp.getStart().sub(temp.getEnd()).reduce();
+                        return new Tuple<Point, Point>(toFind.getStart().add(newDir), newDir);
+
+                    } else if (p.equals(toFind.getEnd())) {
+                        Track temp = toFind.getNextEnd();
+                        Point newDir = temp.getEnd().sub(temp.getStart()).reduce();
+                        return new Tuple<Point, Point>(toFind.getStart().add(newDir), newDir);
+
+                    } else if (p.equals(toFind.getAltEnd())) {
+                        Track temp = toFind.getNextAltEnd();
+                        Point newDir = temp.getAltEnd().sub(temp.getStart()).reduce();
+                        return new Tuple<Point, Point>(toFind.getStart().add(newDir), newDir);
+
+                    } else {
+                        return null;
+                    }
+                }
+            }
+        }
+
         if (trackMap.get(p.add(dir)) != null && trackMap.get(p.add(dir))) {
             return new Tuple<Point, Point>(p.add(dir), dir);
 
@@ -296,7 +336,7 @@ public class TrackNetwork {
             if (tracks.containsValue(toAdd)) {
                 throw new SemanticsException("track already exists");
             }
-            if (!findFitting(toAdd)) {
+            if (!findAndSetFittingTracks(toAdd)) {
                 throw new SemanticsException("none of the points exist already");
             } else {
                 tracks.put(toAdd.getId(), toAdd);
@@ -311,7 +351,7 @@ public class TrackNetwork {
      * @param toAdd the track to add
      * @return true, if a fitting track has been found, false else
      */
-    private boolean findFitting(Track toAdd) {
+    private boolean findAndSetFittingTracks(Track toAdd) {
         for (Track tr : tracks.values()) {
             if (tr.getStart().equals(toAdd.getStart()) && tr.getNextStart() == null) {
                 addPointsFromTrack(toAdd);

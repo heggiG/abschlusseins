@@ -22,14 +22,6 @@ public abstract class Coach extends RollingStock {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    @Override
-    public String getSuperType() {
-        return "coach";
-    }
-
-    /**
      * Returns null as coaches have no name
      */
     @Override

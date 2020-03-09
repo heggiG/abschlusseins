@@ -26,6 +26,7 @@ public abstract class RollingStock {
      * @param frontCoupling Whether the stock has front coupling
      * @param backCoupling  Whether the stock has back coupling
      * @param length        The stocks length
+     * @param type          The rollingstocks type
      */
     public RollingStock(String modelSeries, String name, boolean frontCoupling, boolean backCoupling, int length) {
         this.frontCoupling = frontCoupling;
@@ -39,7 +40,20 @@ public abstract class RollingStock {
         this.length = length;
         trainNumber = "none";
     }
+    
+    /**
+     * Returns a string array containing the rolling stocks ascii art representation
+     * 
+     * @return The stocks ascii art representation
+     */
+    public abstract String[] show();
 
+    /**
+     * 
+     * @return Returns the exact type of any given rolling stock
+     */
+    public abstract String getType();
+    
     /**
      * 
      * @return Whether the stock has front coupling
@@ -109,26 +123,7 @@ public abstract class RollingStock {
     public String getTrainNumber() {
         return trainNumber;
     }
-
-    /**
-     * Returns a string array containing the rolling stocks ascii art representation
-     * 
-     * @return The stocks ascii art representation
-     */
-    public abstract String[] show();
-
-    /**
-     * 
-     * @return Returns the exact type of any given rolling stock
-     */
-    public abstract String getType();
-
-    /**
-     * 
-     * @return The stocks more generic type
-     */
-    public abstract String getSuperType();
-
+    
     /**
      * {@inheritDoc}
      */

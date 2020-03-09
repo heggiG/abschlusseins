@@ -24,7 +24,7 @@ public class Track implements Comparable<Track> {
      * @param end   Tracks end
      * @param id    Tracks id
      */
-    public Track(Point start, Point end, int id) {
+    public Track(final Point start, final Point end, final int id) {
         this.start = start;
         this.end = end;
         this.id = id;
@@ -79,14 +79,16 @@ public class Track implements Comparable<Track> {
     }
 
     /**
-     * Returns the tracks length (see pythagoras) rounded down to the next integer
+     * Returns the tracks length as a long (see pythagoras), since the track can go from
+     * {@code Integer.MIN_VALUE} to
+     * {@code Integer.MAX_VALUE rounded down to the next integer
      * 
-     * @return The tracks length as integer
+     * @return The tracks length as long
      */
-    public int getLength() {
+    public long getLength() {
         int xLength = start.getXCord() - end.getXCord();
         int yLength = start.getYCord() - end.getYCord();
-        return (int) Math.round(Math.sqrt(xLength * xLength + yLength * yLength));
+        return Math.round(Math.sqrt(xLength * xLength + yLength * yLength));
     }
 
     /**
@@ -99,7 +101,7 @@ public class Track implements Comparable<Track> {
     }
 
     /**
-     * Returns a set of Points containing all points between start and end
+     * Returns a set of Points containing all points between start and end (exclusive)
      * 
      * @return All points between start and end
      */
@@ -112,6 +114,13 @@ public class Track implements Comparable<Track> {
         return ret;
     }
 
+    public Set<Point> getAllPointsFromTrack() {
+        Set<Point> ret = getPointsBetween();
+        ret.add(start);
+        ret.add(end);
+        return ret;
+    }
+    
     /**
      * Returns the track which follows the start point
      * 

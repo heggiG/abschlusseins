@@ -30,11 +30,6 @@ public class Step extends Command {
     public void execute(String command) throws SyntaxException {
         MatchResult mr = getMatcher(command);
         short steps = Short.parseShort(mr.group(1));
-        if (steps == 0) {
-            throw new SyntaxException("amount of steps can't be 0");
-        } else {
-            model.step(steps);
-        }
+        model.step(steps);
     }
-
 }

@@ -28,14 +28,6 @@ public class TrainSet extends RollingStock {
     }
     
     /**
-     * The same as {@link TrainSet#getType()} but only in this case
-     */
-    @Override
-    public String getSuperType() {
-        return getType();
-    }
-    
-    /**
      * {@inheritDoc}
      */
     @Override

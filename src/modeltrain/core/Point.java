@@ -85,10 +85,8 @@ public class Point implements Comparable<Point> {
     }
 
     /**
-     * Reduces a point to be only consinsten of 0s and 1s, usefull for train
-     * direction
      * 
-     * @return The reduced point
+     * @return a point reduced to 0s and 1s
      */
     public Point reduce() {
         int reducedX = this.xCord == 0 ? 0 : this.xCord / Math.abs(this.xCord);

@@ -16,6 +16,7 @@ public class Train implements Comparable<Train> {
     private final int id;
     private List<RollingStock> wagons;
     private boolean isTrainSet;
+    private boolean isValid;
     private Point direction;
 
     /**
@@ -28,23 +29,15 @@ public class Train implements Comparable<Train> {
     }
 
     /**
-     * Adds rolling stock to the train
-     * @param rs The rolling stock to add
-     * @throws SemanticsException if the adding cannot succeed.
+     * Adds an engine to the train
+     * 
+     * @param engine The engine to add
+     * @throws SemanticsException 
      */
-    public void add(RollingStock rs) throws SemanticsException {
-        if (rs.getSuperType().equals("engine")) {
-            add((Engine) rs);
-        } else if (rs.getSuperType().equals("coach")) {
-            add((Coach) rs);
-        } else if (rs.getSuperType().equals("train-set")) {
-            add((TrainSet) rs);
-        }
-    }
-
-    private void add(Engine engine) throws SemanticsException {
+    public void add(Engine engine) throws SemanticsException {
         if (wagons.isEmpty()) {
             isTrainSet = false;
+            isValid = true;
             wagons.add(engine);
         } else if (isTrainSet) {
             throw new SemanticsException("train already contains a powered car");
@@ -57,7 +50,7 @@ public class Train implements Comparable<Train> {
         }
     }
 
-    private void add(Coach co) throws SemanticsException {
+    public void add(Coach co) throws SemanticsException {
         if (wagons.isEmpty()) {
             isTrainSet = false;
             wagons.add(co);
@@ -72,9 +65,10 @@ public class Train implements Comparable<Train> {
         }
     }
 
-    private void add(TrainSet trainSet) throws SemanticsException {
+    public void add(TrainSet trainSet) throws SemanticsException {
         if (wagons.isEmpty()) {
             isTrainSet = true;
+            isValid = true;
             wagons.add(trainSet);
         }
         if (!isTrainSet) {
@@ -111,13 +105,7 @@ public class Train implements Comparable<Train> {
      * @return Whether the train is valid
      */
     public boolean isValid() {
-        if (wagons.get(wagons.size() - 1).getSuperType().equals("engine")
-                || wagons.get(0).getSuperType().equals("engine")) {
-            return true;
-        } else if (isTrainSet) {
-            return true;
-        }
-        return false;
+        return isValid;
     }
 
     /**

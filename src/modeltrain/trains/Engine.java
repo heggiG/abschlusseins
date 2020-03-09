@@ -23,14 +23,6 @@ public abstract class Engine extends RollingStock {
     }
 
     /**
-     * Returns this type as a string
-     */
-    @Override
-    public String getSuperType() {
-        return "engine";
-    }
-
-    /**
      * 
      * @return A StringBuilder that contains a '#' that will be replaced in the
      *         subclasses to match the requierd String

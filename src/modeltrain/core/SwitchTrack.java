@@ -107,10 +107,10 @@ public class SwitchTrack extends Track {
      * {@inheritDoc} between the start and the currently selected switch
      */
     @Override
-    public int getLength() {
+    public long getLength() {
         int xLength = getStart().getXCord() - currentSwitch.getXCord();
         int yLength = getStart().getYCord() - currentSwitch.getYCord();
-        return (int) Math.sqrt(Math.pow(xLength, 2) + Math.pow(yLength, 2));
+        return (long) Math.sqrt(Math.pow(xLength, 2) + Math.pow(yLength, 2));
     }
 
     /**
