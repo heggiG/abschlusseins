@@ -131,6 +131,7 @@ public class Model {
     public void setSwitch(int id, Point p) {
         try {
             tn.toggleSwitch(id, p);
+            
             Terminal.printLine("OK");
         } catch (SemanticsException e) {
             Terminal.printError(e.getMessage());

@@ -26,7 +26,6 @@ public abstract class RollingStock {
      * @param frontCoupling Whether the stock has front coupling
      * @param backCoupling  Whether the stock has back coupling
      * @param length        The stocks length
-     * @param type          The rollingstocks type
      */
     public RollingStock(String modelSeries, String name, boolean frontCoupling, boolean backCoupling, int length) {
         this.frontCoupling = frontCoupling;

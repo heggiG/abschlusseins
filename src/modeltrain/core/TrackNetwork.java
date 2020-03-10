@@ -110,11 +110,13 @@ public class TrackNetwork {
             ret.add(current.getNextAltEnd());
             ret.addAll(checkTrack(current.getNextEnd(), current, ret));
             ret.addAll(checkTrack(current.getNextAltEnd(), current, ret));
+            
         } else if (prev.equals(current.getNextEnd())) {
             ret.add(current.getNextStart());
             ret.add(current.getNextAltEnd());
             ret.addAll(checkTrack(current.getNextStart(), current, ret));
             ret.addAll(checkTrack(current.getNextAltEnd(), current, ret));
+            
         } else if (prev.equals(current.getNextAltEnd())) {
             ret.add(current.getNextStart());
             ret.add(current.getNextEnd());
@@ -222,6 +224,7 @@ public class TrackNetwork {
             for (Point p : toSwitch.getPointsBetweenAltEnd()) {
                 trackMap.replace(p, false);
             }
+            toSwitch.setSwitch(toSwitch.getEnd());
             unsetSwitches.remove((Integer) id);
         } else if (dest.equals(toSwitch.getAltEnd())) {
             for (Point p : toSwitch.getPointsBetweenEnd()) {
@@ -230,7 +233,14 @@ public class TrackNetwork {
             for (Point p : toSwitch.getPointsBetweenAltEnd()) {
                 trackMap.replace(p, true);
             }
+            toSwitch.setSwitch(toSwitch.getAltEnd());
             unsetSwitches.remove((Integer) id);
+        }
+        // removes all trains on the switchtrack
+        for (Map.Entry<Train, List<Point>> ent : trainsOnTrack.entrySet()) {
+            if (!Collections.disjoint(ent.getValue(), toSwitch.getAllPointsFromTrack())) {
+                trainsOnTrack.remove(ent.getKey());
+            }
         }
     }
 
@@ -254,7 +264,7 @@ public class TrackNetwork {
         // the list on which points the train is located
         List<Point> points = new ArrayList<>();
         points.add(place);
-        for (int i = 1; i < t.getLength(); i++) {
+        for (int i = 1; i <= t.getLength(); i++) {
             // uses the negative trains direction to get the points the train is placed on
             Tuple<Point, Point> ret = getNextPoint(points.get(points.size() - 1), newDir);
             if (ret != null) {
@@ -274,46 +284,27 @@ public class TrackNetwork {
      * direction that may have been updated.
      */
     private Tuple<Point, Point> getNextPoint(final Point p, final Point dir) {
+        Track found = tracks.values().stream().filter(t -> t.getAllPointsFromTrack().contains(p)).findFirst()
+                .orElse(null);
+        if (found == null) {
+            return null;
+        }
         for (Track toFind : tracks.values()) {
             if (toFind.getAllPointsFromTrack().contains(p)) {
-                if (toFind.getAllPointsFromTrack().contains(p.add(dir)) && trackMap.get(p.add(dir))) {
-                    if (trackMap.get(p.add(dir))) {
-                        return new Tuple<Point, Point>(p.add(dir), dir);
-                    } else if (trackMap.containsKey(p.add(dir.getLeft())) && trackMap.get(p.add(dir.getLeft()))) {
-                        return new Tuple<Point, Point>(p.add(dir.getLeft()), dir.getLeft());
-                    } else if (trackMap.containsKey(p.add(dir.getRight())) && trackMap.get(p.add(dir.getRight()))) {
-                        return new Tuple<Point, Point>(p.add(dir.getRight()), dir.getRight());
-                    }
-                } else {
-                    if (p.equals(toFind.getStart())) {
-                        Track temp = toFind.getNextStart();
-                        Point newDir = temp.getStart().sub(temp.getEnd()).reduce();
-                        return new Tuple<Point, Point>(toFind.getStart().add(newDir), newDir);
-
-                    } else if (p.equals(toFind.getEnd())) {
-                        Track temp = toFind.getNextEnd();
-                        Point newDir = temp.getEnd().sub(temp.getStart()).reduce();
-                        return new Tuple<Point, Point>(toFind.getStart().add(newDir), newDir);
-
-                    } else if (p.equals(toFind.getAltEnd())) {
-                        Track temp = toFind.getNextAltEnd();
-                        Point newDir = temp.getAltEnd().sub(temp.getStart()).reduce();
-                        return new Tuple<Point, Point>(toFind.getStart().add(newDir), newDir);
-
-                    } else {
-                        return null;
-                    }
-                }
+                found = toFind;
+                break;
             }
         }
-
-        if (trackMap.get(p.add(dir)) != null && trackMap.get(p.add(dir))) {
+        if (trackMap.get(p.add(dir)) != null && trackMap.get(p.add(dir))
+                && found.getPointsFromThisAndSurroundingTracks().contains(p.add(dir))) {
             return new Tuple<Point, Point>(p.add(dir), dir);
 
-        } else if (trackMap.get(p.add(dir.getLeft())) != null && trackMap.get(p.add(dir.getLeft()))) {
+        } else if (trackMap.get(p.add(dir.getLeft())) != null && trackMap.get(p.add(dir.getLeft()))
+                && found.getPointsFromThisAndSurroundingTracks().contains(p.add(dir.getLeft()))) {
             return new Tuple<Point, Point>(p.add(dir.getLeft()), dir.getLeft());
 
-        } else if (trackMap.get(p.add(dir.getRight())) != null && trackMap.get(p.add(dir.getRight()))) {
+        } else if (trackMap.get(p.add(dir.getRight())) != null && trackMap.get(p.add(dir.getRight()))
+                && found.getPointsFromThisAndSurroundingTracks().contains(p.add(dir.getRight()))) {
             return new Tuple<Point, Point>(p.add(dir.getRight()), dir.getRight());
 
         } else {

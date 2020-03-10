@@ -63,6 +63,9 @@ public class Create extends Command {
             throw new SyntaxException("wrong syntax for create coach command");
         }
         String modelType = match.group(1);
+        if (modelType.equals("W")) {
+            throw new SyntaxException("model type can't be W");
+        }
         String name = match.group(2);
         int len = Integer.parseInt(match.group(3));
         boolean couplingFront = Boolean.parseBoolean(match.group(5));

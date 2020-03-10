@@ -52,7 +52,7 @@ public class Track implements Comparable<Track> {
      * Returns the Tracks alternative end (here null since this is a normal track,
      * not a switch)
      * 
-     * @return Null
+     * @return null
      */
     public Point getAltEnd() {
         return null;
@@ -62,7 +62,7 @@ public class Track implements Comparable<Track> {
      * Returns the track that follows the alternative end (here null since this is
      * no switchtrack)
      * 
-     * @return Null
+     * @return null
      */
     public Track getNextAltEnd() {
         return null;
@@ -114,10 +114,29 @@ public class Track implements Comparable<Track> {
         return ret;
     }
 
+    /**
+     * 
+     * @return all points including start and end
+     */
     public Set<Point> getAllPointsFromTrack() {
         Set<Point> ret = getPointsBetween();
         ret.add(start);
         ret.add(end);
+        return ret;
+    }
+    
+    /**
+     * 
+     * @return a set of points from this track and all neighbouring tracks
+     */
+    public Set<Point> getPointsFromThisAndSurroundingTracks() {
+        Set<Point> ret = getAllPointsFromTrack();
+        if (nextStart != null) {
+            ret.addAll(nextStart.getAllPointsFromTrack());
+        }
+        if (nextEnd != null) {
+            ret.addAll(nextEnd.getAllPointsFromTrack());
+        }
         return ret;
     }
     

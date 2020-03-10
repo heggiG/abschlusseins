@@ -75,17 +75,21 @@ public class SwitchTrack extends Track {
     }
 
     /**
-     * Toggles between the endpoints and returns the newly selected one
-     * @return The now selected end point
+     * 
+     * @param p the point to set to
+     * @return the point that has been set to or null
      */
-    public Point toggle() {
-        if (currentSwitch.equals(getEnd()))
-            currentSwitch = altEnd;
-        else
+    public Point setSwitch(Point p) {
+        if (getStart().equals(p)) {
+            return null;
+        } else if (getEnd().equals(p)) {
             currentSwitch = getEnd();
+        } else if (altEnd.equals(p)) {
+            currentSwitch = altEnd;
+        }
         return currentSwitch;
     }
-
+    
     /**
      * Returns the track after the alternative end
      * @return the track after the alternative end
@@ -118,11 +122,9 @@ public class SwitchTrack extends Track {
      */
     @Override
     public boolean equals(Object o) {
-        if (o == null) 
-            return false;
         if (o == this)
             return true;
-        if (o.getClass() != this.getClass())
+        if (o == null || o.getClass() != this.getClass())
             return false;
         SwitchTrack st = (SwitchTrack) o;
         if (st.getStart().equals(this.getStart()) && st.altEnd.equals(this.altEnd) && st.getEnd().equals(this.getEnd()))

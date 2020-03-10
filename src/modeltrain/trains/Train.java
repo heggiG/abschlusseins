@@ -9,7 +9,7 @@ import java.util.ArrayList;
  * Class that implements a train.
  * 
  * @author Florian
- * @version 400.1
+ * @version 1.1
  */
 public class Train implements Comparable<Train> {
 
@@ -50,6 +50,11 @@ public class Train implements Comparable<Train> {
         }
     }
 
+    /**
+     * Adds a coach to the train
+     * @param co The coach to add
+     * @throws SemanticsException if the parameters dont work
+     */ 
     public void add(Coach co) throws SemanticsException {
         if (wagons.isEmpty()) {
             isTrainSet = false;
@@ -65,6 +70,11 @@ public class Train implements Comparable<Train> {
         }
     }
 
+    /**
+     * Adds a trainset to the train
+     * @param trainSet The trainset to add
+     * @throws SemanticsException if the parameters dont work
+     */
     public void add(TrainSet trainSet) throws SemanticsException {
         if (wagons.isEmpty()) {
             isTrainSet = true;
